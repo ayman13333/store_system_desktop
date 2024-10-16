@@ -755,7 +755,7 @@
 const { app, BrowserWindow } = require('electron');
 
 async function createWindow() {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -766,7 +766,13 @@ async function createWindow() {
   const users=await User.find();
 
   console.log('users',users);
-  win.loadFile('index.html');
+
+   mainWindow.webContents.openDevTools();
+  mainWindow.loadURL('http://localhost:3000');
+
+  // production
+  // const startUrl = path.join(__dirname,'my-app','build','index.html');
+  //  mainWindow.loadFile(startUrl);
 }
 
 app.whenReady().then(async () => {

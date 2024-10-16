@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import {  HashRouter, Route, Routes } from 'react-router-dom';
+
+import { ToastContainer } from 'react-bootstrap';
+import 'react-toastify/dist/ReactToastify.css';
+
+// components and pages
+import Login from './Pages/Login';
+import AllItemsPage from './Pages/items/AllItemsPage';
+import AddItemPage from './Pages/items/AddItemPage';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <HashRouter>
+      <Routes>
+      <Route index element={<Login />} />
+      {/* الاصناف */}
+      <Route path='/allitems' element={<AllItemsPage />} />
+      {/* اضافة صنف */}
+      <Route path='/allitems/add' element={<AddItemPage />} />
+      </Routes>
+
+     <ToastContainer />
+     </HashRouter>
     </div>
   );
 }

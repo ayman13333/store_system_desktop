@@ -1,15 +1,45 @@
 {
-  "name": "front",
+  "name": "my-app",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.39",
+    "@types/react": "^18.2.18",
+    "@types/react-dom": "^18.2.7",
+    "aws-sdk": "^2.1664.0",
+    "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.3",
+    "electron": "^31.2.0",
+    "flatpickr": "^4.6.13",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.4",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.4",
+    "react-data-table-component": "^7.6.2",
+    "react-data-table-component-extensions": "^1.6.0",
+    "react-dom": "^18.2.0",
+    "react-flatpickr": "^3.10.13",
+    "react-icons": "^5.2.1",
+    "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.6",
+    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
+  },
+  "build": {
+    "appId": "com.example.electron-react-app",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
   },
   "scripts": {
     "start": "react-scripts start",
