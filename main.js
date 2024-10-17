@@ -1,14 +1,14 @@
-// const { app, BrowserWindow, ipcMain, Notification, screen } = require('electron');
+ const { app, BrowserWindow, ipcMain, Notification, screen } = require('electron');
 // const url = require('url');
-// const path = require('path');
+ const path = require('path');
  const connectDB = require('./back/db'); // Import the database connection
-// const _ = require('lodash');
+ const _ = require('lodash');
 
 
 
-// const bcrypt = require('bcrypt');
+ const bcrypt = require('bcrypt');
 // const Room = require('./front/src/Models/Rooms');
- const User = require('./back/Models/User');
+const User = require('./back/Models/User');
 // const Book = require('./front/src/Models/Books');
 
 // // const PQueue = require('p-queue');
@@ -62,42 +62,7 @@
 
 // //app.whenReady().then(createMainWindow);
 
-// // login
-// ipcMain.handle('login', async (event, data) => {
-//   try {
-//     const user = await User.findOne({ email: data.email }).lean()
-//     if (!user) {
-//       new Notification({ title: 'خطأ في البريد الالكتروني او كلمة المرور' }).show();
-//       return {
-//         success: false
-//       }
-//     }
 
-//     // Compare the input password with the hashed password in the database
-//     const isMatch = await bcrypt.compare(data.password, user.password);
-//     if (isMatch) {
-//       new Notification({ title: 'تم  الدخول بنجاح' }).show();
-//       return {
-//         success: true, user: { ...user, _id: user?._id.toString() }
-//       }
-
-//     } else {
-//       new Notification({ title: 'خطأ في البريد الالكتروني او كلمة المرور' }).show();
-//       return {
-//         success: false
-//       }
-
-//     }
-
-//   } catch (error) {
-//     // errno: -4077,
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-//     console.log('mmmmmmmmmmmmmmmm');
-//     // code: 'ECONNRESET'
-//     console.log(error.errno);
-//     console.log('mmmmmmmmmmmmmmmm');
-//   }
-// })
 
 // // rooms
 // ipcMain.handle('create-room', async (event, userData) => {
@@ -165,57 +130,7 @@
 //   }
 // });
 
-// // users
-// ipcMain.handle('add-user', async (event, userData) => {
-//   try {
 
-//     //console.log('ggggggggggggggggggggggggggg');
-//     let hashedPassword = '';
-//     if (userData.email || userData.password) {
-//       const foundUser = await User.findOne({ email: userData.email });
-//       if (foundUser !== null) {
-//         new Notification({ title: 'هذا الاميل موجود بالفعل' }).show();
-//         return;
-//       }
-//       const salt = await bcrypt.genSalt(10);
-//       hashedPassword = await bcrypt.hash(userData.password, salt);
-//       userData.password = hashedPassword;
-//     }
-
-//     console.log('userData:', userData);
-
-//     if (userData.typeOfUser == 'user') {
-//       const foundUser = await User.findOne({ cardNumber: userData.cardNumber });
-//       console.log('foundUser', foundUser);
-//       if (foundUser !== null) {
-//         new Notification({ title: 'رقم البطاقة موجود بالفعل' }).show();
-//         return;
-//       }
-//     }
-
-//     const newUser = new User(userData);
-//     await newUser.save();
-
-//     console.log('newUser saved:', newUser);
-
-//     new Notification({ title: 'تم اضافة المستخدم بنجاح' }).show();
-
-//     return {
-//       success: true, newUser: {
-//         ...newUser.toObject(),
-//         _id: newUser?._id.toString()
-//       }
-//     };
-//   } catch (error) {
-//     console.log('ooooooooooooooooooo');
-//     console.log(error);
-//     console.log('ooooooooooooooooooo');
-//     // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     new Notification({ title: 'فشل في اضافة المستخدم' }).show();
-//     return { success: false, error: error.message };
-//   }
-// });
 
 // // edit
 // ipcMain.handle('editUser', async (event, data) => {
@@ -306,47 +221,7 @@
 //   }
 // });
 
-// ipcMain.handle('getAllUsers', async (event, data) => {
-//   try {
 
-//     let filter = '';
-
-//     // صفحة الموظفين
-//     if (data.type == 'reception') {
-//       filter = [
-//         { type: 'reception' },
-//         { type: 'accountant' },
-//         { type: 'admin' }
-//       ];
-//     }
-
-//     // صفحة الضيوف
-//     if (data.type == 'guests') {
-//       filter = [
-//         { type: 'madany' },
-//         { type: 'darMember' },
-//         { type: 'army' }
-//       ];
-//     }
-//     let users = await User.find({
-//       $or: filter
-//     }).lean();
-
-//     users = users.map(doc => {
-//       return {
-//         ...doc,
-//         _id: doc._id.toString()
-//       }
-//     });
-
-//     return { success: true, users };
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     return { success: false, error: error.message };
-//   }
-// })
 
 // ipcMain.handle('get-one-user', async (event, userData) => {
 //   try {
@@ -752,20 +627,22 @@
 
 // test 
 
-const { app, BrowserWindow } = require('electron');
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: {
-      nodeIntegration: true,  // Enables Node.js integration in the renderer process
-    },
+        webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false
+    }
   });
 
-  const users=await User.find();
+  // const users=await User.find();
 
-  console.log('users',users);
+  // console.log('users',users);
 
    mainWindow.webContents.openDevTools();
   mainWindow.loadURL('http://localhost:3000');
@@ -782,6 +659,136 @@ app.whenReady().then(async () => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+});
+// // login
+ipcMain.handle('login', async (event, data) => {
+  try {
+    const user = await User.findOne({ email: data.email }).lean()
+    if (!user) {
+      new Notification({ title: 'خطأ في البريد الالكتروني او كلمة المرور' }).show();
+      return {
+        success: false
+      }
+    }
+
+    // Compare the input password with the hashed password in the database
+    const isMatch = await bcrypt.compare(data.password, user.password);
+    if (isMatch) {
+      new Notification({ title: 'تم  الدخول بنجاح' }).show();
+      return {
+        success: true, user: { ...user, _id: user?._id.toString() }
+      }
+
+    } else {
+      new Notification({ title: 'خطأ في البريد الالكتروني او كلمة المرور' }).show();
+      return {
+        success: false
+      }
+
+    }
+
+  } catch (error) {
+    // errno: -4077,
+    new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
+    console.log('mmmmmmmmmmmmmmmm');
+    // code: 'ECONNRESET'
+    console.log(error.errno);
+    console.log('mmmmmmmmmmmmmmmm');
+  }
+});
+
+// // users
+ipcMain.handle('add-user', async (event, userData) => {
+  try {
+
+    //console.log('ggggggggggggggggggggggggggg');
+    let hashedPassword = '';
+    if (userData.email || userData.password) {
+      const foundUser = await User.findOne({ email: userData.email });
+      if (foundUser !== null) {
+        new Notification({ title: 'هذا الاميل موجود بالفعل' }).show();
+        return;
+      }
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(userData.password, salt);
+      userData.password = hashedPassword;
+    }
+
+    console.log('userData:', userData);
+
+    // if (userData.typeOfUser == 'user') {
+    //   const foundUser = await User.findOne({ cardNumber: userData.cardNumber });
+    //   console.log('foundUser', foundUser);
+    //   if (foundUser !== null) {
+    //     new Notification({ title: 'رقم البطاقة موجود بالفعل' }).show();
+    //     return;
+    //   }
+    // }
+
+    const newUser = new User(userData);
+    await newUser.save();
+
+    console.log('newUser saved:', newUser);
+
+    new Notification({ title: 'تم اضافة المستخدم بنجاح' }).show();
+
+    return {
+      success: true, newUser: {
+        ...newUser.toObject(),
+        _id: newUser?._id.toString()
+      }
+    };
+  } catch (error) {
+    console.log('ooooooooooooooooooo');
+    console.log(error);
+    console.log('ooooooooooooooooooo');
+    // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
+
+    new Notification({ title: 'فشل في اضافة المستخدم' }).show();
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('getAllUsers', async (event, data) => {
+  try {
+
+    let filter = {};
+
+    // صفحة الموظفين
+    if (data.type == 'worker') {
+      filter = [
+        { type: 'worker' },
+        { type: 'storekeeper' },
+        { type: 'admin' }
+      ];
+    }
+
+    // // صفحة الموردين
+    // if (data.type == 'guests') {
+    //   filter = [
+    //     { type: 'madany' },
+    //     { type: 'darMember' },
+    //     { type: 'army' }
+    //   ];
+    // }
+    let users = await User.find({
+      $or: filter
+    }).lean();
+
+    users = users.map(doc => {
+      return {
+        ...doc,
+        _id: doc._id.toString()
+      }
+    });
+
+    return { success: true, users };
+
+  } catch (error) {
+    new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
+
+    return { success: false, error: error.message };
+  }
 });
 
 app.on('window-all-closed', () => {

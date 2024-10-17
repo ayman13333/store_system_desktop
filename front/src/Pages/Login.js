@@ -13,7 +13,7 @@ export default function Login() {
 
     const login=async()=>{
 
-        navigate('/allitems');
+       // navigate('/allitems');
 
         //  login
         const data={
@@ -31,8 +31,10 @@ export default function Login() {
             localStorage.setItem('type',result?.user.type);
             localStorage.setItem('email',result?.user.email);
 
-            if(result?.user.type=='accountant') navigate('/accountant/search');
-            else navigate('/bookings');
+            // if(result?.user.type=='accountant') navigate('/accountant/search');
+            // else navigate('/allitems');
+
+            navigate('/allitems');
         }
 
         console.log("result",result);

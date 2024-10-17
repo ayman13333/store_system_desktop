@@ -1,21 +1,29 @@
 const mongoose = require('mongoose');
 
 const usersSchema=new mongoose.Schema({
+   
+    type:{
+        //  موظف (worker) - امين مخزن (storekeeper) - (supplier) مورد - (consumer) جهة صرف
+        type:String,
+        enum:['worker','storekeeper','admin','supplier','consumer']
+    },
     fullName:{
         type:String
-    },
-    cardNumber:{
-        type:String,
-        // unique:true
-    },
-    type:{
-        type:String,
-        enum:['madany','darMember','army','admin','reception','accountant']
     },
     mobile:{
         type:String
     },
     address:{
+        type:String
+    },
+    // نوع التوريد
+    typeOfSupply:{
+        type:String
+    },
+    advantages:{
+        type:String
+    },
+    disAdvantages:{
         type:String
     },
     email:{

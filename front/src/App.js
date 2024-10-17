@@ -8,6 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './Pages/Login';
 import AllItemsPage from './Pages/items/AllItemsPage';
 import AddItemPage from './Pages/items/AddItemPage';
+import AllUsersPage from './Pages/users/AllUsersPage';
+import GuestsPage from './Pages/users/GuestsPage';
+
 
 
 function App() {
@@ -16,6 +19,11 @@ function App() {
      <HashRouter>
       <Routes>
       <Route index element={<Login />} />
+      {/* الموظفين */}
+      <Route path='/users' element={<AllUsersPage />} />
+      {/* الموردين */}
+      <Route path='/guests' element={<GuestsPage />} />
+
       {/* الاصناف */}
       <Route path='/allitems' element={<AllItemsPage />} />
       {/* اضافة صنف */}

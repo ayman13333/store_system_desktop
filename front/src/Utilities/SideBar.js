@@ -18,12 +18,35 @@ export default function SideBar() {
         <h4 className='my-3 text-center'> لوحة التحكم </h4>
 
         <p className='text-right my-3'>   <BsFillFilePersonFill />  {localStorage.getItem('email')} </p>
-     
-        
+
+       
+
         <NavLink className='link my-2' to={'/allitems'}>
           <span> <BsBackpack4Fill />  ادارة الاصناف  </span>
-        </NavLink> 
-       
+        </NavLink>
+
+        <NavLink className='link my-3' to={'/users'}>
+          <span style={{ display: "flex", gap: "10px" }}>
+            <div>
+              <BsGlobeCentralSouthAsia />
+            </div>
+            <div>
+              ادارة الموظفين
+            </div>
+          </span>
+        </NavLink>
+
+        <NavLink className='link my-3' to={'/guests'}>
+          <span style={{ display: "flex", gap: "10px" }}>
+            <div>
+              <BsFillPersonVcardFill />
+            </div>
+            <div>
+              سجل الموردين
+            </div>
+          </span>
+        </NavLink>
+
 
 
 
