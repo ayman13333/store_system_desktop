@@ -30,6 +30,7 @@ export default function AllUsersPage() {
     <div className="p-4 w-100">
     <AllUsersComponent />
     </div>    
+
 </div>
   )
 }

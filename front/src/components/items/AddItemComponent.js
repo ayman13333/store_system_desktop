@@ -4,6 +4,7 @@ import CustumNumberInput from '../../Utilities/CustumNumberInput';
 import ExpirationDateModal from './ExpirationDateModal';
 import FormatDate from '../../Utilities/FormatDate';
 import { FaTrashAlt } from "react-icons/fa";
+import { CiEdit } from 'react-icons/ci';
 
 
 export default function AddItemComponent() {
@@ -17,11 +18,18 @@ export default function AddItemComponent() {
 
     const[expirationDatesArr,setExpirationDatesArr]=useState([]);
     const[showExpirationDateModal,setShowExpirationDateModal]=useState(false);
+    const[rowToEdit,setRowToEdit]=useState(null);
 
 
     const deleteRow=(row)=>{
             let filter=expirationDatesArr.filter(el=>el?.key!=row?.key);
             setExpirationDatesArr(filter);
+            setRowToEdit(null);
+    }
+
+    const editRow=(row)=>{
+            setRowToEdit(row);
+            setShowExpirationDateModal(true);
     }
 
 
@@ -92,7 +100,11 @@ export default function AddItemComponent() {
                 <div className='d-flex justify-content-between'>
                     <h6 className="my-3">  تاريخ الصلاحية </h6>
                     <button 
-                    onClick={()=>setShowExpirationDateModal(true)}
+                    onClick={()=>{
+                        setRowToEdit(null);
+                        setShowExpirationDateModal(true);
+                        
+                    }}
                     className='btn btn-success h-50 my-auto'> اضافة </button>
                 </div>
 
@@ -114,25 +126,16 @@ export default function AddItemComponent() {
                                     <td>{ FormatDate(el?.date)} </td>
                                     <td >{el?.quantity}</td>
                                     <td>
-                                        <div className='d-flex h-25'>
+                                        <div className='d-flex h-25 gap-2'>
                                             <button onClick={()=>deleteRow(el)} className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button>
+                                            <button onClick={()=>editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
+
                                         </div>
                                     </td>
                                 </tr>
                                 )
                             }
-                            {/* <tr>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr> */}
-                            {/* <tr>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                            </tr>
-                            <tr>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                            </tr> */}
+                          
                         </tbody>
                     </table>
                 </div>
@@ -142,6 +145,8 @@ export default function AddItemComponent() {
                     show={showExpirationDateModal} setShow={setShowExpirationDateModal} 
                     expirationDatesArr={expirationDatesArr}
                     setExpirationDatesArr={setExpirationDatesArr}
+                    rowToEdit={rowToEdit}
+                    setRowToEdit={setRowToEdit}
                     />   
                
                 }

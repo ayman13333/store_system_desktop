@@ -1,7 +1,6 @@
 import './App.css';
 import {  HashRouter, Route, Routes } from 'react-router-dom';
 
-import { ToastContainer } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 
 // components and pages
@@ -10,6 +9,7 @@ import AllItemsPage from './Pages/items/AllItemsPage';
 import AddItemPage from './Pages/items/AddItemPage';
 import AllUsersPage from './Pages/users/AllUsersPage';
 import GuestsPage from './Pages/users/GuestsPage';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -28,10 +28,11 @@ function App() {
       <Route path='/allitems' element={<AllItemsPage />} />
       {/* اضافة صنف */}
       <Route path='/allitems/add' element={<AddItemPage />} />
+
       </Routes>
+     </HashRouter>
 
      <ToastContainer />
-     </HashRouter>
     </div>
   );
 }

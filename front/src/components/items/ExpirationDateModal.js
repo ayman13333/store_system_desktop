@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import CustumNumberInput from '../../Utilities/CustumNumberInput';
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import removeTimeFromDate from '../../Utilities/removeTimeFromDate';
 
 
-export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr }) {
-    const[newExpirationDate,setNewExpirationDate]=useState('');
-    const [newQuantity, setNewQuantity] = useState('');
+export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr,rowToEdit,setRowToEdit }) {
+    const[newExpirationDate,setNewExpirationDate]=useState(()=>{
+      return  rowToEdit ? rowToEdit?.date?.toISOString().split('T')[0] :''
+    });
+    const [newQuantity, setNewQuantity] = useState(()=>{
+        return rowToEdit ? rowToEdit?.quantity :'';
+    });
 
     const addRow=()=>{
        // console.log('kkkkkkkkkkk');
@@ -37,6 +41,7 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
 
     }
 
+    console.log('rowToEdit',rowToEdit?.date?.toISOString());
 
     return (
         <Modal show={show} onHide={() => setShow(false)}>
@@ -85,7 +90,6 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
                 </div>
             </Modal.Body>
 
-            <ToastContainer />
         </Modal>
     )
 }
