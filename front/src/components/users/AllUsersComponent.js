@@ -62,7 +62,7 @@ export default function AllUsersComponent() {
             setIsLoading(true);
             await window?.electron?.editUser(data);
             const result = await window?.electron?.getAllUsers({
-                type: 'reception'
+                type: 'worker'
             });
             setIsLoading(false);
 
@@ -103,14 +103,7 @@ export default function AllUsersComponent() {
 
         setEmail('');
         setPassword('');
-        //console.log('result', result);
-
-        // const result = await window?.electron?.getAllUsers({
-        //     type: 'reception'
-        // });
-        // console.log('result', result);
-
-        // setUsers(result?.users);
+       
     }
 const onKeyEnter = (event)=>{
    if( event.key == "Enter"){
@@ -127,7 +120,12 @@ const onKeyEnter = (event)=>{
         },
         {
             name: 'النوع',
-            selector: row => row.type,
+            selector: row =>{
+                if(row.type=='worker') return 'موظف';
+                if(row.type=='storekeeper') return 'امين مخزن';
+                if(row.type=='admin') return 'ادمن';
+
+            } ,
             sortable: true,
         },
         // {
@@ -207,6 +205,7 @@ const onKeyEnter = (event)=>{
 
                                             >
                                                 <option value={0}> اختر تصنيف الموظف  </option>
+                                                <option value={'admin'}> ادمن  </option>
                                                 <option value={'worker'}> موظف  </option>
                                                 <option value={'storekeeper'}>  امين مخزن </option>
                                             </select></>
@@ -248,7 +247,7 @@ const onKeyEnter = (event)=>{
 
            
 
-            <button className='btn btn-success' onClick={() => {
+            <button className='btn btn-success my-2' onClick={() => {
                 setShowModal(true);
                 setIsEdit(false);
                 setUserID('');

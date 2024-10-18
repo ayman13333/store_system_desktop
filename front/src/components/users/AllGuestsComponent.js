@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { BsBackspaceFill, BsPlus } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
@@ -12,29 +12,29 @@ export default function AllGuestsComponent() {
 
   // معلومات المستخدم
   const [fullName, setFullName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
   const [type, setType] = useState(0);
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
   const [userForEdit, setUserForEdit] = useState(null);
-
+  const [typeOfSupply, setTypeOfSupply] = useState('');
+  const [advantages, setAdvantages] = useState('');
+  const [disAdvantages, setDisAdvantages] = useState('');
 
   const [isEdit, setIsEdit] = useState(false);
-  useEffect(()=>{
-    if(showEditModal==false){
+  useEffect(() => {
+    if (showEditModal == false) {
       setSearchValue('');
       setFullName('');
-      setCardNumber('');
       setType(0);
       setMobile('');
       setAddress('');
     }
-},[showEditModal])
+  }, [showEditModal])
 
   useEffect(() => {
     const get = async () => {
       const result = await window?.electron?.getAllUsers({
-        type: 'guests'
+        type: 'supplier'
       });
       console.log('result', result);
 
@@ -54,7 +54,7 @@ export default function AllGuestsComponent() {
 
   const cancelFilter = async () => {
     const result = await window?.electron?.getAllUsers({
-      type: 'guests'
+      type: 'supplier'
     });
     console.log('result', result);
 
@@ -63,29 +63,31 @@ export default function AllGuestsComponent() {
   }
 
   const addOrEditUser = async () => {
-    if (type == 0) return toast.error("من فضلك اختر تصنيف العميل");
+    if (type == 0) return toast.error("من فضلك   اختر نوع التوريد");
 
     let data = {
       fullName,
-      cardNumber,
       type,
       mobile,
-      address
+      address,
+      advantages,
+      disAdvantages,
+      typeOfSupply
     };
 
     console.log('isEdit', isEdit);
 
     if (isEdit) {
       data._id = userForEdit?._id;
-      data.oldCardNumber = userForEdit?.cardNumber;
     }
-    else data.typeOfUser = 'user';
+
+    // else data.typeOfUser = 'user';
 
     if (isEdit) {
       let result = await window?.electron?.editGuest(data);
       if (result?.success) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
-          type: 'guests'
+          type: 'supplier'
         });
 
         setUsers(usersAfterEdit?.users);
@@ -93,11 +95,16 @@ export default function AllGuestsComponent() {
         setSearchValue('');
         setShowEditModal(false);
         setFullName('');
-        setCardNumber('');
+        // setCardNumber('');
         setType(0);
         setMobile('');
         setAddress('');
         setUserForEdit(null);
+
+        setTypeOfSupply('');
+        setAdvantages('');
+        setDisAdvantages('');
+
         setIsEdit(false);
 
         console.log('result', result);
@@ -109,7 +116,7 @@ export default function AllGuestsComponent() {
 
       if (result?.newUser?._id) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
-          type: 'guests'
+          type: 'supplier'
         });
 
         setUsers(usersAfterEdit?.users);
@@ -117,11 +124,16 @@ export default function AllGuestsComponent() {
         setSearchValue('');
         setShowEditModal(false);
         setFullName('');
-        setCardNumber('');
+        //  setCardNumber('');
         setType(0);
         setMobile('');
         setAddress('');
         setUserForEdit(null);
+
+        setTypeOfSupply('');
+        setAdvantages('');
+        setDisAdvantages('');
+
         setIsEdit(false);
       }
 
@@ -142,9 +154,8 @@ export default function AllGuestsComponent() {
       // darMember
       name: 'النوع',
       selector: row => {
-        if (row.type == 'madany') return 'مدني';
-        if (row.type == 'army') return 'قوات مسلحة';
-        if (row.type == 'darMember') return 'عضو دار';
+        if (row.type == 'supplier') return 'مورد';
+        if (row.type == 'consumer') return 'جهة صرف';
 
       },
       sortable: true,
@@ -162,10 +173,15 @@ export default function AllGuestsComponent() {
           setUserForEdit(row);
           // console.log("row", row);
           setFullName(row?.fullName);
-          setCardNumber(row?.cardNumber);
+          // setCardNumber(row?.cardNumber);
           setType(row?.type);
           setMobile(row?.mobile);
           setAddress(row?.address);
+
+          setTypeOfSupply(row?.typeOfSupply);
+          setAdvantages(row?.advantages);
+          setDisAdvantages(row?.disAdvantages);
+
           setShowEditModal(true);
           setIsEdit(true);
         }}
@@ -174,28 +190,29 @@ export default function AllGuestsComponent() {
   ];
   console.log('users', users);
   //-------------------------------------------
-const handleWheel = (event) => {
-  // event.preventDefault();
-  // Optionally blur the input to remove focus and further prevent interaction
-  event.currentTarget.blur();};
-//-------------------------------------------
+  const handleWheel = (event) => {
+    // event.preventDefault();
+    // Optionally blur the input to remove focus and further prevent interaction
+    event.currentTarget.blur();
+  };
+  //-------------------------------------------
 
 
-const onKeyEnter = (event)=>{
-  if( event.key == "Enter"){
-    if(fullName !=="" &&mobile !=="" &&cardNumber !=="" &&address !=="" && type !==0 ){
-      addOrEditUser();
-    }
-  
-  }
-}
-const onKeyEnter2 = (event)=>{
-  if( event.key == "Enter"){
-      search();
-    
-  
-  }
-}
+  // const onKeyEnter = (event)=>{
+  //   if( event.key == "Enter"){
+  //     if(fullName !=="" &&mobile !=="" &&cardNumber !=="" &&address !=="" && type !==0 ){
+  //       addOrEditUser();
+  //     }
+
+  //   }
+  // }
+  // const onKeyEnter2 = (event)=>{
+  //   if( event.key == "Enter"){
+  //       search();
+
+
+  //   }
+  // }
 
   return (
     <div className='w-100 h-100'>
@@ -204,7 +221,7 @@ const onKeyEnter2 = (event)=>{
           <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
             <Modal.Header>
               <Modal.Title>
-                {isEdit ? ' تعديل عميل' : 'اضافة عميل'}
+                {isEdit ? ' تعديل مورد' : 'اضافة مورد'}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -217,31 +234,21 @@ const onKeyEnter2 = (event)=>{
                   <input
                     value={fullName} onChange={(e) => setFullName(e.target.value)}
                     required
-                    onKeyPress={onKeyEnter}
                     type="text" className="form-control" placeholder=" الاسم رباعي" />
                 </div>
 
-                <div className="form-group">
-                  <label className="my-2"> رقم تحقيق الشخصية </label>
-                  <input
-                    value={cardNumber} onChange={(e) => setCardNumber(e.target.value)}
-                    required
-                    onKeyPress={onKeyEnter}
-                    type="number" className="form-control" placeholder=" رقم تحقيق الشخصية" onWheel={handleWheel} />
-                </div>
+
 
                 <div className="form-group">
-                  <label className="my-2">تصنيف العميل</label>
+                  <label className="my-2"> النوع</label>
                   <select
 
                     value={type} onChange={(e) => setType(e.target.value)}
                     required
-                    onKeyPress={onKeyEnter}
                     className="form-control">
-                    <option value={0}> من فضلك اختر تصنيف العميل </option>
-                    <option value={'madany'}> مدني </option>
-                    <option value={'army'}> قوات مسلحة </option>
-                    <option value={'darMember'}> عضو دار </option>
+                    <option value={0}> من فضلك النوع </option>
+                    <option value={'consumer'}> جهة صرف </option>
+                    <option value={'supplier'}>  مورد </option>
                   </select>
                 </div>
 
@@ -250,15 +257,46 @@ const onKeyEnter2 = (event)=>{
                   <input
                     value={mobile} onChange={(e) => setMobile(e.target.value)}
                     required
-                    onKeyPress={onKeyEnter}
+
                     type="number" className="form-control" placeholder=" رقم الموبايل" onWheel={handleWheel} />
                 </div>
 
                 <div className="form-group">
                   <label className="my-2"> العنوان </label>
                   <input
-                    value={address} onKeyPress={onKeyEnter} onChange={(e) => setAddress(e.target.value)}
+                    value={address} onChange={(e) => setAddress(e.target.value)}
                     type="text" className="form-control" placeholder=" العنوان" />
+                </div>
+
+                <div className="form-group">
+                  <label className="my-2"> نوع التوريد </label>
+                  <input
+                    value={typeOfSupply} onChange={(e) => setTypeOfSupply(e.target.value)}
+                    type="text" className="form-control" placeholder=" نوع التوريد" />
+                </div>
+
+                <div className="form-group">
+                  <label className="my-2"> المميزات </label>
+                  {/* <input
+                    value={advantages}  onChange={(e) => setAdvantages(e.target.value)}
+                    type="text" className="form-control" placeholder=" المميزات" /> */}
+                  <Form.Control as="textarea"
+                    value={advantages} onChange={(e) => setAdvantages(e.target.value)}
+                    placeholder=" المميزات"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="my-2"> العيوب </label>
+                  {/* <input
+                    value={disAdvantages}  onChange={(e) => setDisAdvantages(e.target.value)}
+                    type="text" className="form-control" placeholder=" العيوب" /> */}
+                  <Form.Control as="textarea"
+                    value={disAdvantages}  onChange={(e) => setDisAdvantages(e.target.value)}
+                    placeholder=" المميزات"
+                    rows={3}
+                  />
                 </div>
 
 
@@ -282,7 +320,7 @@ const onKeyEnter2 = (event)=>{
         </>
       }
 
-      <h1> ادارة العملاء </h1>
+      <h1> ادارة الموردين </h1>
 
       <div className="d-flex justify-content-between my-3">
         <button onClick={() => setShowEditModal(true)} className='btn btn-success' > اضافة <BsPlus /> </button>
@@ -293,8 +331,7 @@ const onKeyEnter2 = (event)=>{
             onChange={(e) => setSearchValue(e.target.value)}
             className="form-control"
             placeholder="ابحث بالاسم هنا"
-            onKeyPress={onKeyEnter2}
-            />
+          />
 
           <button onClick={() => search()} className='btn btn-success'> بحث </button>
         </div>

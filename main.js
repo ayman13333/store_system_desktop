@@ -132,94 +132,7 @@ const User = require('./back/Models/User');
 
 
 
-// // edit
-// ipcMain.handle('editUser', async (event, data) => {
-//   try {
 
-
-//     //lastEmail
-//     if (data?.email !== data?.lastEmail) {
-//       let foundEmail = await User.findOne({ email: data?.email });
-//       console.log("foundEmail", foundEmail);
-
-//       if (foundEmail !== null) {
-//         new Notification({ title: 'هذا الايميل موجود بالفعل' }).show();
-//         return;
-//       }
-
-//     }
-
-
-//     let hashedPassword = '';
-//     if (data.password) {
-//       const salt = await bcrypt.genSalt(10);
-//       hashedPassword = await bcrypt.hash(data.password, salt);
-//       data.password = hashedPassword;
-//     }
-
-//     let updateObj = {
-//       email: data?.email
-//     };
-
-//     if (data.password) updateObj.password = data.password;
-
-//     let user = await User.findByIdAndUpdate(data?._id, updateObj, {
-//       new: true
-//     });
-
-//     new Notification({ title: 'تم تعديل المستخدم بنجاح' }).show();
-
-//     console.log("user", user);
-
-//   } catch (error) {
-//     // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     new Notification({ title: 'فشل في عملية التعديل' }).show();
-//   }
-// });
-
-// // edit guest
-// ipcMain.handle('editGuest', async (event, data) => {
-//   try {
-//     const id = data?._id;
-//     // data=data.delete('_id');
-//     delete data['_id'];
-
-//     // رقم البطاقة ميتكررش
-//     if (data?.cardNumber !== data?.oldCardNumber) {
-//       const foundUser = await User.findOne({ cardNumber: data.cardNumber });
-//       if (foundUser !== null) {
-//         new Notification({ title: 'رقم البطاقة موجود بالفعل' }).show();
-//         return;
-//       }
-
-//     }
-
-
-
-//     let user = await User.findByIdAndUpdate(id, data, {
-//       new: true
-//     }).lean();
-
-//     // console.log("user",user);
-//     user = {
-//       ...user,
-//       _id: user?._id.toString()
-//     }
-//     new Notification({ title: 'تم تعديل المستخدم بنجاح' }).show();
-
-//     return {
-//       success: true,
-//       user
-//     }
-
-//   } catch (error) {
-//     // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     new Notification({ title: 'فشل في عملية التعديل' }).show();
-
-//   }
-// });
 
 
 
@@ -764,13 +677,12 @@ ipcMain.handle('getAllUsers', async (event, data) => {
     }
 
     // // صفحة الموردين
-    // if (data.type == 'guests') {
-    //   filter = [
-    //     { type: 'madany' },
-    //     { type: 'darMember' },
-    //     { type: 'army' }
-    //   ];
-    // }
+    if (data.type == 'supplier') {
+      filter = [
+        { type: 'consumer' },
+        { type: 'supplier' },
+      ];
+    }
     let users = await User.find({
       $or: filter
     }).lean();
@@ -790,6 +702,89 @@ ipcMain.handle('getAllUsers', async (event, data) => {
     return { success: false, error: error.message };
   }
 });
+
+// // edit تعديل موظف او ادمن او امين مخزن
+ipcMain.handle('editUser', async (event, data) => {
+  try {
+
+    //lastEmail
+    if (data?.email !== data?.lastEmail) {
+      let foundEmail = await User.findOne({ email: data?.email });
+      console.log("foundEmail", foundEmail);
+
+      if (foundEmail !== null) {
+        new Notification({ title: 'هذا الايميل موجود بالفعل' }).show();
+        return;
+      }
+
+    }
+
+
+    let hashedPassword = '';
+    if (data.password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(data.password, salt);
+      data.password = hashedPassword;
+    }
+
+    let updateObj = {
+      email: data?.email
+    };
+
+    if (data.password) updateObj.password = data.password;
+
+    let user = await User.findByIdAndUpdate(data?._id, updateObj, {
+      new: true
+    });
+
+    new Notification({ title: 'تم تعديل المستخدم بنجاح' }).show();
+
+    console.log("user", user);
+
+  } catch (error) {
+    // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
+
+    new Notification({ title: 'فشل في عملية التعديل' }).show();
+  }
+});
+
+// // edit مورد او جهة صرف
+ipcMain.handle('editGuest', async (event, data) => {
+  try {
+    const id = data?._id;
+    // data=data.delete('_id');
+    delete data['_id'];
+
+    
+
+
+
+    let user = await User.findByIdAndUpdate(id, data, {
+      new: true
+    }).lean();
+
+    // console.log("user",user);
+    user = {
+      ...user,
+      _id: user?._id.toString()
+    }
+    new Notification({ title: 'تم تعديل المستخدم بنجاح' }).show();
+
+    return {
+      success: true,
+      user
+    }
+
+  } catch (error) {
+
+    new Notification({ title: 'فشل في عملية التعديل' }).show();
+
+  }
+});
+
+
+
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
