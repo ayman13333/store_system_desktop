@@ -319,6 +319,11 @@ ipcMain.handle('addCategory',async(event,data)=>{
     if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
     // الاول شوف الكود ده دخل قبل كدة ولا لا
+    const foundCode = await Category.findOne({ code });
+      if (foundCode !== null) {
+        new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
+        return;
+      }
 
     // 1) ضيف تواريخ الصلاحية في ال model
     let totalQuantity=0;
