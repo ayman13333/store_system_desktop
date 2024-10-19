@@ -9,12 +9,17 @@ const categoryItemsSchema=new mongoose.Schema({
     quantity:{
         type:Number,
         required:true
-    },
-    key:{
-        type:String
     }
 },{
     timestamps:true
 });
+
+// Override the toJSON method to convert _id to a string
+categoryItemsSchema.set('toJSON', {
+    transform: function (doc, ret, options) {
+      ret._id = ret._id.toString(); // Convert _id to string
+      return ret;
+    }
+  });
 
 module.exports=mongoose.model('CategoryItem',categoryItemsSchema);

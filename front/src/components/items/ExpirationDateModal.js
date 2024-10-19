@@ -16,7 +16,7 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
     const addRow=()=>{
        // console.log('kkkkkkkkkkk');
         if(newExpirationDate=='' || newQuantity=='' || newQuantity=='0'){
-            console.log('kkkkkkkkkkk');
+           // console.log('kkkkkkkkkkk');
             return toast.error("من فضلك اكمل البيانات");
         }
 
@@ -39,6 +39,24 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
         setNewQuantity('');
         setShow(false);
 
+    }
+
+    const editRow=()=>{
+        let newexpirationDatesArr=expirationDatesArr?.map(el=>{
+            if(el?.key==rowToEdit?.key){
+                return {
+                    key:rowToEdit?.key,
+                    date:removeTimeFromDate(newExpirationDate),
+                    quantity:newQuantity
+                }
+            }
+            else return el;
+        });
+
+        setExpirationDatesArr(newexpirationDatesArr);
+        setNewExpirationDate('');
+        setNewQuantity('');
+        setShow(false);
     }
 
     console.log('rowToEdit',rowToEdit?.date?.toISOString());
@@ -77,7 +95,10 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
 
                 <div className="d-flex my-3 justify-content-between">
 
-                    <Button onClick={()=>addRow()} variant="primary" >
+                    <Button onClick={()=>{
+                       if(rowToEdit==null) addRow();
+                       else editRow();
+                        }} variant="primary" >
                         حفظ
                     </Button>
 

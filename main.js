@@ -3,6 +3,7 @@
  const path = require('path');
  const connectDB = require('./back/db'); // Import the database connection
  const _ = require('lodash');
+ const mongoose = require('mongoose');
 
 
 
@@ -19,140 +20,6 @@ const CategoryItem = require('./back/Models/CategoryItem');
 
 // let requestQueue = Promise.resolve();
 
-
-// async function createMainWindow() {
-
-//   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
-//   const mainWindow = new BrowserWindow({
-//     title: 'جاردينيا',
-//     width: Math.min(width, 1000),
-//     height: Math.min(height, 1000),
-//     webPreferences: {
-//       contextIsolation: true,
-//       nodeIntegration: true,
-//       preload: path.join(__dirname, 'preload.js'),
-//       webSecurity: false
-//     }
-//   });
-
-//   // delete all users except admin
-//   // await User.deleteMany({ type: { $ne: 'admin' } });
-
-
-
-//   // 'http://localhost:3000'
-
-//   // mainWindow.webContents.openDevTools();
-//   // mainWindow.loadURL('http://localhost:3000');
-
-//   // production
-//   const startUrl = path.join(__dirname,'my-app','build','index.html');
-//    mainWindow.loadFile(startUrl);
-
-// }
-
-// app.whenReady().then(async () => {
-//   await connectDB(); // Connect to the database
-//   createMainWindow();
-// });
-
-// //app.whenReady().then(createMainWindow);
-
-
-
-// // rooms
-// ipcMain.handle('create-room', async (event, userData) => {
-//   try {
-
-//     //console.log('ggggggggggggggggggggggggggg');
-//     const newRoom = new Room(userData);
-//     await newRoom.save();
-
-//     console.log('newRoom saved:', newRoom);
-
-//     new Notification({ title: 'Room Created' }).show();
-
-//     return { success: true, newRoom: { ...newRoom.toObject() } };
-//   } catch (error) {
-//     new Notification({ title: 'فشل في عملية الاضافة' }).show();
-
-//     return { success: false, error: error.message };
-//   }
-// });
-
-// ipcMain.handle('edit-room', async (event, userData) => {
-//   try {
-//     //console.log('userData', userData);
-//     let room = await Room.findByIdAndUpdate(userData?._id, {
-//       room_number: userData?.room_number,
-//       type: userData?.type,
-//       priceForUser: userData?.priceForUser,
-//       priceForArmy: userData?.priceForArmy,
-//       priceForDarMember: userData?.priceForDarMember
-//     }, {
-//       new: true
-//     });
-
-//     console.log('room updated', room);
-
-//     new Notification({ title: 'Room updated' }).show();
-
-//     return { success: true, newRoom: { ...room.toObject() } };
-//   } catch (error) {
-//     new Notification({ title: 'فشل في عملية التعديل' }).show();
-
-//     return { success: false, error: error.message };
-//   }
-// });
-
-
-// ipcMain.handle('get-all-rooms', async (event, userData) => {
-//   try {
-//     let rooms = await Room.find().lean();
-
-//     rooms = rooms.map(doc => {
-//       return {
-//         ...doc,
-//         _id: doc._id.toString()
-//       }
-//     });
-
-//     return { success: true, rooms };
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     return { success: false, error: error.message };
-//   }
-// });
-
-
-
-
-
-
-
-// ipcMain.handle('get-one-user', async (event, userData) => {
-//   try {
-//     const user = await User.findOne({ cardNumber: userData?.cardNumber }).lean();
-
-//     if (user == null) return new Notification({ title: 'هذا العميل غير موجود' }).show();
-
-//     console.log('user', user);
-//     let doc = {
-//       ...user,
-//       _id: user._id.toString()
-//     }
-
-//     console.log('doc', doc);
-
-//     return doc;
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//   }
-// });
 
 // // add book
 // ipcMain.handle('add-book', async (event, data) => {
@@ -212,326 +79,7 @@ const CategoryItem = require('./back/Models/CategoryItem');
 
 // });
 
-// // search for empty rooms
-// ipcMain.handle('search-for-room', async (event, data) => {
-//   try {
-//     let from = data.from;
-//     let to = data.to;
 
-//     // to = new Date(data.to);
-//     // to = to.setDate(to.getDate() + 1);
-//     // to = new Date(to);
-
-//     console.log('to', to);
-
-
-//     //   to=to.setDate(to.getDate() - 1);
-
-//     console.log('from', from);
-
-//     let Booked_rooms = await Book.find({
-//       $or: [
-//         { from: { $lte: to }, to: { $gte: from } }
-//       ],
-//       disabled: false
-
-//       // from:{$gte: new Date(from) ,$lte: new Date(to)},
-//       //  to:{ $gte: new Date(from), $lte: new Date(to)}
-//     });
-
-//     // console.log('Booked_rooms',Booked_rooms);
-
-
-//     const rooms = await Room.find().lean();
-
-//     let empty_rooms = [];
-
-//     let empty_room_count = 0;
-//     let booked_room_count = 0;
-//     let all_rooms = rooms.length;
-
-//     empty_rooms = rooms?.filter(room => {
-//       let foundRoom = Booked_rooms.find(el => el?.roomID.toString() == room?._id.toString());
-//       if (foundRoom?.serialNumber) {
-//         booked_room_count += 1;
-//       }
-//       else {
-//         return room;
-//       }
-//       // console.log("foundRoom", foundRoom);
-//     })
-
-
-
-//     empty_rooms = empty_rooms.map(doc => {
-//       return {
-//         ...doc,
-//         _id: doc._id.toString()
-//       }
-//     });
-
-//     // empty_rooms;
-
-//     // console.log('empty_rooms', empty_rooms);
-
-//     empty_room_count = all_rooms - booked_room_count;
-//     empty_rooms = _.uniqBy(empty_rooms, '_id');
-
-
-//     return {
-//       success: true, rooms: {
-//         empty_rooms
-//       },
-//       booked_room_count,
-//       empty_room_count
-//     };
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     console.log('error');
-//     console.log(error.message);
-//   }
-// });
-
-// // search for book(bill)   البحث عن فاتورة
-// // cardNumber
-// // serialNumber
-// ipcMain.handle('search-for-book', async (event, data) => {
-//   try {
-//     if (data.value == '' || data.type == '') return new Notification({ title: 'من فضلك اكمل البيانات' }).show();
-//     console.log('data', data);
-//     let query = {};
-//     if (data.type == 'cardNumber') query.cardNumber = data.value;
-//     if (data.type == 'serialNumber') query.serialNumber = data.value;
-
-//     console.log('query', query);
-
-//     // query.status='حجز جديد';
-
-//     let book = await Book.findOne(query).populate('userID roomID prevRoomID').sort({ createdAt: -1 }).lean();
-
-//     if (book == null) new Notification({ title: 'تأكد من ادخال البيانات بشكل صحيح' }).show();
-
-//     console.log('book', book);
-
-//     // to=book?.to;
-
-//     let to = new Date(book?.to);
-//     to = to.setDate(to.getDate() + 1);
-//     to = new Date(to);
-
-
-//     book = {
-//       ...book,
-//       to,
-//       _id: book?._id.toString(),
-//       userID: {
-//         ...book.userID,
-//         _id: book.userID._id.toString()
-//       },
-//       roomID: {
-//         ...book.roomID,
-//         _id: book.roomID._id.toString()
-//       },
-//       prevRoomID: {
-//         ...book.prevRoomID,
-//         _id: book?.prevRoomID?._id.toString()
-//       }
-//     }
-//     return {
-//       success: true,
-//       book: book
-//     }
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//   }
-// });
-
-// // update pill
-// ipcMain.handle('updatePill', async (event, data) => {
-//   try {
-//     const id = data?._id;
-//     // data=data.delete('_id');
-//     delete data['_id'];
-
-//     // الغاء الحجز
-//     // const isCanceledBook = await Book.findById(id);
-
-//     // if (isCanceledBook?.status == 'الغاء الحجز') return new Notification({ title: 'تم الغاء حجز هذا الايصال بالفعل' }).show();
-
-//     // console.log('id', id);
-
-//     if (data.ensurancePrice == '') data.ensurancePrice = 0;
-//     if (data.extraPrice == '') data.extraPrice = 0;
-//     if (data.subEnsurancePrice == '') data.subEnsurancePrice = 0;
-//     if (data.cancelPrice == '') data.cancelPrice = 0;
-//     if (data.earlyLeavePrice == '') data.earlyLeavePrice = 0;
-
-
-
-
-
-//     let book = await Book.findByIdAndUpdate(id, {
-//       ...data
-//     }, {
-//       new: true
-//     })
-//       .populate('userID roomID prevRoomID')
-//       .lean();
-
-//     console.log('book updated', book);
-
-//     let to = new Date(book?.to);
-//     to = to.setDate(to.getDate() + 1);
-//     to = new Date(to);
-
-//     book = {
-//       ...book,
-//       to
-//     }
-
-//     book = { ...book, _id: book._id.toString() }
-
-//     // new Notification({ title: 'Room updated' }).show();
-
-//     return { success: true, book: { ...book } };
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     console.log("error", error.message);
-//   }
-// });
-
-// // get last bill serial number
-// ipcMain.handle('getLastPill', async (event, data) => {
-//   try {
-//     let book = await Book.findOne().populate('userID roomID prevRoomID').sort({ createdAt: -1 }).lean();
-
-//     console.log('last book', book);
-
-//     book = {
-//       ...book,
-//       _id: book?._id?.toString()
-//     }
-
-//     return {
-//       success: true,
-//       book
-//     }
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     console.log("error", error.message);
-
-//   }
-// });
-// // let book = await Book.findOne(query).populate('userID roomID prevRoomID').sort({createdAt:-1}).lean();
-
-// ipcMain.handle('getArcheives', async (event, data) => {
-
-//   try {
-//     let from = data.from;
-//     let to = data.to;
-
-//     // to = new Date(data.to);
-//     // to = to.setDate(to.getDate() + 1);
-//     // to = new Date(to);
-
-//     // to=new Date(to);
-
-//     console.log('to', to);
-
-
-//     //   to=to.setDate(to.getDate() - 1);
-
-//     console.log('from', from);
-
-//     let query = {
-//       $and: [
-//         // { from: { $lte: to }, to: { $gte: from } }
-//         { to: { $lte: to }, from: { $gte: from } }
-
-
-//       ]
-//     };
-
-
-//     if (data.type == 'cardNumber') query.cardNumber = data.value;
-//     if (data.type == 'roomNumber') query.roomNumber = data.value;
-//     if (data.type == 'userName') {
-//       let name = data.value.trim();
-//       const regex = new RegExp(name, 'i');
-//       query.userName = regex;
-//     }
-
-
-
-//     //query;
-
-//     console.log('query', query);
-
-//     // userID: new ObjectId('66a1939d302c3682f6b5b665'),
-//     // roomID
-//     let results = await Book.find(query).populate('userID roomID').lean();
-
-
-//     results = results.map(doc => {
-//       let to = new Date(doc?.to);
-//       to = to.setDate(to.getDate() + 1);
-//       to = new Date(to);
-
-//       return {
-//         ...doc,
-//         to,
-//         userID: {
-//           ...doc.userID,
-//           _id: doc.userID._id.toString()
-//         },
-//         roomID: {
-//           ...doc.roomID,
-//           _id: doc.roomID._id.toString()
-//         },
-//         _id: doc._id.toString()
-//       }
-//     });
-
-//     console.log('results', results);
-
-//     return {
-//       success: true,
-//       results
-//     }
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     console.log('error', error.message);
-//   }
-// });
-
-
-// // delete pill
-// ipcMain.handle('deletePill', async (event, data) => {
-//   try {
-//     const id = data.id;
-//     let deletedBook = await Book.findByIdAndDelete(id);
-
-//     return {
-//       success: true, deletedBook
-//     };
-
-//   } catch (error) {
-//     new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//     console.log('error', error.message);
-//   }
-// });
-
-// // if (error.errno == '-4077')
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -621,15 +169,7 @@ ipcMain.handle('add-user', async (event, userData) => {
 
     console.log('userData:', userData);
 
-    // if (userData.typeOfUser == 'user') {
-    //   const foundUser = await User.findOne({ cardNumber: userData.cardNumber });
-    //   console.log('foundUser', foundUser);
-    //   if (foundUser !== null) {
-    //     new Notification({ title: 'رقم البطاقة موجود بالفعل' }).show();
-    //     return;
-    //   }
-    // }
-
+   
     const newUser = new User(userData);
     await newUser.save();
 
@@ -774,28 +314,58 @@ ipcMain.handle('editGuest', async (event, data) => {
 // 1) add category
 ipcMain.handle('addCategory',async(event,data)=>{
   try {
-    let{expirationDatesArr}=data;
+    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity}=data;
 
     if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
+    // الاول شوف الكود ده دخل قبل كدة ولا لا
+
     // 1) ضيف تواريخ الصلاحية في ال model
+    let totalQuantity=0;
+    let expirationDatesArrIDS=[];
 
     await Promise.all(
       expirationDatesArr?.map(async(el)=>{
-        console.log("el",el);
+       // console.log("el",el);
+        totalQuantity+= Number(el?.quantity);
         let newCategoryItem = new CategoryItem(el);
         await newCategoryItem.save();
-    
-        console.log('CategoryItem saved:', CategoryItem);
+        
+        newCategoryItem=newCategoryItem.toJSON();
+
+        
+        expirationDatesArrIDS.push(newCategoryItem?._id);
+
+        console.log('CategoryItem saved:', newCategoryItem);
       })
     );
+
+    console.log('expirationDatesArrIDS',expirationDatesArrIDS);
+    console.log('totalQuantity',totalQuantity);
+
+   //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
+
+    //2) ضيف الصنف
+    let newCategoryObj={
+      code,
+      name,
+      criticalValue,
+      unitPrice,
+      unit, 
+      expirationDatesArr:expirationDatesArrIDS,
+      totalQuantity:quantity
+    }
+
+    let newCategory=new Category(newCategoryObj);
+
+    await newCategory.save();
 
     return {
       success: true
     };
-    //2) ضيف الصنف 
   } catch (error) {
     
+    console.log(error);
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
 
     return{

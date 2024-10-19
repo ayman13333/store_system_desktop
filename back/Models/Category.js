@@ -15,6 +15,7 @@ const categoriesSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'criticalValue is required']
     },
+    // سعر الوحدة
     unitPrice: {
         type: Number,
         required: [true, 'unitPrice is required']
@@ -34,5 +35,13 @@ const categoriesSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+// Override the toJSON method to convert _id to a string
+categoriesSchema.set('toJSON', {
+    transform: function (doc, ret, options) {
+      ret._id = ret._id.toString(); // Convert _id to string
+      return ret;
+    }
+  });
 
 module.exports = mongoose.model('Category', categoriesSchema);

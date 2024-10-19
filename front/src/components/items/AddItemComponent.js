@@ -35,10 +35,25 @@ export default function AddItemComponent() {
 
     const addNewCategory = async () => {
         try {
-            // if(code=='') return toast.error('يجب ادخال الكود');
+
+            if(code=='') return toast.error('يجب ادخال الكود');
+            if(name=='') return toast.error('يجب ادخال اسم الصنف');
+            if(criticalValue=='' || criticalValue=='0') return toast.error('يجب ادخال الحد الحرج');
+            if(quantity=='' || quantity=='0') return toast.error('يجب ادخال الكمية');
+            if(unitPrice=='' || unitPrice=='0') return toast.error('يجب ادخال سعر الوحدة');
+            if(unit=='') return toast.error('يجب ادخال الوحدة');
             if(expirationDatesArr.length==0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
+
+
+
         const data = {
+            code,
+            name,
+            criticalValue,
+            quantity,
+            unit,
+            unitPrice,
             expirationDatesArr
         };
 
@@ -46,12 +61,13 @@ export default function AddItemComponent() {
         const result = await window?.electron?.addCategory(data);
         setIsLoading(false);
 
-        if (result) toast.success('تم اضافة الصنف');
+        if (result.success==true) toast.success('تم اضافة الصنف');
         else toast.error('فشل في عملية الاضافة');
 
         } catch (error) {
 
             console.log('error',error.message);
+            toast.error('فشل في عملية الاضافة');
             setIsLoading(false);
         }
         
@@ -184,6 +200,8 @@ export default function AddItemComponent() {
                     onClick={() => addNewCategory()}
                     className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
             </div>
+
+            {isLoading && <Spinner />}
 
         </div>
     )
