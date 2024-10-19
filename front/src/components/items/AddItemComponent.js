@@ -5,6 +5,7 @@ import ExpirationDateModal from './ExpirationDateModal';
 import FormatDate from '../../Utilities/FormatDate';
 import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from 'react-icons/ci';
+import { toast } from 'react-toastify';
 
 
 export default function AddItemComponent() {
@@ -16,24 +17,47 @@ export default function AddItemComponent() {
     const [quantity, setQuantity] = useState('');
     const [unit, setUnit] = useState('');
 
-    const[expirationDatesArr,setExpirationDatesArr]=useState([]);
-    const[showExpirationDateModal,setShowExpirationDateModal]=useState(false);
-    const[rowToEdit,setRowToEdit]=useState(null);
+    const [expirationDatesArr, setExpirationDatesArr] = useState([]);
+    const [showExpirationDateModal, setShowExpirationDateModal] = useState(false);
+    const [rowToEdit, setRowToEdit] = useState(null);
 
 
-    const deleteRow=(row)=>{
-            let filter=expirationDatesArr.filter(el=>el?.key!=row?.key);
-            setExpirationDatesArr(filter);
-            setRowToEdit(null);
+    const deleteRow = (row) => {
+        let filter = expirationDatesArr.filter(el => el?.key != row?.key);
+        setExpirationDatesArr(filter);
+        setRowToEdit(null);
     }
 
-    const editRow=(row)=>{
-            setRowToEdit(row);
-            setShowExpirationDateModal(true);
+    const editRow = (row) => {
+        setRowToEdit(row);
+        setShowExpirationDateModal(true);
     }
 
+    const addNewCategory = async () => {
+        try {
+            // if(code=='') return toast.error('يجب ادخال الكود');
+            if(expirationDatesArr.length==0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
-    console.log('expirationDatesArr',expirationDatesArr);
+        const data = {
+            expirationDatesArr
+        };
+
+        setIsLoading(true);
+        const result = await window?.electron?.addCategory(data);
+        setIsLoading(false);
+
+        if (result) toast.success('تم اضافة الصنف');
+        else toast.error('فشل في عملية الاضافة');
+
+        } catch (error) {
+
+            console.log('error',error.message);
+            setIsLoading(false);
+        }
+        
+    }
+
+    console.log('expirationDatesArr', expirationDatesArr);
 
 
     return (
@@ -95,17 +119,17 @@ export default function AddItemComponent() {
                 />
             </div>
 
-            <div className="form-group">
+            <div className="form-group my-3">
 
                 <div className='d-flex justify-content-between'>
                     <h6 className="my-3">  تاريخ الصلاحية </h6>
-                    <button 
-                    onClick={()=>{
-                        setRowToEdit(null);
-                        setShowExpirationDateModal(true);
-                        
-                    }}
-                    className='btn btn-success h-50 my-auto'> اضافة </button>
+                    <button
+                        onClick={() => {
+                            setRowToEdit(null);
+                            setShowExpirationDateModal(true);
+
+                        }}
+                        className='btn btn-success h-50 my-auto'> اضافة تاريخ صلاحية </button>
                 </div>
 
 
@@ -121,40 +145,45 @@ export default function AddItemComponent() {
                         </thead>
                         <tbody>
                             {
-                                expirationDatesArr?.map((el,i)=>
-                                <tr key={i}>
-                                    <td>{ FormatDate(el?.date)} </td>
-                                    <td >{el?.quantity}</td>
-                                    <td>
-                                        <div className='d-flex h-25 gap-2'>
-                                            <button onClick={()=>deleteRow(el)} className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button>
-                                            <button onClick={()=>editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
+                                expirationDatesArr?.map((el, i) =>
+                                    <tr key={i}>
+                                        <td>{FormatDate(el?.date)} </td>
+                                        <td >{el?.quantity}</td>
+                                        <td>
+                                            <div className='d-flex h-25 gap-2'>
+                                                <button onClick={() => deleteRow(el)} className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button>
+                                                <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
 
-                                        </div>
-                                    </td>
-                                </tr>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 )
                             }
-                          
+
                         </tbody>
                     </table>
                 </div>
 
                 {
-                    showExpirationDateModal&&<ExpirationDateModal 
-                    show={showExpirationDateModal} setShow={setShowExpirationDateModal} 
-                    expirationDatesArr={expirationDatesArr}
-                    setExpirationDatesArr={setExpirationDatesArr}
-                    rowToEdit={rowToEdit}
-                    setRowToEdit={setRowToEdit}
-                    />   
-               
+                    showExpirationDateModal && <ExpirationDateModal
+                        show={showExpirationDateModal} setShow={setShowExpirationDateModal}
+                        expirationDatesArr={expirationDatesArr}
+                        setExpirationDatesArr={setExpirationDatesArr}
+                        rowToEdit={rowToEdit}
+                        setRowToEdit={setRowToEdit}
+                    />
+
                 }
 
 
             </div>
 
 
+            <div>
+                <button
+                    onClick={() => addNewCategory()}
+                    className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
+            </div>
 
         </div>
     )

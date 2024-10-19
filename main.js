@@ -7,15 +7,12 @@
 
 
  const bcrypt = require('bcrypt');
-// const Room = require('./front/src/Models/Rooms');
 const User = require('./back/Models/User');
-// const Book = require('./front/src/Models/Books');
+const Category = require('./back/Models/Category');
+const CategoryItem = require('./back/Models/CategoryItem');
 
-// // const PQueue = require('p-queue');
-// // // import PQueue from 'p-queue';
-// // const queue = new PQueue({ concurrency: 1 });
 
-// //let queue;
+
 
 
 
@@ -536,11 +533,6 @@ const User = require('./back/Models/User');
 
 // // if (error.errno == '-4077')
 
-
-
-// test 
-
-
 async function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -553,10 +545,10 @@ async function createWindow() {
     }
   });
 
-  // const users=await User.find();
+  
 
-  // console.log('users',users);
 
+  // test
    mainWindow.webContents.openDevTools();
   mainWindow.loadURL('http://localhost:3000');
 
@@ -755,10 +747,6 @@ ipcMain.handle('editGuest', async (event, data) => {
     // data=data.delete('_id');
     delete data['_id'];
 
-    
-
-
-
     let user = await User.findByIdAndUpdate(id, data, {
       new: true
     }).lean();
@@ -782,6 +770,40 @@ ipcMain.handle('editGuest', async (event, data) => {
   }
 });
 
+// الاصناف (categories)
+// 1) add category
+ipcMain.handle('addCategory',async(event,data)=>{
+  try {
+    let{expirationDatesArr}=data;
+
+    if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+
+    // 1) ضيف تواريخ الصلاحية في ال model
+
+    await Promise.all(
+      expirationDatesArr?.map(async(el)=>{
+        console.log("el",el);
+        let newCategoryItem = new CategoryItem(el);
+        await newCategoryItem.save();
+    
+        console.log('CategoryItem saved:', CategoryItem);
+      })
+    );
+
+    return {
+      success: true
+    };
+    //2) ضيف الصنف 
+  } catch (error) {
+    
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+
+    return{
+      success:false
+    };
+
+  }
+})
 
 
 
