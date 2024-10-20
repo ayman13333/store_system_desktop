@@ -4,6 +4,10 @@
   direction: rtl;
   font-family: 'Cairo', sans-serif;
 }
+.parent{
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+}
 
 .parent button{
   color: white;
@@ -53,4 +57,16 @@
 
 .link:hover{
   background-color: #0d6efd;
+}
+
+.navButton:hover{
+  background-color: #0d6efd;
+}
+
+.link2{
+  text-decoration: none;
+  color: black;
+  font-size: medium;
+  display: block;
+  text-align: start;
 }

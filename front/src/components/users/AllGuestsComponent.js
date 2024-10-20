@@ -34,7 +34,7 @@ export default function AllGuestsComponent() {
   useEffect(() => {
     const get = async () => {
       const result = await window?.electron?.getAllUsers({
-        type: 'supplier'
+        type: 'allSuppliers'
       });
       console.log('result', result);
 
@@ -54,7 +54,7 @@ export default function AllGuestsComponent() {
 
   const cancelFilter = async () => {
     const result = await window?.electron?.getAllUsers({
-      type: 'supplier'
+      type: 'allSuppliers'
     });
     console.log('result', result);
 
@@ -87,7 +87,7 @@ export default function AllGuestsComponent() {
       let result = await window?.electron?.editGuest(data);
       if (result?.success) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
-          type: 'supplier'
+          type: 'allSuppliers'
         });
 
         setUsers(usersAfterEdit?.users);
@@ -112,11 +112,13 @@ export default function AllGuestsComponent() {
     }
     else {
       console.log('adddddddddddddd');
+
+      // checks
       let result = await window?.electron?.addUser(data);
 
       if (result?.newUser?._id) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
-          type: 'supplier'
+          type: 'allSuppliers'
         });
 
         setUsers(usersAfterEdit?.users);

@@ -10,6 +10,7 @@ import AddItemPage from './Pages/items/AddItemPage';
 import AllUsersPage from './Pages/users/AllUsersPage';
 import GuestsPage from './Pages/users/GuestsPage';
 import { ToastContainer } from 'react-toastify';
+import SupplyInvoicePage from './Pages/invoices/SupplyInvoicePage';
 
 
 
@@ -28,6 +29,9 @@ function App() {
       <Route path='/allitems' element={<AllItemsPage />} />
       {/* اضافة صنف */}
       <Route path='/allitems/add' element={<AddItemPage />} />
+
+      {/* فاتورة توريد */}
+      <Route path='/supplyInvoice' element={<SupplyInvoicePage />} />
 
       </Routes>
      </HashRouter>

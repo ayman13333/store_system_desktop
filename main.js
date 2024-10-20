@@ -209,10 +209,15 @@ ipcMain.handle('getAllUsers', async (event, data) => {
     }
 
     // // صفحة الموردين
-    if (data.type == 'supplier') {
+   else if (data.type == 'allSuppliers') {
       filter = [
         { type: 'consumer' },
         { type: 'supplier' },
+      ];
+    }
+    else{
+      filter=[
+        {type:data.type}
       ];
     }
     let users = await User.find({

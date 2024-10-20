@@ -1,8 +1,9 @@
 //import React from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { MdBedroomParent, MdLogout, MdModeEdit } from "react-icons/md";
-import { BsArrowLeftRight, BsBackpack4Fill, BsCalendar2DateFill, BsClipboardCheckFill, BsFillFilePersonFill, BsFillPersonVcardFill, BsGlobeCentralSouthAsia } from "react-icons/bs";
-import { FaCircleInfo } from "react-icons/fa6";
+import { BsBackpack4Fill, BsFillFilePersonFill, BsFillPersonVcardFill, BsGlobeCentralSouthAsia } from "react-icons/bs";
+import { FaFileInvoice } from "react-icons/fa";
+import { Dropdown, DropdownButton, Nav } from 'react-bootstrap';
 
 export default function SideBar() {
   const location = useLocation();
@@ -19,7 +20,7 @@ export default function SideBar() {
 
         <p className='text-right my-3'>   <BsFillFilePersonFill />  {localStorage.getItem('email')} </p>
 
-       
+
 
         <NavLink className='link my-2' to={'/allitems'}>
           <span> <BsBackpack4Fill />  ادارة الاصناف  </span>
@@ -46,6 +47,29 @@ export default function SideBar() {
             </div>
           </span>
         </NavLink>
+
+        {/* <Nav.Item>
+          <button className='link my-3 w-100 navButton' style={{border:'none',background:'none'}}>
+            الفواتير
+          </button>
+        </Nav.Item> */}
+
+        <Dropdown>
+          <Dropdown.Toggle variant="black" id="dropdown-basic">
+            {/* <FaFileInvoice /> */}
+            الفواتير
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+            <NavLink className='link2' style={{color:'black'}} to={'/supplyInvoice'}>
+            فاتورة توريد
+            </NavLink>
+      
+             </Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Option 2</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Option 3</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
 
 
 
