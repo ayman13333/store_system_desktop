@@ -43,7 +43,7 @@ export default function Login() {
     console.log('ppppppppppppppppppppppppppp');
     
     return (
-        <div className="d-flex justify-content-center" style={{
+        <div className="d-flex justify-content-center parent" style={{
             height: '100vh',
             alignItems: 'center',
             flexDirection: 'column'

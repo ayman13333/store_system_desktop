@@ -12,4 +12,5 @@ contextBridge.exposeInMainWorld('electron', {
   editGuest:(data)=>ipcRenderer.invoke('editGuest',data),
   // الاصناف
   addCategory:(data)=>ipcRenderer.invoke('addCategory',data),
+  getAllCategories:(data)=>ipcRenderer.invoke('getAllCategories',data)
 });

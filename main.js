@@ -316,6 +316,35 @@ ipcMain.handle('editGuest', async (event, data) => {
 });
 
 // الاصناف (categories)
+ipcMain.handle('getAllCategories',async(event,data)=>{
+  try {
+    let categories=await Category.find().lean();
+
+    // convert objectid to string
+    categories=categories?.map(el=>{
+      return{
+        ...el,
+        _id:el?._id?.toString()
+      }
+    })
+
+    console.log('categories',categories);
+
+    return{
+      success:true,
+      categories
+    }
+
+  } catch (error) {
+    console.log(error);
+    new Notification({ title: 'حدث مشكلة اثناء الاتصال بالانترنت' }).show();
+
+    return{
+      success:false
+    };
+  }
+});
+
 // 1) add category
 ipcMain.handle('addCategory',async(event,data)=>{
   try {
