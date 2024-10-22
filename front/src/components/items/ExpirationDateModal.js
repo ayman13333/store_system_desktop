@@ -3,11 +3,26 @@ import { Button, Modal } from 'react-bootstrap'
 import CustumNumberInput from '../../Utilities/CustumNumberInput';
 import { toast } from "react-toastify";
 import removeTimeFromDate from '../../Utilities/removeTimeFromDate';
+import FormatDateForHTML from '../../Utilities/FormatDateForHTML';
 
 
 export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr,rowToEdit,setRowToEdit }) {
+
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+
     const[newExpirationDate,setNewExpirationDate]=useState(()=>{
-      return  rowToEdit ? rowToEdit?.date?.toISOString().split('T')[0] :''
+        if(rowToEdit){
+           // const date = new Date('2024-10-22');
+            
+            return FormatDateForHTML(rowToEdit?.date) ;
+           // return rowToEdit?.date?.toLocaleDateString(); 
+           // rowToEdit?.date?.toLocaleDateString('en-US', options);
+
+        }
+        else{
+            return '';
+        }
+     // return  rowToEdit ? rowToEdit?.date?.toLocaleDateString('en-US', options) :''
     });
     const [newQuantity, setNewQuantity] = useState(()=>{
         return rowToEdit ? rowToEdit?.quantity :'';
@@ -65,7 +80,8 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
         setShow(false);
     }
 
-    console.log('rowToEdit',rowToEdit?.date?.toISOString());
+   // console.log('rowToEdit',rowToEdit?.date?.toISOString());
+    console.log('newExpirationDate',newExpirationDate);
 
     return (
         <Modal show={show} onHide={() => setShow(false)}>

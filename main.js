@@ -320,13 +320,24 @@ ipcMain.handle('editGuest', async (event, data) => {
 // الاصناف (categories)
 ipcMain.handle('getAllCategories',async(event,data)=>{
   try {
-    let categories=await Category.find().lean();
+    let categories=await Category.find()
+    .populate('expirationDatesArr')
+    .lean();
 
     // convert objectid to string
     categories=categories?.map(el=>{
       return{
         ...el,
-        _id:el?._id?.toString()
+        _id:el?._id?.toString(),
+        expirationDatesArr:el?.expirationDatesArr?.map(item=>{
+          console.log('cccccccc');
+          console.log('item',item);
+          console.log('cccccccc');
+          return{
+            ...item,
+            _id:item?._id?.toString()
+          }
+        })
       }
     })
 

@@ -8,6 +8,7 @@ import { CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
 
 
+
 export default function AddItemComponent() {
     const [isLoading, setIsLoading] = useState(false);
     const [code, setCode] = useState('');
@@ -36,41 +37,64 @@ export default function AddItemComponent() {
     const addNewCategory = async () => {
         try {
 
-            if(code=='') return toast.error('يجب ادخال الكود');
-            if(name=='') return toast.error('يجب ادخال اسم الصنف');
-            if(criticalValue=='' || criticalValue=='0') return toast.error('يجب ادخال الحد الحرج');
-            if(quantity=='' || quantity=='0') return toast.error('يجب ادخال الكمية');
-            if(unitPrice=='' || unitPrice=='0') return toast.error('يجب ادخال سعر الوحدة');
-            if(unit=='') return toast.error('يجب ادخال الوحدة');
-            if(expirationDatesArr.length==0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
+            if (code == '') return toast.error('يجب ادخال الكود');
+            if (name == '') return toast.error('يجب ادخال اسم الصنف');
+            if (criticalValue == '' || criticalValue == '0') return toast.error('يجب ادخال الحد الحرج');
+            if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
+            if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
+            if (unit == '') return toast.error('يجب ادخال الوحدة');
+            if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
 
+            // نقص 5 ايام من التواريخ
+            let expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
+                // let date=new Date(el.date);
+                let date = el?.date?.setDate(el?.date?.getDate() - 5);
+                date = new Date(date);
 
+                return {
+                    ...el,
+                    date
+                }
+            });
 
-        const data = {
-            code,
-            name,
-            criticalValue,
-            quantity,
-            unit,
-            unitPrice,
-            expirationDatesArr
-        };
+            console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
 
-        setIsLoading(true);
-        const result = await window?.electron?.addCategory(data);
-        setIsLoading(false);
+            // return;
 
-        if (result.success==true) toast.success('تم اضافة الصنف');
-        else toast.error('فشل في عملية الاضافة');
+            const data = {
+                code,
+                name,
+                criticalValue,
+                quantity,
+                unit,
+                unitPrice,
+                expirationDatesArr
+            };
+
+            setIsLoading(true);
+            const result = await window?.electron?.addCategory(data);
+            setIsLoading(false);
+
+            if (result.success == true) {
+                toast.success('تم اضافة الصنف');
+                setCode('');
+                setName('');
+                setCriticalValue('');
+                setUnitPrice('');
+                setQuantity('');
+                setUnit('');
+                setExpirationDatesArr([]);
+            }
+            else toast.error('فشل في عملية الاضافة');
 
         } catch (error) {
 
-            console.log('error',error.message);
+            console.log('error', error.message);
             toast.error('فشل في عملية الاضافة');
             setIsLoading(false);
         }
-        
+
     }
 
     console.log('expirationDatesArr', expirationDatesArr);
@@ -198,6 +222,7 @@ export default function AddItemComponent() {
             <div>
                 <button
                     onClick={() => addNewCategory()}
+                    disabled={isLoading}
                     className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
             </div>
 

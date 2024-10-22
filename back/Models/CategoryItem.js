@@ -3,7 +3,7 @@ const mongoose=require('mongoose');
 
 const categoryItemsSchema=new mongoose.Schema({
     date:{
-        type:Date,
+        type:String,
         required:true
     },
     quantity:{
@@ -23,3 +23,5 @@ categoryItemsSchema.set('toJSON', {
   });
 
 module.exports=mongoose.model('CategoryItem',categoryItemsSchema);
+
+// module.exports = mongoose.model('Category', categoriesSchema);
