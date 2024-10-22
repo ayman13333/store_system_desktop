@@ -14,7 +14,7 @@ const connectDB = async () => {
 };
 
 
-mongoose.set('strictPopulate', false);
+// mongoose.set('strictPopulate', false);
 
 // new 
 // mongodb+srv://gardeniag434:gardeniag434@cluster0.qh72r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
