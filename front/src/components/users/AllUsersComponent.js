@@ -46,10 +46,16 @@ export default function AllUsersComponent() {
     console.log('users', users);
 
     const addOrEditUser = async () => {
+
+        if (type == 0) {
+            return toast.error("من فضلك اختر تصنيف الموظف");
+        }
+
         let data = {
             lastEmail: userID?.email,
             email,
             password,
+            type
             // mobile,
             // address
         };
@@ -59,6 +65,8 @@ export default function AllUsersComponent() {
         // edit
         if (isEdit) {
             console.log('eeeeeeeeeeeeeee');
+            console.log(data);
+            
             setIsLoading(true);
             await window?.electron?.editUser(data);
             const result = await window?.electron?.getAllUsers({
@@ -75,12 +83,7 @@ export default function AllUsersComponent() {
             setType(0);
         }
         else {
-            if (type == 0) {
-                return toast.error("من فضلك اختر تصنيف الموظف");
-            }
-            // ريسبشن
-            data.type = type;
-
+           
             setIsLoading(true);
 
             console.log('data',data);

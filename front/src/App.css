@@ -70,3 +70,10 @@
   display: block;
   text-align: start;
 }
+
+.sideBarSelect{
+  background:'#212529';
+  color:'white';
+  border:'none';
+  width:'100%'
+}

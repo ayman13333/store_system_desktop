@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { MdBedroomParent, MdLogout, MdModeEdit } from "react-icons/md";
 import { BsBackpack4Fill, BsFillFilePersonFill, BsFillPersonVcardFill, BsGlobeCentralSouthAsia } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
-import { Dropdown, DropdownButton, Nav } from 'react-bootstrap';
+import { Accordion, Dropdown, DropdownButton, Nav } from 'react-bootstrap';
 
 export default function SideBar() {
   const location = useLocation();
@@ -52,11 +52,30 @@ export default function SideBar() {
           <button className='link my-3 w-100 navButton' style={{border:'none',background:'none'}}>
             الفواتير
           </button>
-        </Nav.Item> */}
+        </Nav.Item>
+                     <FaFileInvoice /> 
 
-        <Dropdown>
+        */}
+        <Nav.Item>
+          <select 
+          onChange={(e)=>{
+            if(e.target.value=='0') return;
+            navigate(e.target.value);
+          }}
+          style={{background:'#212529',color:'white',border:'none',width:'100%'}}>
+            <option value={'0'}> 
+              الفواتير
+            </option>
+            <option value={'/supplyInvoice'}>
+            فاتورة توريد
+            </option>
+          </select>
+        </Nav.Item>
+
+      
+
+        {/* <Dropdown>
           <Dropdown.Toggle variant="black" id="dropdown-basic">
-            {/* <FaFileInvoice /> */}
             الفواتير
           </Dropdown.Toggle>
           <Dropdown.Menu>
@@ -69,7 +88,7 @@ export default function SideBar() {
             <Dropdown.Item href="#/action-2">Option 2</Dropdown.Item>
             <Dropdown.Item href="#/action-3">Option 3</Dropdown.Item>
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown> */}
 
 
 

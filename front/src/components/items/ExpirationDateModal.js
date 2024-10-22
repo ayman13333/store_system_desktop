@@ -42,6 +42,12 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
     }
 
     const editRow=()=>{
+
+        if(newExpirationDate=='' || newQuantity=='' || newQuantity=='0'){
+            // console.log('kkkkkkkkkkk');
+             return toast.error("من فضلك اكمل البيانات");
+         }
+         
         let newexpirationDatesArr=expirationDatesArr?.map(el=>{
             if(el?.key==rowToEdit?.key){
                 return {

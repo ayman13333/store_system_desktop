@@ -3,9 +3,17 @@ const mongoose = require('mongoose');
 const usersSchema=new mongoose.Schema({
    
     type:{
-        //  موظف (worker) - امين مخزن (storekeeper) - (supplier) مورد - (consumer) جهة صرف
+        //  موظف (worker)
+        // - امين مخزن (storekeeper) 
+       // - (supplier) مورد 
+       // - (consumer) جهة صرف 
+       // - (transfer) جهة تحويل
         type:String,
-        enum:['worker','storekeeper','admin','supplier','consumer']
+        enum:['worker','storekeeper','admin','supplier','consumer','transfer']
+    },
+    // رقم سجل ضريبي
+    taxNumber:{
+        type:String
     },
     fullName:{
         type:String

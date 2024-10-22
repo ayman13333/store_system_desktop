@@ -213,6 +213,7 @@ ipcMain.handle('getAllUsers', async (event, data) => {
       filter = [
         { type: 'consumer' },
         { type: 'supplier' },
+        { type: 'transfer' },
       ];
     }
     else{
@@ -269,6 +270,7 @@ ipcMain.handle('editUser', async (event, data) => {
     };
 
     if (data.password) updateObj.password = data.password;
+    if(data.type) updateObj.type=data.type;
 
     let user = await User.findByIdAndUpdate(data?._id, updateObj, {
       new: true
@@ -328,7 +330,7 @@ ipcMain.handle('getAllCategories',async(event,data)=>{
       }
     })
 
-    console.log('categories',categories);
+   // console.log('categories',categories);
 
     return{
       success:true,

@@ -19,6 +19,7 @@ export default function AllGuestsComponent() {
   const [typeOfSupply, setTypeOfSupply] = useState('');
   const [advantages, setAdvantages] = useState('');
   const [disAdvantages, setDisAdvantages] = useState('');
+  const[taxNumber,setTaxNumber]=useState('');
 
   const [isEdit, setIsEdit] = useState(false);
   useEffect(() => {
@@ -63,17 +64,34 @@ export default function AllGuestsComponent() {
   }
 
   const addOrEditUser = async () => {
-    if (type == 0) return toast.error("من فضلك   اختر نوع التوريد");
 
+    if (type == 0) return toast.error("من فضلك   اختر نوع التوريد");
     let data = {
-      fullName,
-      type,
-      mobile,
-      address,
-      advantages,
-      disAdvantages,
-      typeOfSupply
+      type
     };
+
+
+    if (type == 'consumer' || type == 'transfer') data.fullName = fullName;
+
+    else {
+      if(taxNumber=='') return toast.error("من فضلك   ادخل الرقم الضريبي");
+      if (fullName == '') return toast.error("من فضلك ادخل الاسم رباعي");
+      if (mobile == '') return toast.error("من فضلك   ادخل الهاتف");
+
+
+      data = {
+        fullName,
+        type,
+        mobile,
+        address,
+        advantages,
+        disAdvantages,
+        typeOfSupply,
+        taxNumber
+      };
+    }
+
+
 
     console.log('isEdit', isEdit);
 
@@ -104,6 +122,7 @@ export default function AllGuestsComponent() {
         setTypeOfSupply('');
         setAdvantages('');
         setDisAdvantages('');
+        setTaxNumber('');
 
         setIsEdit(false);
 
@@ -112,6 +131,7 @@ export default function AllGuestsComponent() {
     }
     else {
       console.log('adddddddddddddd');
+      console.log('data',data);
 
       // checks
       let result = await window?.electron?.addUser(data);
@@ -135,6 +155,7 @@ export default function AllGuestsComponent() {
         setTypeOfSupply('');
         setAdvantages('');
         setDisAdvantages('');
+        setTaxNumber('');
 
         setIsEdit(false);
       }
@@ -158,15 +179,17 @@ export default function AllGuestsComponent() {
       selector: row => {
         if (row.type == 'supplier') return 'مورد';
         if (row.type == 'consumer') return 'جهة صرف';
+        if (row.type == 'transfer') return 'جهة تحويل';
+
 
       },
       sortable: true,
     },
-    {
-      name: 'الهاتف',
-      selector: row => row.mobile,
-      sortable: true,
-    },
+    // {
+    //   name: 'الهاتف',
+    //   selector: row => row.mobile,
+    //   sortable: true,
+    // },
 
     {
       name: 'تعديل',
@@ -227,96 +250,107 @@ export default function AllGuestsComponent() {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                addOrEditUser();
-              }}>
-                <div className="form-group">
-                  <label className="my-2"> الاسم رباعي </label>
-                  <input
-                    value={fullName} onChange={(e) => setFullName(e.target.value)}
-                    required
-                    type="text" className="form-control" placeholder=" الاسم رباعي" />
-                </div>
+
+              <div className="form-group">
+                <label className="my-2"> النوع</label>
+                <select
+
+                  value={type} onChange={(e) => setType(e.target.value)}
+                  
+                  className="form-control">
+                  <option value={0}> من فضلك النوع </option>
+                  <option value={'consumer'}> جهة صرف </option>
+                  <option value={'supplier'}>  مورد </option>
+                  <option value={'transfer'}>  جهة تحويل </option>
+
+                </select>
+              </div>
+
+              {
+               (type == 'consumer' || type == 'transfer') ?
+                  <div className="form-group">
+                    <label className="my-2"> الاسم رباعي </label>
+                    <input
+                      value={fullName} onChange={(e) => setFullName(e.target.value)}
+                      type="text" className="form-control" placeholder=" الاسم رباعي" />
+                  </div>
+                  :
+                  type !='0'&&
+                  <>
+                  <div className="form-group">
+                      <label className="my-2"> الرقم الضريبي </label>
+                      <input
+                        value={taxNumber} onChange={(e) => setTaxNumber(e.target.value)}
+                        type="number" className="form-control" placeholder=" الرقم الضريبي" onWheel={handleWheel} />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> الاسم رباعي </label>
+                      <input
+                        value={fullName} onChange={(e) => setFullName(e.target.value)}
+                        type="text" className="form-control" placeholder=" الاسم رباعي" />
+                    </div>
+
+
+                    <div className="form-group">
+                      <label className="my-2"> رقم الموبايل </label>
+                      <input
+                        value={mobile} onChange={(e) => setMobile(e.target.value)}
+                        type="number" className="form-control" placeholder=" رقم الموبايل" onWheel={handleWheel} />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> العنوان </label>
+                      <input
+                        value={address} onChange={(e) => setAddress(e.target.value)}
+                        type="text" className="form-control" placeholder=" العنوان" />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> نوع التوريد </label>
+                      <input
+                        value={typeOfSupply} onChange={(e) => setTypeOfSupply(e.target.value)}
+                        type="text" className="form-control" placeholder=" نوع التوريد" />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> المميزات </label>
+
+                      <Form.Control as="textarea"
+                        value={advantages} onChange={(e) => setAdvantages(e.target.value)}
+                        placeholder=" المميزات"
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> العيوب </label>
+
+                      <Form.Control as="textarea"
+                        value={disAdvantages} onChange={(e) => setDisAdvantages(e.target.value)}
+                        placeholder=" المميزات"
+                        rows={3}
+                      />
+                    </div>
+                  </>
+              }
+
+              <div className="d-flex my-3 justify-content-between">
+                <Button
+                  onClick={() => addOrEditUser()}
+                  variant="primary" >
+                  حفظ
+                </Button>
+
+                <Button className="gap-2" variant="secondary" onClick={() => {
+                  setShowEditModal(false);
+                }}>
+                  اغلاق
+                </Button>
+              </div>
 
 
 
-                <div className="form-group">
-                  <label className="my-2"> النوع</label>
-                  <select
-
-                    value={type} onChange={(e) => setType(e.target.value)}
-                    required
-                    className="form-control">
-                    <option value={0}> من فضلك النوع </option>
-                    <option value={'consumer'}> جهة صرف </option>
-                    <option value={'supplier'}>  مورد </option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="my-2"> رقم الموبايل </label>
-                  <input
-                    value={mobile} onChange={(e) => setMobile(e.target.value)}
-                    required
-
-                    type="number" className="form-control" placeholder=" رقم الموبايل" onWheel={handleWheel} />
-                </div>
-
-                <div className="form-group">
-                  <label className="my-2"> العنوان </label>
-                  <input
-                    value={address} onChange={(e) => setAddress(e.target.value)}
-                    type="text" className="form-control" placeholder=" العنوان" />
-                </div>
-
-                <div className="form-group">
-                  <label className="my-2"> نوع التوريد </label>
-                  <input
-                    value={typeOfSupply} onChange={(e) => setTypeOfSupply(e.target.value)}
-                    type="text" className="form-control" placeholder=" نوع التوريد" />
-                </div>
-
-                <div className="form-group">
-                  <label className="my-2"> المميزات </label>
-                  {/* <input
-                    value={advantages}  onChange={(e) => setAdvantages(e.target.value)}
-                    type="text" className="form-control" placeholder=" المميزات" /> */}
-                  <Form.Control as="textarea"
-                    value={advantages} onChange={(e) => setAdvantages(e.target.value)}
-                    placeholder=" المميزات"
-                    rows={3}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="my-2"> العيوب </label>
-                  {/* <input
-                    value={disAdvantages}  onChange={(e) => setDisAdvantages(e.target.value)}
-                    type="text" className="form-control" placeholder=" العيوب" /> */}
-                  <Form.Control as="textarea"
-                    value={disAdvantages}  onChange={(e) => setDisAdvantages(e.target.value)}
-                    placeholder=" المميزات"
-                    rows={3}
-                  />
-                </div>
-
-
-
-                <div className="d-flex my-3 justify-content-between">
-                  <Button type="submit" variant="primary" >
-                    حفظ
-                  </Button>
-
-                  <Button className="gap-2" variant="secondary" onClick={() => {
-                    setShowEditModal(false);
-                  }}>
-                    اغلاق
-                  </Button>
-                </div>
-
-
-              </form>
             </Modal.Body>
           </Modal>
         </>
@@ -325,7 +359,10 @@ export default function AllGuestsComponent() {
       <h1> ادارة الموردين </h1>
 
       <div className="d-flex justify-content-between my-3">
-        <button onClick={() => setShowEditModal(true)} className='btn btn-success' > اضافة <BsPlus /> </button>
+        <button onClick={() =>{
+          setShowEditModal(true);
+          setIsEdit(false);
+        } } className='btn btn-success' > اضافة <BsPlus /> </button>
 
         <div className="d-flex gap-2">
           <input
