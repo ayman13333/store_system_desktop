@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import CustumNumberInput from "../../Utilities/CustumNumberInput";
-import FormatDate from "../../Utilities/FormatDate";
+import CustumNumberInput from "../../../Utilities/CustumNumberInput";
+import FormatDate from "../../../Utilities/FormatDate";
 import Select from 'react-select';
 import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
+import ExpirationDatesModal from "./ExpirationDatesModal";
 
 export default function SupplyInvoiceComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -18,10 +19,13 @@ export default function SupplyInvoiceComponent() {
     const [supplyDate, setSupplyDate] = useState('');
     // الاصناف
     const [categories, setCategories] = useState([]);
+    // كود الفاتورة
+    const[invoiceCode,setInvoiceCode]=useState('');
      // State to store the selected option
     const [selectedOptionArr, setSelectedOptionArr] = useState(null);
+
     const[showExpirationDatesModal,setShowExpirationDatesModal]=useState(false);
-    
+    const[categoryToShow,setCategoryToShow]=useState(null);
 
     useEffect(() => {
         const get = async () => {
@@ -64,8 +68,15 @@ export default function SupplyInvoiceComponent() {
         setSelectedOptionArr(option);
     };
 
+    const showSelectedCategory=(el)=>{
+        setCategoryToShow(el);
+        setShowExpirationDatesModal(true);
+    }
+
     return (
-        <div className='w-75 h-100'>
+        <div className='w-75 h-100' style={{
+            // overflowX:'hidden'
+        }}>
             <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
 
             <div className="form-group">
@@ -74,6 +85,16 @@ export default function SupplyInvoiceComponent() {
                     value={'توريد'}
                     disabled
                     type="text" className="form-control"
+                />
+            </div>
+
+            <div className="form-group">
+                <label className="my-2"> كود الفاتورة </label>
+                <input
+                    value={invoiceCode}
+                    onChange={(e)=>setInvoiceCode(e.target.value)}
+                    type="text" className="form-control"
+                    placeholder="كود الفاتورة"
                 />
             </div>
 
@@ -128,36 +149,44 @@ export default function SupplyInvoiceComponent() {
             }
 
             {
-                 <div className='d-flex justify-content-between'>
-                 <table className="table mt-3">
+                 <div className='d-flex justify-content-between' style={{
+                    overflow:'auto',
+                    width:'100%'
+                 }}>
+                 <table className="table mt-3" style={{
+                       width: "100%",
+                       borderCollapse: "collapse"
+                 }}>
                      <thead>
                          <tr>
-                             <th scope="col"> الاسم </th>
-                             <th scope="col">الكود  </th>
-                             <th scope="col"> تاريخ الصلاحية </th>
-                             <th scope="col"> سعر </th>
-                             <th scope="col"> كمية </th>
-                             <th scope="col"> وحدة </th>
-                             <th scope="col"> الاجمالي </th>
-                             <th scope="col">تحكم</th>
+                             <th className="text-center" scope="col"> الاسم </th>
+                             <th className="text-center" scope="col">الكود  </th>
+                             <th className="text-center" scope="col" style={{
+                                whiteSpace: "nowrap"
+                             }}> تاريخ الصلاحية </th>
+                             <th className="text-center" scope="col"> سعر </th>
+                             <th className="text-center" scope="col"> كمية </th>
+                             <th className="text-center" scope="col"> وحدة </th>
+                             <th className="text-center" scope="col"> الاجمالي </th>
+                             <th className="text-center" scope="col">تحكم</th>
                          </tr>
                      </thead>
                      <tbody>
                          {
                              selectedOptionArr?.map((el, i) =>
                                  <tr key={i}>
-                                     <td> {el?.name} </td>
-                                     <td >{el?.code}</td>
-                                     <td >
-                                        <button className="btn btn-success">
+                                     <td className="text-center"> {el?.name} </td>
+                                     <td className="text-center" >{el?.code}</td>
+                                     <td className="text-center" >
+                                        <button onClick={()=>showSelectedCategory(el)} className="btn btn-success">
                                             اضغط هنا
                                         </button>
                                      </td>
-                                     <td >{el?.unitPrice}</td>
-                                     <td >{el?.totalQuantity}</td>
-                                     <td >{el?.unit}</td>
-                                     <td>{Number(el?.unitPrice * el?.totalQuantity)} </td>
-                                     <td>
+                                     <td className="text-center" >{el?.unitPrice}</td>
+                                     <td className="text-center" >{el?.totalQuantity}</td>
+                                     <td className="text-center" >{el?.unit}</td>
+                                     <td className="text-center">{Number(el?.unitPrice * el?.totalQuantity)} </td>
+                                     <td className="text-center">
                                          <div className='d-flex h-25 gap-2'>
                                              {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
                                              <button  className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
@@ -166,6 +195,13 @@ export default function SupplyInvoiceComponent() {
                                      </td>
                                  </tr>
                              )
+                         }
+
+                         {
+                            showExpirationDatesModal&&<ExpirationDatesModal
+                                show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
+                                category={categoryToShow}  setCategory={setCategoryToShow}
+                            />
                          }
 
                      </tbody>

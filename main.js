@@ -330,9 +330,9 @@ ipcMain.handle('getAllCategories',async(event,data)=>{
         ...el,
         _id:el?._id?.toString(),
         expirationDatesArr:el?.expirationDatesArr?.map(item=>{
-          console.log('cccccccc');
-          console.log('item',item);
-          console.log('cccccccc');
+          // console.log('cccccccc');
+          // console.log('item',item);
+          // console.log('cccccccc');
           return{
             ...item,
             _id:item?._id?.toString()

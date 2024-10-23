@@ -1,4 +1,4 @@
-import SupplyInvoiceComponent from "../../components/invoices/SupplyInvoiceComponent";
+import SupplyInvoiceComponent from "../../components/invoices/supplyInvoice/SupplyInvoiceComponent";
 import SideBar from "../../Utilities/SideBar";
 
 export default function SupplyInvoicePage() {
