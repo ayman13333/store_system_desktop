@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import ExpirationDatesModal from "./ExpirationDatesModal";
+import AddQuantityModal from "./AddQuantityModal";
 
 export default function SupplyInvoiceComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +24,11 @@ export default function SupplyInvoiceComponent() {
     const[invoiceCode,setInvoiceCode]=useState('');
      // State to store the selected option
     const [selectedOptionArr, setSelectedOptionArr] = useState(null);
-
+    // تواريخ الصلاحية
     const[showExpirationDatesModal,setShowExpirationDatesModal]=useState(false);
     const[categoryToShow,setCategoryToShow]=useState(null);
+    // اضافة كمية
+    const[showAddQuantityModal,setShowAddQuantityModal]=useState(false);
 
     useEffect(() => {
         const get = async () => {
@@ -68,10 +71,19 @@ export default function SupplyInvoiceComponent() {
         setSelectedOptionArr(option);
     };
 
+    // تواريخ الصلاحية
     const showSelectedCategory=(el)=>{
         setCategoryToShow(el);
         setShowExpirationDatesModal(true);
     }
+
+    // اضافة كمية وسعر
+    const showQuantity=(el)=>{
+        setCategoryToShow(el);
+        setShowAddQuantityModal(true);
+    }
+
+
 
     return (
         <div className='w-75 h-100' style={{
@@ -168,14 +180,14 @@ export default function SupplyInvoiceComponent() {
                              <th className="text-center" scope="col"> كمية </th>
                              <th className="text-center" scope="col"> وحدة </th>
                              <th className="text-center" scope="col"> الاجمالي </th>
-                             <th className="text-center" scope="col">تحكم</th>
+                             <th className="text-center mx-auto" scope="col">تحكم</th>
                          </tr>
                      </thead>
                      <tbody>
                          {
                              selectedOptionArr?.map((el, i) =>
                                  <tr key={i}>
-                                     <td className="text-center"> {el?.name} </td>
+                                     <td className="text-center">  {el?.name}   </td>
                                      <td className="text-center" >{el?.code}</td>
                                      <td className="text-center" >
                                         <button onClick={()=>showSelectedCategory(el)} className="btn btn-success">
@@ -189,7 +201,10 @@ export default function SupplyInvoiceComponent() {
                                      <td className="text-center">
                                          <div className='d-flex h-25 gap-2'>
                                              {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
-                                             <button  className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
+                                             <button
+                                             onClick={()=>showQuantity(el)}  
+                                             className='btn btn-warning h-25 my-auto mx-auto'
+                                             > <CiEdit height={'5px'} /> </button>
 
                                          </div>
                                      </td>
@@ -201,6 +216,15 @@ export default function SupplyInvoiceComponent() {
                             showExpirationDatesModal&&<ExpirationDatesModal
                                 show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                 category={categoryToShow}  setCategory={setCategoryToShow}
+                            />
+                         }
+
+                         {
+                            showAddQuantityModal&&<AddQuantityModal
+                            show={showAddQuantityModal} setShow={setShowAddQuantityModal}
+                            category={categoryToShow}  setCategory={setCategoryToShow}
+                            categories={categories} setCategories={setCategories}
+                            setSelectedOptionArr={setSelectedOptionArr}
                             />
                          }
 
