@@ -49,7 +49,9 @@ export default function AllItemsComponent() {
             setCategoryToShow(row);
             setShowExpirationDatesModal(true);
         }}
-        className='btn btn-secondary' > اضغط هنا  <CiEdit /> </button>,
+        className='btn btn-secondary' style={{
+          whiteSpace:'nowrap'
+        }} > اضغط هنا  <CiEdit /> </button>,
       sortable: true
     },
     { name: 'الكمية', selector: row => row.totalQuantity, sortable: true },
@@ -59,7 +61,11 @@ export default function AllItemsComponent() {
       name: 'تعديل',
       cell: (row) => <button className='btn btn-warning' onClick={() => {
          
-      }}> تعديل  <CiEdit /> </button>
+      }}
+      style={{
+        whiteSpace:'nowrap'
+      }}
+      > تعديل  <CiEdit /> </button>
   }
 
   ];
@@ -112,7 +118,7 @@ const customStyles = {
       }} > اضافة <BsPlus /> </button>
 
       <AlarmComponent />
-      <SearchItemsComponent />
+      <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} />
 
      {
       categories?.length >0 && <DataTable
