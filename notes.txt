@@ -1,9 +1,11 @@
 npm run start:watch
 
 
+gmail: gardeniag434@gmail.com
+pass: 123456aA@#zxc
 
 
-admin pass: 0000001
+admin pass gardenia: 0000001
 *****************************
 npm run electron:build
 

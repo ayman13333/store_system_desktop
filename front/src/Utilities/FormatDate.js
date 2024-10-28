@@ -13,7 +13,7 @@ export default function FormatDate(date) {
     
     // Format the date as DD/MM/YYYY 
     let formattedDate = `${year}-${month}-${day}`;
-    console.log("Formatted date:", formattedDate);
+    // console.log("Formatted date:", formattedDate);
     return formattedDate;
 }
 // 
