@@ -36,22 +36,68 @@ export default function AllItemsComponent() {
     get();
   }, []);
 
+  // {
+  //   name: 'Price',
+  //   selector: row => row.price,
+  //   sortable: true,
+  //   cell: row => (
+  //     <div style={{ backgroundColor: '#fff3e0', padding: '10px' }}>
+  //       {row.price}
+  //     </div>
+  //   ),
+  // },
 
   const columns = [
     { name: 'الكود', selector: row => row.code, sortable: true },
     { name: 'الاسم', selector: row => row.name, sortable: true },
-    { name: 'الحد الحرج', selector: row => row.criticalValue, sortable: true },
+    {
+      name: 'الحد الحرج',
+      selector: row => row.criticalValue,
+      sortable: true,
+      cell: row => (
+        <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', width: '100%', textAlign:'start' }}>
+          {row.criticalValue}
+        </div>
+      )
+    },
     { name: 'الوحدة', selector: row => row.unit, sortable: true },
     {
       name: 'تاريخ الصلاحية',
-      cell: (row) => <button
-        onClick={() => {
-            setCategoryToShow(row);
-            setShowExpirationDatesModal(true);
-        }}
-        className='btn btn-secondary' style={{
-          whiteSpace:'nowrap'
-        }} > اضغط هنا  <CiEdit /> </button>,
+      cell: (row) => {
+        const currentDate=new Date();
+        let isYellow=false;
+        let isRed=false;
+        let yellowCount=0;
+
+        row?.expirationDatesArr?.map(el=>{
+          const itemDate = new Date(el?.date);
+          if(currentDate.getTime() > itemDate.getTime() ){
+            isYellow=true;
+            yellowCount++;
+          } 
+        });
+
+        if(yellowCount== row?.expirationDatesArr?.length) isRed=true;
+
+        let color='';
+        if(isRed==true) color=red;
+        else{
+          if(isYellow) color=yellow;
+        }
+        return (
+          <div style={{ backgroundColor: color, width: '100%' }} >
+            <button
+              onClick={() => {
+                setCategoryToShow(row);
+                setShowExpirationDatesModal(true);
+              }}
+              className='btn btn-secondary' style={{
+                whiteSpace: 'nowrap'
+              }} > اضغط هنا  </button>
+          </div>
+        )
+      }
+      ,
       sortable: true
     },
     { name: 'الكمية', selector: row => row.totalQuantity, sortable: true },
@@ -60,13 +106,13 @@ export default function AllItemsComponent() {
     {
       name: 'تعديل',
       cell: (row) => <button className='btn btn-warning' onClick={() => {
-         
+
       }}
-      style={{
-        whiteSpace:'nowrap'
-      }}
+        style={{
+          whiteSpace: 'nowrap'
+        }}
       > تعديل  <CiEdit /> </button>
-  }
+    }
 
   ];
 
@@ -75,38 +121,45 @@ export default function AllItemsComponent() {
       when: row => true, // Apply to all rows
       style: {
         fontWeight: 'bold',
-        fontSize:'large'
-      },
-    },
-    {
-      when: row => row.criticalValue === row.totalQuantity ,
-      style: {
-        backgroundColor: orange, // Light blue for Admin
-        fontWeight: 'bold',
-        fontSize:'large'
+        fontSize: 'large',
+        textAlign: 'center'
       },
     },
     // {
-    //   when: row => row._id === "67179c2d08c1baf43d1ce7c7",
+    //   when: row => row.criticalValue === row.totalQuantity ,
     //   style: {
-    //     backgroundColor: yellow, // Light red for User
+    //     backgroundColor: orange, // Light blue for Admin
     //     fontWeight: 'bold',
     //     fontSize:'large'
     //   },
     // },
 
-  
+
+
   ];
 
   // Header styling to make header text bold
-const customStyles = {
-  headCells: {
-    style: {
-      fontWeight: 'bold',
-      fontSize:'larger'
-    },
-  },
-};
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: 'bold',
+        fontSize: 'larger',
+        // textAlign: 'start'
+      },
+    }
+  };
+
+  // const customStyles = {
+  //   cells: [
+  //     {
+  //       style: (row, rowIndex, columnIndex) => {
+  //         if (columnIndex === 0) return { backgroundColor: '#e0f7fa' }; // Light blue for first column
+  //         if (columnIndex === 1) return { backgroundColor: '#ffebee' }; // Light red for second column
+  //         if (columnIndex === 2) return { backgroundColor: '#fff3e0' }; // Light orange for third column
+  //       }
+  //     }
+  //   ],
+  // };
 
 
   return (
@@ -120,17 +173,17 @@ const customStyles = {
       <AlarmComponent />
       <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} />
 
-     {
-      categories?.length >0 && <DataTable
-      columns={columns}
-      data={categories}
-      filter={true}
-      filterPlaceholder={'ابحث هنا'}
-      conditionalRowStyles={conditionalRowStyles}
-      customStyles={customStyles}
-      pagination
-    />
-     } 
+      {
+        categories?.length > 0 && <DataTable
+          columns={columns}
+          data={categories}
+          filter={true}
+          filterPlaceholder={'ابحث هنا'}
+          conditionalRowStyles={conditionalRowStyles}
+          customStyles={customStyles}
+          pagination
+        />
+      }
 
       {
         showExpirationDatesModal && <ExpirationDatesModal

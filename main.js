@@ -322,6 +322,7 @@ ipcMain.handle('getAllCategories',async(event,data)=>{
   try {
     let categories=await Category.find()
     .populate('expirationDatesArr')
+    .sort({createdAt:-1})
     .lean();
 
     // convert objectid to string
