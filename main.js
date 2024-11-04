@@ -101,7 +101,7 @@ async function createWindow() {
   mainWindow.loadURL('http://localhost:3000');
 
   // production
-  // const startUrl = path.join(__dirname,'my-app','build','index.html');
+  // const startUrl = path.join(__dirname,'front','build','index.html');
   //  mainWindow.loadFile(startUrl);
 }
 
