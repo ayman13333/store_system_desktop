@@ -6,17 +6,33 @@ import FormatDate from '../../Utilities/FormatDate';
 import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 
 
 export default function AddItemComponent() {
+
+    const location=useLocation();
+
     const [isLoading, setIsLoading] = useState(false);
-    const [code, setCode] = useState('');
-    const [name, setName] = useState('');
-    const [criticalValue, setCriticalValue] = useState('');
-    const [unitPrice, setUnitPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [unit, setUnit] = useState('');
+    const [code, setCode] = useState(
+     ()=> location?.state?._id ? location?.state?.code  : ''
+    );
+    const [name, setName] = useState(
+        ()=> location?.state?._id ? location?.state?.name  : ''
+    );
+    const [criticalValue, setCriticalValue] = useState(
+        ()=> location?.state?._id ? location?.state?.criticalValue  : ''
+    );
+    const [unitPrice, setUnitPrice] = useState(
+        ()=> location?.state?._id ? location?.state?.unitPrice  : ''
+    );
+    const [quantity, setQuantity] = useState(
+        ()=> location?.state?._id ? location?.state?.totalQuantity  : ''
+    );
+    const [unit, setUnit] = useState(
+        ()=> location?.state?._id ? location?.state?.unit  : ''
+    );
 
     const [expirationDatesArr, setExpirationDatesArr] = useState([]);
     const [showExpirationDateModal, setShowExpirationDateModal] = useState(false);
@@ -97,12 +113,14 @@ export default function AddItemComponent() {
 
     }
 
+    console.log('location.state',location.state);
+
     console.log('expirationDatesArr', expirationDatesArr);
 
 
     return (
         <div className='w-75 h-100'>
-            <h1>  اضافة صنف   {isLoading && <Spinner />} </h1>
+            <h1> {location?.state?._id ? 'تعديل صنف' :'اضافة صنف'}     {isLoading && <Spinner />} </h1>
 
             <div className="form-group">
                 <label className="my-2"> الكود </label>
@@ -220,10 +238,19 @@ export default function AddItemComponent() {
 
 
             <div>
-                <button
+                {
+                    location?.state?._id  ?
+                    <button
+                   // onClick={() => addNewCategory()}
+                    disabled={isLoading}
+                    className='btn btn-warning h-50 my-auto'> تعديل  صنف </button>
+                    :
+                    <button
                     onClick={() => addNewCategory()}
                     disabled={isLoading}
                     className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
+                }
+                
             </div>
 
             {isLoading && <Spinner />}

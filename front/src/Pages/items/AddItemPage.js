@@ -7,7 +7,6 @@ export default function AddItemPage() {
         <div className='parent'>
             <SideBar />
             <div className="p-4 w-100">
-
                 <AddItemComponent />
             </div>
         </div>

@@ -30,6 +30,8 @@ function App() {
       <Route path='/allitems' element={<AllItemsPage />} />
       {/* اضافة صنف */}
       <Route path='/allitems/add' element={<AddItemPage />} />
+    {/* تعديل صنف */}
+      <Route path='/allitems/edit' element={<AddItemPage />} />
 
       {/* فاتورة توريد */}
       <Route path='/supplyInvoice' element={<SupplyInvoicePage />} />

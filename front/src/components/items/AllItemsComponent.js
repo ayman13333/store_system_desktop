@@ -36,16 +36,7 @@ export default function AllItemsComponent() {
     get();
   }, []);
 
-  // {
-  //   name: 'Price',
-  //   selector: row => row.price,
-  //   sortable: true,
-  //   cell: row => (
-  //     <div style={{ backgroundColor: '#fff3e0', padding: '10px' }}>
-  //       {row.price}
-  //     </div>
-  //   ),
-  // },
+  
 
   const columns = [
     { name: 'الكود', selector: row => row.code, sortable: true },
@@ -107,7 +98,10 @@ export default function AllItemsComponent() {
     {
       name: 'تعديل',
       cell: (row) => <button className='btn btn-warning' onClick={() => {
-
+        //  console.log('row',row);
+          navigate('/allitems/edit',{
+            state:row
+          });
       }}
         style={{
           whiteSpace: 'nowrap'

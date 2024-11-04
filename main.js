@@ -4,10 +4,7 @@
  const connectDB = require('./back/db'); // Import the database connection
  const _ = require('lodash');
  const mongoose = require('mongoose');
-
-
-
- const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const User = require('./back/Models/User');
 const Category = require('./back/Models/Category');
 const CategoryItem = require('./back/Models/CategoryItem');
@@ -21,63 +18,7 @@ const CategoryItem = require('./back/Models/CategoryItem');
 // let requestQueue = Promise.resolve();
 
 
-// // add book
-// ipcMain.handle('add-book', async (event, data) => {
-//   //queue.add()
-//   // const queue=createQueue();
-//   requestQueue = requestQueue.then(async () => {
-//     try {
 
-//       if (data.type == '0') return new Notification({ title: 'من فضلك اختر تصنيف العميل' }).show();
-
-//       let serialNumber;
-//       //  serialNumber = await Book.countDocuments();
-
-//       //  serialNumber=serialNumber+1;
-
-//       let lastBook = await Book.findOne().sort({ createdAt: -1 });
-
-//       console.log('lastBook', lastBook);
-//       console.log('lastBook.serialNumber', lastBook.serialNumber);
-//       // return;
-
-//       if (lastBook == null) serialNumber = 1000;
-//       else serialNumber = Number(lastBook.serialNumber) + 1;
-
-//       //console.log('ggggggggggggggggggggggggggg');
-//       let newBook = new Book({ ...data, serialNumber });
-
-//       await newBook.save();
-
-//       await newBook.populate('userID roomID');
-
-//       console.log('book saved:', newBook);
-
-//       let to = new Date(newBook?.to);
-//       to = to.setDate(to.getDate() + 1);
-//       to = new Date(to);
-
-//       newBook = {
-//         ...newBook.toObject(),
-//         to
-//       }
-
-//       new Notification({ title: 'تم الحجز بنجاح' }).show();
-
-//       return {
-//         success: true, newBook
-//       };
-//     } catch (error) {
-//       // new Notification({ title: 'حدث خطأ في الاتصال بالانترنت' }).show();
-
-//       new Notification({ title: 'فشل في الحجز' }).show();
-//       return { success: false, error: error.message };
-//     }
-//   });
-
-//   return requestQueue; // Return the queued promise
-
-// });
 
 
 
@@ -427,6 +368,22 @@ ipcMain.handle('addCategory',async(event,data)=>{
 
   }
 })
+
+// edit category
+ipcMain.handle('editCategory',async(event,data)=>{
+  try {
+    const id = data?._id;
+    // data=data.delete('_id');
+    delete data['_id'];
+
+    //1) امسح كل ال category items بتوع الصنف 
+
+    //2) save new category items
+    
+  } catch (error) {
+    new Notification({ title: 'فشل في عملية التعديل' }).show();
+  }
+});
 
 
 
