@@ -5,55 +5,72 @@ import { toast } from "react-toastify";
 import removeTimeFromDate from "../../../Utilities/removeTimeFromDate";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
 
-export default function AddQuantityModal({ show, setShow , category , setCategory,categories, setCategories , setSelectedOptionArr }) {
-    const[newExpirationDate,setNewExpirationDate]=useState(()=>
-      category?.newExpirationDate ?  FormatDateForHTML(category?.newExpirationDate) :'');
-    const [newQuantity, setNewQuantity] = useState(()=>category?.totalQuantity);
-    const[price,setPrice]=useState(()=>category?.unitPrice);
+export default function AddQuantityModal({ show, setShow, category, setCategory, categories, setCategories, setSelectedOptionArr, type }) {
+    const [newExpirationDate, setNewExpirationDate] = useState(() =>
+        (category?.newExpirationDate && category?.expirationDatesArr?.length > 0) ? FormatDateForHTML(category?.newExpirationDate) : '');
+    const [newQuantity, setNewQuantity] = useState(() =>
+        (category?.totalQuantity && category?.expirationDatesArr?.length > 0) ? category?.totalQuantity : ''
+    );
+    const [price, setPrice] = useState(() =>
+        (category?.unitPrice && category?.expirationDatesArr?.length > 0) ? category?.unitPrice : ''
+    );
 
-    const addQuantity=()=>{
-        if(newExpirationDate=='' || newQuantity=='' || newQuantity=='0' || price=='' || price=='0'){
-            // console.log('kkkkkkkkkkk');
-             return toast.error("من فضلك اكمل البيانات");
-         }
-            
-
-            // category.unitPrice= Number(price);
-            // category.totalQuantity=Number(newQuantity);
-
-            let newCategory={
-                ...category,
-                unitPrice: Number(price),
-                totalQuantity:(Number(category?.totalQuantity)+Number(newQuantity)),
-                newExpirationDate:removeTimeFromDate(newExpirationDate),
-                expirationDatesArr:[
-                    ...category.expirationDatesArr,
-                    {
-                        quantity: Number(newQuantity),
-                        date:removeTimeFromDate(newExpirationDate)
-                    }
-                ]
-            };
+    const addQuantity = () => {
+        if (type == 'payment') {
+            if (newQuantity == '' || newQuantity == '0') {
+                // console.log('kkkkkkkkkkk');
+                return toast.error("من فضلك اكمل البيانات");
+            }
+        }
+        else {
+            if (newExpirationDate == '' || newQuantity == '' || newQuantity == '0' || price == '' || price == '0') {
+                // console.log('kkkkkkkkkkk');
+                return toast.error("من فضلك اكمل البيانات");
+            }
+        }
 
 
-            setCategory(newCategory);
 
-            console.log("newCategory",newCategory);
+        // category.unitPrice= Number(price);
+        // category.totalQuantity=Number(newQuantity);
 
-            // let newCategories= categories?.map(el=> el?._id==newCategory?._id  ? newCategory : el);
+        let date=''
+        if(newExpirationDate=='') date=new Date();
+        else date= newExpirationDate;
 
-            // console.log('newCategories',newCategories);
+        let newCategory = {
+            ...category,
+            unitPrice: Number(price),
+            totalQuantity: (Number(category?.totalQuantity) + Number(newQuantity)),
+            newExpirationDate: removeTimeFromDate(date),
+            expirationDatesArr: [
+                ...category.expirationDatesArr,
+                {
+                    quantity: Number(newQuantity),
+                    date: removeTimeFromDate(date)
+                }
+            ]
+        };
 
-            // console.log('newCategory',newCategory);
 
-          // setCategories(...newCategories);
-           setSelectedOptionArr(prev=> prev?.map(el=>el?._id==newCategory?._id ? newCategory : el));
+        setCategory(newCategory);
 
-            setShow(false);
-           // category.totalQuantity=Number(price * el?.totalQuantity)
+        console.log("newCategory", newCategory);
+
+        // let newCategories= categories?.map(el=> el?._id==newCategory?._id  ? newCategory : el);
+
+        // console.log('newCategories',newCategories);
+
+        // console.log('newCategory',newCategory);
+
+        // setCategories(...newCategories);
+        setSelectedOptionArr(prev => prev?.map(el => el?._id == newCategory?._id ? newCategory : el));
+
+        setShow(false);
+        // category.totalQuantity=Number(price * el?.totalQuantity)
     }
 
-   
+
     // "_id": "6717a3f508c1baf43d1ce7d8",
     // "code": "iio",
     // "name": "aaa",
@@ -86,68 +103,73 @@ export default function AddQuantityModal({ show, setShow , category , setCategor
     // "value": "6717a3f508c1baf43d1ce7d8"
 
 
-  return (
-    <Modal show={show} onHide={() =>{
-        setCategory(null);
-        setShow(false);
-    } }>
-        <Modal.Header>
-            <Modal.Title style={{
-                whiteSpace: "wrap"
-            }}>
-                 {`الصنف : ${category?.name}`}
-                {/* {isEdit ? ' تعديل موظف' : 'اضافة موظف'} */}
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+    return (
+        <Modal show={show} onHide={() => {
+            setCategory(null);
+            setShow(false);
+        }}>
+            <Modal.Header>
+                <Modal.Title style={{
+                    whiteSpace: "wrap"
+                }}>
+                    {`الصنف : ${category?.name}`}
+                    {/* {isEdit ? ' تعديل موظف' : 'اضافة موظف'} */}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
 
-        <div className="form-group">
-                    <label className="my-2"> تاريخ الصلاحية </label>
-                    <input
-                         value={newExpirationDate} onChange={(e) => setNewExpirationDate(e.target.value)}
-                        required
-                        type="date" className="form-control" placeholder=" تاريخ الصلاحية"
-                    // onKeyPress={onKeyEnter}
+                {
+                    type != 'payment' && <div className="form-group">
+                        <label className="my-2"> تاريخ الصلاحية </label>
+                        <input
+                            value={newExpirationDate} onChange={(e) => setNewExpirationDate(e.target.value)}
+                            required
+                            type="date" className="form-control" placeholder=" تاريخ الصلاحية"
+                        // onKeyPress={onKeyEnter}
 
-                    />
-                </div>
+                        />
+                    </div>
+                }
 
                 <div className="form-group">
                     <label className="my-2"> الكمية </label>
                     <CustumNumberInput
-                    value={newQuantity} setValue={setNewQuantity}
-                    placeholder={'الكمية'}
-                    
-                />
+                        value={newQuantity} setValue={setNewQuantity}
+                        placeholder={'الكمية'}
+
+                    />
                 </div>
 
-                <div className="form-group">
-                    <label className="my-2"> السعر </label>
-                    <CustumNumberInput
-                    value={price} setValue={setPrice}
-                    placeholder={'السعر'}
-                    
-                />
+                {
+                    type != 'payment' && <div className="form-group">
+                        <label className="my-2"> السعر </label>
+                        <CustumNumberInput
+                            value={price} setValue={setPrice}
+                            placeholder={'السعر'}
+
+                        />
+                    </div>
+                }
+
+
+
+                <div className="d-flex my-3 justify-content-between">
+
+                    <Button onClick={() => addQuantity()} variant="primary" >
+                        حفظ
+                    </Button>
+
+                    <Button className="gap-2" variant="secondary" onClick={() => {
+                        setShow(false);
+                        setCategory(null);
+
+                    }}>
+                        اغلاق
+                    </Button>
                 </div>
 
-           
-            <div className="d-flex my-3 justify-content-between">
+            </Modal.Body>
 
-                <Button onClick={() => addQuantity()} variant="primary" >
-                    حفظ
-                </Button>
-
-                <Button className="gap-2" variant="secondary" onClick={() => {
-                    setShow(false);
-                    setCategory(null);
-
-                }}>
-                    اغلاق
-                </Button>
-            </div>
-
-        </Modal.Body>
-
-    </Modal>
-  )
+        </Modal>
+    )
 }

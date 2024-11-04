@@ -8,7 +8,6 @@ export default function SupplyInvoicePage() {
             <div className="p-4 w-100">
                 <SupplyInvoiceComponent />
             </div>
-
         </div>
     )
 }

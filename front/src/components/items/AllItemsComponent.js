@@ -92,7 +92,8 @@ export default function AllItemsComponent() {
                 setShowExpirationDatesModal(true);
               }}
               className='btn btn-secondary' style={{
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                width:'80%'
               }} > اضغط هنا  </button>
           </div>
         )

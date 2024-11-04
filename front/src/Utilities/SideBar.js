@@ -69,6 +69,9 @@ export default function SideBar() {
             <option value={'/supplyInvoice'}>
             فاتورة توريد
             </option>
+            <option value={'/paymentInvoice'}>
+            فاتورة صرف
+            </option>
           </select>
         </Nav.Item>
 

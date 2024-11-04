@@ -11,6 +11,7 @@ import AllUsersPage from './Pages/users/AllUsersPage';
 import GuestsPage from './Pages/users/GuestsPage';
 import { ToastContainer } from 'react-toastify';
 import SupplyInvoicePage from './Pages/invoices/SupplyInvoicePage';
+import PaymentInvoicePage from './Pages/invoices/PaymentInvoicePage';
 
 
 
@@ -33,6 +34,8 @@ function App() {
       {/* فاتورة توريد */}
       <Route path='/supplyInvoice' element={<SupplyInvoicePage />} />
 
+      {/* فاتورة صرف */}
+      <Route path='/paymentInvoice' element={<PaymentInvoicePage />} />
       </Routes>
      </HashRouter>
 

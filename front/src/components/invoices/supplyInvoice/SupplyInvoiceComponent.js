@@ -48,7 +48,9 @@ export default function SupplyInvoiceComponent() {
                 return{
                     ...el,
                     label:el?.name,
-                    value:el?._id
+                    value:el?._id,
+                    totalQuantity:0,
+                    expirationDatesArr:[]
                 }
             })
             setCategories(categoriesForSelect);
