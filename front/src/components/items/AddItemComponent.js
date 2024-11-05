@@ -12,29 +12,47 @@ import { useLocation } from 'react-router-dom';
 
 export default function AddItemComponent() {
 
-    const location=useLocation();
+    const location = useLocation();
 
     const [isLoading, setIsLoading] = useState(false);
     const [code, setCode] = useState(
-     ()=> location?.state?._id ? location?.state?.code  : ''
+        () => location?.state?._id ? location?.state?.code : ''
     );
     const [name, setName] = useState(
-        ()=> location?.state?._id ? location?.state?.name  : ''
+        () => location?.state?._id ? location?.state?.name : ''
     );
     const [criticalValue, setCriticalValue] = useState(
-        ()=> location?.state?._id ? location?.state?.criticalValue  : ''
+        () => location?.state?._id ? location?.state?.criticalValue : ''
     );
     const [unitPrice, setUnitPrice] = useState(
-        ()=> location?.state?._id ? location?.state?.unitPrice  : ''
+        () => location?.state?._id ? location?.state?.unitPrice : ''
     );
     const [quantity, setQuantity] = useState(
-        ()=> location?.state?._id ? location?.state?.totalQuantity  : ''
+        () => location?.state?._id ? location?.state?.totalQuantity : ''
     );
     const [unit, setUnit] = useState(
-        ()=> location?.state?._id ? location?.state?.unit  : ''
+        () => location?.state?._id ? location?.state?.unit : ''
     );
 
-    const [expirationDatesArr, setExpirationDatesArr] = useState([]);
+    const [expirationDatesArr, setExpirationDatesArr] = useState(
+        ()=>{
+            if(location?.state?._id){
+                let expirationDatesWithKey=location?.state?.expirationDatesArr?.map((el,i)=>{
+                    return{
+                        ...el,
+                        key:i
+                    }
+                });
+
+                return expirationDatesWithKey;
+            }
+            else{
+                return [];
+            }
+        }
+       
+      //  () => location?.state?._id ? location?.state?.expirationDatesArr : []
+    );
     const [showExpirationDateModal, setShowExpirationDateModal] = useState(false);
     const [rowToEdit, setRowToEdit] = useState(null);
 
@@ -113,14 +131,79 @@ export default function AddItemComponent() {
 
     }
 
-    console.log('location.state',location.state);
+    const editCategory=async()=>{
+        try {
+            if (code == '') return toast.error('يجب ادخال الكود');
+            if (name == '') return toast.error('يجب ادخال اسم الصنف');
+            if (criticalValue == '' || criticalValue == '0') return toast.error('يجب ادخال الحد الحرج');
+            if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
+            if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
+            if (unit == '') return toast.error('يجب ادخال الوحدة');
+            if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
+
+
+            // نقص 5 ايام من التواريخ
+            let expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
+                // let date=new Date(el.date);
+                // صنف موجود قبل كدة مش هنقص منه تاني
+                if(el?._id) return el;
+
+                let date = el?.date?.setDate(el?.date?.getDate() - 5);
+                date = new Date(date);
+
+                return {
+                    ...el,
+                    date
+                }
+            });
+
+            console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
+
+           //  return;
+
+            const data = {
+                code,
+                name,
+                criticalValue,
+                quantity,
+                unit,
+                unitPrice,
+                expirationDatesArr,
+                lastCode:location?.state?.code
+            };
+
+            setIsLoading(true);
+            const result = await window?.electron?.editCategory(data);
+            setIsLoading(false);
+
+            console.log('result',result);
+
+            if (result.success == true) {
+                toast.success('تم تعديل الصنف');
+                setCode('');
+                setName('');
+                setCriticalValue('');
+                setUnitPrice('');
+                setQuantity('');
+                setUnit('');
+                setExpirationDatesArr([]);
+            }
+            else toast.error('فشل في عملية التعديل');
+        } catch (error) {
+            console.log('error', error.message);
+            toast.error('فشل في عملية التعديل');
+            setIsLoading(false);
+        }
+    }
+
+    console.log('location.state', location.state);
 
     console.log('expirationDatesArr', expirationDatesArr);
 
 
     return (
         <div className='w-75 h-100'>
-            <h1> {location?.state?._id ? 'تعديل صنف' :'اضافة صنف'}     {isLoading && <Spinner />} </h1>
+            <h1> {location?.state?._id ? 'تعديل صنف' : 'اضافة صنف'}     {isLoading && <Spinner />} </h1>
 
             <div className="form-group">
                 <label className="my-2"> الكود </label>
@@ -205,13 +288,12 @@ export default function AddItemComponent() {
                             {
                                 expirationDatesArr?.map((el, i) =>
                                     <tr key={i}>
-                                        <td>{FormatDate(el?.date)} </td>
+                                        <td>{FormatDate(new Date(el?.date))} </td>
                                         <td >{el?.quantity}</td>
                                         <td>
                                             <div className='d-flex h-25 gap-2'>
                                                 <button onClick={() => deleteRow(el)} className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button>
-                                                <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
-
+                                                {/* <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button> */}
                                             </div>
                                         </td>
                                     </tr>
@@ -237,20 +319,24 @@ export default function AddItemComponent() {
             </div>
 
 
-            <div>
+            <div className='d-flex justify-content-between'>
                 {
-                    location?.state?._id  ?
-                    <button
-                   // onClick={() => addNewCategory()}
-                    disabled={isLoading}
-                    className='btn btn-warning h-50 my-auto'> تعديل  صنف </button>
-                    :
-                    <button
-                    onClick={() => addNewCategory()}
-                    disabled={isLoading}
-                    className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
+                    location?.state?._id ?
+                        <button
+                            onClick={() => editCategory()}
+                            disabled={isLoading}
+                            className='btn btn-warning h-50 my-auto'> تعديل  صنف </button>
+                        :
+                        <button
+                            onClick={() => addNewCategory()}
+                            disabled={isLoading}
+                            className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
                 }
-                
+
+                <button
+                    onClick={() => window.history.back()}
+                    className='btn btn-primary h-50 my-auto'> رجوع </button>
+
             </div>
 
             {isLoading && <Spinner />}

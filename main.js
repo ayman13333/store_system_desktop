@@ -372,13 +372,88 @@ ipcMain.handle('addCategory',async(event,data)=>{
 // edit category
 ipcMain.handle('editCategory',async(event,data)=>{
   try {
-    const id = data?._id;
-    // data=data.delete('_id');
-    delete data['_id'];
+    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity,lastCode}=data;
+
+    if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+
+   // const oldCategory=await Category.findById(_id);
+
+    if (code !== lastCode) {
+      // الاول شوف الكود ده دخل قبل كدة ولا لا
+    const foundCode = await Category.findOne({ code });
+    if (foundCode !== null) {
+      new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
+      return;
+    }
+    }
+
+   // console.log('oldCategory',oldCategory);
+
+    const oldCategory = await Category.findOne({ code });
+    let oldCategoryItems= oldCategory?.expirationDatesArr;
 
     //1) امسح كل ال category items بتوع الصنف 
+  const result= await CategoryItem.deleteMany({ _id: { $in: oldCategoryItems } });
 
+    console.log('result',result);
     //2) save new category items
+
+     // 1) ضيف تواريخ الصلاحية في ال model
+     let totalQuantity=0;
+     let expirationDatesArrIDS=[];
+
+    await Promise.all(
+      expirationDatesArr?.map(async(el)=>{
+       // console.log("el",el);
+        totalQuantity+= Number(el?.quantity);
+        let newCategoryItem = new CategoryItem(el);
+        await newCategoryItem.save();
+        
+        newCategoryItem=newCategoryItem.toJSON();
+
+        
+        expirationDatesArrIDS.push(newCategoryItem?._id);
+
+        console.log('CategoryItem saved:', newCategoryItem);
+      })
+    );
+
+    console.log('expirationDatesArrIDS',expirationDatesArrIDS);
+    console.log('totalQuantity',totalQuantity);
+
+   //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
+
+    //2) ضيف الصنف
+    let newCategoryObj={
+      code,
+      name,
+      criticalValue,
+      unitPrice,
+      unit, 
+      expirationDatesArr:expirationDatesArrIDS,
+      totalQuantity:quantity
+    }
+
+   // let newCategory=new Category(newCategoryObj);
+
+   // await newCategory.save();
+
+   await Category.findByIdAndUpdate(
+    oldCategory?._id,
+    newCategoryObj,
+    {
+      new:true
+    }
+   );
+
+    console.log('edited');
+
+    return {
+      success: true
+    };
+
+
+
     
   } catch (error) {
     new Notification({ title: 'فشل في عملية التعديل' }).show();

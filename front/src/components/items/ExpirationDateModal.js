@@ -4,9 +4,12 @@ import CustumNumberInput from '../../Utilities/CustumNumberInput';
 import { toast } from "react-toastify";
 import removeTimeFromDate from '../../Utilities/removeTimeFromDate';
 import FormatDateForHTML from '../../Utilities/FormatDateForHTML';
+import { useLocation } from 'react-router-dom';
 
 
 export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr,rowToEdit,setRowToEdit }) {
+
+    const location=useLocation();
 
     const options = { month: 'long', day: 'numeric', year: 'numeric' };
 
@@ -35,11 +38,18 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
             return toast.error("من فضلك اكمل البيانات");
         }
 
+        console.log('expirationDatesArr.length',expirationDatesArr.length);
         let key;
         if(expirationDatesArr.length==0) key=expirationDatesArr.length;
         else{
-            key=expirationDatesArr[expirationDatesArr.length-1].key +1;
+            // if(location?.state?._id){
+            //     key=expirationDatesArr.length;
+            // }
+            // else{
+            //     key=expirationDatesArr[expirationDatesArr.length-1].key +1;
+            // }
 
+            key=expirationDatesArr[expirationDatesArr.length-1].key +1;
         }
 
         let obj={
