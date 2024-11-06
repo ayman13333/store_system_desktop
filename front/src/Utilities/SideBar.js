@@ -43,7 +43,7 @@ export default function SideBar() {
               <BsFillPersonVcardFill />
             </div>
             <div>
-              سجل الموردين
+              سجل الجهات
             </div>
           </span>
         </NavLink>
@@ -71,6 +71,9 @@ export default function SideBar() {
             </option>
             <option value={'/paymentInvoice'}>
             فاتورة صرف
+            </option>
+            <option value={'/convertInvoice'}>
+            فاتورة تحويل
             </option>
           </select>
         </Nav.Item>

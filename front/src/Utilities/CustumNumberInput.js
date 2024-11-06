@@ -1,5 +1,5 @@
 
-export default function CustumNumberInput({ value, setValue, required,placeholder }) {
+export default function CustumNumberInput({ value, setValue, required,placeholder,disabled=false }) {
 
     const handleChange = (e) => {
         const inputValue = e.target.value;
@@ -15,6 +15,7 @@ export default function CustumNumberInput({ value, setValue, required,placeholde
         <input
             value={value} onChange={handleChange}
             required={required}
+            disabled={disabled}
             type="text" className="form-control" placeholder={placeholder}
         />
     )

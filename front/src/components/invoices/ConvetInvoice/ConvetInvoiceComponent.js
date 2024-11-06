@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import CustumNumberInput from "../../../Utilities/CustumNumberInput";
-import FormatDate from "../../../Utilities/FormatDate";
+import React, { useEffect, useState } from 'react'
+import { Spinner } from 'react-bootstrap';
+import ExpirationDatesModal from '../supplyInvoice/ExpirationDatesModal';
+import AddQuantityModal from '../supplyInvoice/AddQuantityModal';
+import { CiEdit } from 'react-icons/ci';
+import FormatDate from '../../../Utilities/FormatDate';
+import CustumNumberInput from '../../../Utilities/CustumNumberInput';
+import { toast } from 'react-toastify';
 import Select from 'react-select';
-import { FaTrashAlt } from "react-icons/fa";
-import { CiEdit } from "react-icons/ci";
-import ExpirationDatesModal from "./ExpirationDatesModal";
-import AddQuantityModal from "./AddQuantityModal";
-import { toast } from "react-toastify";
 
-export default function SupplyInvoiceComponent() {
-    const [isLoading, setIsLoading] = useState(false);
+
+export default function ConvetInvoiceComponent() {
+  const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState('');
-    // جهات التوريد
+    // جهات الصرف
     const [suppliers, setSuppliers] = useState([]);
-    // اسم جهة التوريد
+    // اسم جهة الصرف
     const [selectedSupplier, setSelectedSupplier] = useState('0');
-    // تاريخ التوريد
+    // تاريخ الصرف
     const [supplyDate, setSupplyDate] = useState('');
-    // الاصناف
-    const [categories, setCategories] = useState([]);
+
     // كود الفاتورة
     const [invoiceCode, setInvoiceCode] = useState('');
     // State to store the selected option
@@ -33,16 +32,21 @@ export default function SupplyInvoiceComponent() {
 
     const [notes, setNotes] = useState('');
 
+        // المراد تحويلها الاصناف
+        const [categoriesToConvert, setCategoriesToConvert] = useState([]);
 
-    const loggedUser=JSON.parse(localStorage.getItem('user'));
+            // بعد تحويلها الاصناف
+    const [categoriesAfterConvert, setCategoriesAfterConvert] = useState([]);
 
-    console.log('loggedUser',loggedUser);
+
+    const loggedUser = JSON.parse(localStorage.getItem('user'));
+
 
     useEffect(() => {
         const get = async () => {
             setIsLoading(true);
             const [result, categories] = await Promise.all([
-                window?.electron?.getAllUsers({ type: 'supplier' }),
+                window?.electron?.getAllUsers({ type: 'transfer' }),
                 window?.electron?.getAllCategories()
             ]);
 
@@ -58,11 +62,10 @@ export default function SupplyInvoiceComponent() {
                     label: el?.name,
                     value: el?._id,
                     totalQuantity: 0,
-                    expirationDatesArr: [],
-                    unitPrice: 0
+                    //expirationDatesArr:[]
                 }
             })
-            setCategories(categoriesForSelect);
+            setCategoriesToConvert(categoriesForSelect);
         }
 
         get();
@@ -70,7 +73,7 @@ export default function SupplyInvoiceComponent() {
 
     const toDayDate = FormatDate(new Date);
 
-    console.log('categories', categories);
+    console.log('categoriesToConvert', categoriesToConvert);
     console.log('selectedOptionArr', selectedOptionArr);
 
 
@@ -94,28 +97,28 @@ export default function SupplyInvoiceComponent() {
         setShowAddQuantityModal(true);
     }
 
-    const addNewInvoice=async()=>{
+    const addNewInvoice = async () => {
         try {
-            if(invoiceCode=='') return toast.error('من فضلك ادخل كود الفاتورة');
-            if(invoiceNumber=='') return toast.error('من فضلك ادخل رقم الفاتورة');
-            if(selectedSupplier=='0') return toast.error('من فضلك ادخل جهة التوريد');
-            if(supplyDate=='') return toast.error('من فضلك ادخل تاريخ التوريد');
+            if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
+            if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
+            if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة الصرف');
+            if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التحويل');
 
 
 
-            if(selectedOptionArr==null || selectedOptionArr.length==0) return toast.error(" من فضلك اختر قائمة الاصناف");
+            if (selectedOptionArr == null || selectedOptionArr.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف");
 
-            selectedOptionArr?.map(el=>{
-                if(el?.totalQuantity=='0'||el?.expirationDatesArr?.length==0 || el?.unitPrice=='0'){
-                    return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
+            selectedOptionArr?.map(el => {
+                if (el?.totalQuantity == '0') {
+                    return toast.error('من فضلك تاكد من  وجود كميه بكل صنف ');
                 }
             });
 
 
-            console.log(' after selectedOptionArr',selectedOptionArr);
+            console.log(' after selectedOptionArr', selectedOptionArr);
 
         } catch (error) {
-            
+
         }
     }
 
@@ -125,12 +128,12 @@ export default function SupplyInvoiceComponent() {
         <div className='w-75 h-100' style={{
             // overflowX:'hidden'
         }}>
-            <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
+            <h1>  فاتورة التحويل   {isLoading && <Spinner />} </h1>
 
             <div className="form-group">
                 <label className="my-2"> نوع الفاتورة </label>
                 <input
-                    value={'توريد'}
+                    value={'تحويل'}
                     disabled
                     type="text" className="form-control"
                 />
@@ -156,11 +159,11 @@ export default function SupplyInvoiceComponent() {
             </div>
 
             <div className="form-group">
-                <label className="my-2"> اسم جهة التوريد </label>
+                <label className="my-2"> اسم جهة التحويل </label>
                 <select
                     value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
                     className="form-control">
-                    <option value={'0'}> من فضلك اختر جهة التوريد </option>
+                    <option value={'0'}> من فضلك اختر جهة التحويل </option>
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }
@@ -168,7 +171,7 @@ export default function SupplyInvoiceComponent() {
             </div>
 
             <div className="form-group">
-                <label className="my-2">  تاريخ التوريد </label>
+                <label className="my-2">  تاريخ التحويل </label>
                 <input
                     value={supplyDate} onChange={(e) => setSupplyDate(e.target.value)}
                     required
@@ -193,23 +196,26 @@ export default function SupplyInvoiceComponent() {
             </div>
 
             <div className='form-group'>
-                    <label className="my-2"> ملاحظات </label>
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="form-control" style={{ height: '100px' }}>
+                <label className="my-2"> ملاحظات </label>
+                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="form-control" style={{ height: '100px' }}>
 
-                    </textarea>
+                </textarea>
             </div>
 
+
             {
-                categories && <div className="form-group my-2">
-                    <label className="my-2">  قائمة الاصناف </label>
+                categoriesToConvert && <div className="form-group my-2">
+                    <label className="my-2">  قائمة الاصناف المراد تحويلها </label>
                     <Select
                         isMulti={true}
                         value={selectedOptionArr}
                         onChange={handleChange}
-                        options={categories}
+                        options={categoriesToConvert}
                     />
                 </div>
             }
+
+         
 
             {
                 <div className='d-flex justify-content-between' style={{
@@ -274,8 +280,9 @@ export default function SupplyInvoiceComponent() {
                                 showAddQuantityModal && <AddQuantityModal
                                     show={showAddQuantityModal} setShow={setShowAddQuantityModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
-                                    categories={categories} setCategories={setCategories}
+                                    categories={categoriesToConvert} setCategories={setCategoriesToConvert}
                                     setSelectedOptionArr={setSelectedOptionArr}
+                                    type={'payment'}
                                 />
                             }
 
@@ -293,8 +300,8 @@ export default function SupplyInvoiceComponent() {
 
 
                 {/* <button
-                    onClick={() => window.history.back()}
-                    className='btn btn-primary h-50 my-auto'> رجوع </button> */}
+                onClick={() => window.history.back()}
+                className='btn btn-primary h-50 my-auto'> رجوع </button> */}
 
             </div>
 

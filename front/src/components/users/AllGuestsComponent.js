@@ -356,7 +356,7 @@ export default function AllGuestsComponent() {
         </>
       }
 
-      <h1> ادارة الموردين </h1>
+      <h1> ادارة الجهات </h1>
 
       <div className="d-flex justify-content-between my-3">
         <button onClick={() =>{

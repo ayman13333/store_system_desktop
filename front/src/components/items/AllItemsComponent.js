@@ -36,44 +36,47 @@ export default function AllItemsComponent() {
     get();
   }, []);
 
-  
+
 
   const columns = [
-    { name: 'الكود', selector: row => row.code, sortable: true },
+    {
+      name: 'الكود', selector: row => row.criticalValue,
+      sortable: true,
+      cell: row => (
+        <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', width: '100%', textAlign: 'start' }}>
+          {row.criticalValue}
+        </div>
+      )
+    },
     { name: 'الاسم', selector: row => row.name, sortable: true },
     {
       name: 'الحد الحرج',
       selector: row => row.criticalValue,
-      sortable: true,
-      cell: row => (
-        <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', width: '100%', textAlign:'start' }}>
-          {row.criticalValue}
-        </div>
-      )
+      sortable: true
     },
     { name: 'الوحدة', selector: row => row.unit, sortable: true },
     {
       name: 'تاريخ الصلاحية',
       cell: (row) => {
-        const currentDate=new Date();
-        let isYellow=false;
-        let isRed=false;
-        let yellowCount=0;
+        const currentDate = new Date();
+        let isYellow = false;
+        let isRed = false;
+        let yellowCount = 0;
 
-        row?.expirationDatesArr?.map(el=>{
+        row?.expirationDatesArr?.map(el => {
           const itemDate = new Date(el?.date);
-          if(currentDate.getTime() > itemDate.getTime() ){
-            isYellow=true;
+          if (currentDate.getTime() > itemDate.getTime()) {
+            isYellow = true;
             yellowCount++;
-          } 
+          }
         });
 
-        if(yellowCount== row?.expirationDatesArr?.length) isRed=true;
+        if (yellowCount == row?.expirationDatesArr?.length) isRed = true;
 
-        let color='';
-        if(isRed==true) color=red;
-        else{
-          if(isYellow) color=yellow;
+        let color = '';
+        if (isRed == true) color = red;
+        else {
+          if (isYellow) color = yellow;
         }
         return (
           <div style={{ backgroundColor: color, width: '100%' }} >
@@ -84,7 +87,7 @@ export default function AllItemsComponent() {
               }}
               className='btn btn-secondary' style={{
                 whiteSpace: 'nowrap',
-                width:'80%'
+                width: '80%'
               }} > اضغط هنا  </button>
           </div>
         )
@@ -99,9 +102,9 @@ export default function AllItemsComponent() {
       name: 'تعديل',
       cell: (row) => <button className='btn btn-warning' onClick={() => {
         //  console.log('row',row);
-          navigate('/allitems/edit',{
-            state:row
-          });
+        navigate('/allitems/edit', {
+          state: row
+        });
       }}
         style={{
           whiteSpace: 'nowrap'
@@ -117,9 +120,67 @@ export default function AllItemsComponent() {
       style: {
         fontWeight: 'bold',
         fontSize: 'large',
-        textAlign: 'center'
+        textAlign: 'center',
+
       },
     },
+    {
+      when: row => {
+        const currentDate = new Date();
+        let isYellow = false;
+        let isRed = false;
+        let yellowCount = 0;
+
+        row?.expirationDatesArr?.map(el => {
+          const itemDate = new Date(el?.date);
+          if (currentDate.getTime() > itemDate.getTime()) {
+            isYellow = true;
+            yellowCount++;
+          }
+        });
+
+        if (yellowCount == row?.expirationDatesArr?.length) {
+          return true;
+          //  isRed=true;
+
+        }
+
+      },
+      style: {
+        backgroundColor: red,
+        fontWeight: 'bold',
+        fontSize: 'large',
+        textAlign: 'center',
+      }
+    },
+    {
+      when: row => {
+        const currentDate = new Date();
+        let isYellow = false;
+        let isRed = false;
+        let yellowCount = 0;
+
+        row?.expirationDatesArr?.map(el => {
+          const itemDate = new Date(el?.date);
+          if (currentDate.getTime() > itemDate.getTime()) {
+            isYellow = true;
+            yellowCount++;
+          }
+        });
+
+        if ((yellowCount != row?.expirationDatesArr?.length) && yellowCount > 0) return true
+
+      },
+      style: {
+        backgroundColor: yellow,
+        fontWeight: 'bold',
+        fontSize: 'large',
+        textAlign: 'center',
+      }
+    },
+
+
+
     // {
     //   when: row => row.criticalValue === row.totalQuantity ,
     //   style: {

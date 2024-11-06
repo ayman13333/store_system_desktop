@@ -12,6 +12,7 @@ import GuestsPage from './Pages/users/GuestsPage';
 import { ToastContainer } from 'react-toastify';
 import SupplyInvoicePage from './Pages/invoices/SupplyInvoicePage';
 import PaymentInvoicePage from './Pages/invoices/PaymentInvoicePage';
+import ConvetInvoicePage from './Pages/invoices/ConvetInvoicePage';
 
 
 
@@ -35,9 +36,11 @@ function App() {
 
       {/* فاتورة توريد */}
       <Route path='/supplyInvoice' element={<SupplyInvoicePage />} />
-
       {/* فاتورة صرف */}
       <Route path='/paymentInvoice' element={<PaymentInvoicePage />} />
+      {/* فاتورة تحويل */}
+      <Route path='/convertInvoice' element={<ConvetInvoicePage />} />
+
       </Routes>
      </HashRouter>
 

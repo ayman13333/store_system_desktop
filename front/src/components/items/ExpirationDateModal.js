@@ -7,7 +7,7 @@ import FormatDateForHTML from '../../Utilities/FormatDateForHTML';
 import { useLocation } from 'react-router-dom';
 
 
-export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr,rowToEdit,setRowToEdit }) {
+export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,setExpirationDatesArr,rowToEdit,setRowToEdit,setQuantity }) {
 
     const location=useLocation();
 
@@ -51,6 +51,8 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
 
             key=expirationDatesArr[expirationDatesArr.length-1].key +1;
         }
+
+        setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
 
         let obj={
             key,

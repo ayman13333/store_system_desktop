@@ -6,13 +6,14 @@ import FormatDate from '../../Utilities/FormatDate';
 import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 
 export default function AddItemComponent() {
 
     const location = useLocation();
+    const navigate=useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
     const [code, setCode] = useState(
@@ -58,7 +59,14 @@ export default function AddItemComponent() {
 
 
     const deleteRow = (row) => {
-        let filter = expirationDatesArr.filter(el => el?.key != row?.key);
+        let filter = expirationDatesArr.filter(el =>{
+            if(el?.key != row?.key) return el;
+            else{
+                setQuantity(prev=>Number(Number(prev)-Number(el?.quantity)));
+            }
+        });
+
+       // setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
         setExpirationDatesArr(filter);
         setRowToEdit(null);
     }
@@ -103,7 +111,7 @@ export default function AddItemComponent() {
                 quantity,
                 unit,
                 unitPrice,
-                expirationDatesArr
+                expirationDatesArr:expirationDatesArrAfterSubDates
             };
 
             setIsLoading(true);
@@ -180,13 +188,15 @@ export default function AddItemComponent() {
 
             if (result.success == true) {
                 toast.success('تم تعديل الصنف');
-                setCode('');
-                setName('');
-                setCriticalValue('');
-                setUnitPrice('');
-                setQuantity('');
-                setUnit('');
-                setExpirationDatesArr([]);
+                navigate('/allitems');
+                // setCode('');
+                // setName('');
+                // setCriticalValue('');
+                // setUnitPrice('');
+                // setQuantity('');
+                // setUnit('');
+                // setExpirationDatesArr([]);
+                
             }
             else toast.error('فشل في عملية التعديل');
         } catch (error) {
@@ -245,8 +255,10 @@ export default function AddItemComponent() {
                 <label className="my-2"> الكمية </label>
 
                 <CustumNumberInput
-                    value={quantity} setValue={setQuantity}
+                    value={quantity} 
+                    setValue={setQuantity}
                     placeholder={'الكمية'}
+                    disabled={true}
                     required={true}
                 />
             </div>
@@ -288,11 +300,11 @@ export default function AddItemComponent() {
                             {
                                 expirationDatesArr?.map((el, i) =>
                                     <tr key={i}>
-                                        <td>{FormatDate(new Date(el?.date))} </td>
-                                        <td >{el?.quantity}</td>
+                                        <td className="p-13">{FormatDate(new Date(el?.date))} </td>
+                                        <td className="p-13" >{el?.quantity}</td>
                                         <td>
                                             <div className='d-flex h-25 gap-2'>
-                                                <button onClick={() => deleteRow(el)} className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button>
+                                                <button onClick={() => deleteRow(el)} className='btn btn-danger h-25 my-auto small'> <FaTrashAlt height={'5px'} /> </button>
                                                 {/* <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button> */}
                                             </div>
                                         </td>
@@ -311,6 +323,7 @@ export default function AddItemComponent() {
                         setExpirationDatesArr={setExpirationDatesArr}
                         rowToEdit={rowToEdit}
                         setRowToEdit={setRowToEdit}
+                        setQuantity={setQuantity}
                     />
 
                 }
