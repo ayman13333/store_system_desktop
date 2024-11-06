@@ -99,6 +99,7 @@ export default function SideBar() {
         <button onClick={() => {
           localStorage.removeItem('type');
           localStorage.removeItem('email');
+          localStorage.removeItem('user');
           navigate('/');
         }} className=' my-2 mx-auto w-100 btn btn-danger' style={{
         }}>

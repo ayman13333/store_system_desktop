@@ -77,3 +77,20 @@
   border:'none';
   width:'100%'
 }
+
+table tr {
+  display: table-row;
+ 
+}
+
+.small{
+  font-size: small !important;
+}
+
+.p-13{
+  padding-top: 13px !important;
+}
+
+table td {
+  /* font-size: larger; */
+}

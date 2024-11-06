@@ -31,6 +31,8 @@ export default function Login() {
             localStorage.setItem('type',result?.user.type);
             localStorage.setItem('email',result?.user.email);
 
+            let loggedUser=localStorage.setItem('user',JSON.stringify(result?.user));
+
             // if(result?.user.type=='accountant') navigate('/accountant/search');
             // else navigate('/allitems');
 
