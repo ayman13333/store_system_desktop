@@ -24,7 +24,7 @@ function App() {
       <Route index element={<Login />} />
       {/* الموظفين */}
       <Route path='/users' element={<AllUsersPage />} />
-      {/* الموردين */}
+      {/* الجهات */}
       <Route path='/guests' element={<GuestsPage />} />
 
       {/* الاصناف */}

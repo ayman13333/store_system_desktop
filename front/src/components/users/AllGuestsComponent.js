@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { BsBackspaceFill, BsPlus } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
@@ -19,9 +19,11 @@ export default function AllGuestsComponent() {
   const [typeOfSupply, setTypeOfSupply] = useState('');
   const [advantages, setAdvantages] = useState('');
   const [disAdvantages, setDisAdvantages] = useState('');
-  const[taxNumber,setTaxNumber]=useState('');
-
+  const [taxNumber, setTaxNumber] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (showEditModal == false) {
       setSearchValue('');
@@ -34,15 +36,20 @@ export default function AllGuestsComponent() {
 
   useEffect(() => {
     const get = async () => {
+      setIsLoading(true);
       const result = await window?.electron?.getAllUsers({
         type: 'allSuppliers'
       });
+      setIsLoading(false);
+      
       console.log('result', result);
 
       setUsers(result?.users);
     }
 
+   
     get();
+    
   }, []);
 
   const search = () => {
@@ -54,9 +61,12 @@ export default function AllGuestsComponent() {
   }
 
   const cancelFilter = async () => {
+    setIsLoading(true);
     const result = await window?.electron?.getAllUsers({
       type: 'allSuppliers'
     });
+    setIsLoading(false);
+
     console.log('result', result);
 
     setUsers(result?.users);
@@ -74,7 +84,7 @@ export default function AllGuestsComponent() {
     if (type == 'consumer' || type == 'transfer') data.fullName = fullName;
 
     else {
-      if(taxNumber=='') return toast.error("من فضلك   ادخل الرقم الضريبي");
+      if (taxNumber == '') return toast.error("من فضلك   ادخل الرقم الضريبي");
       if (fullName == '') return toast.error("من فضلك ادخل الاسم رباعي");
       if (mobile == '') return toast.error("من فضلك   ادخل الهاتف");
 
@@ -102,7 +112,10 @@ export default function AllGuestsComponent() {
     // else data.typeOfUser = 'user';
 
     if (isEdit) {
+      setIsLoading(true);
       let result = await window?.electron?.editGuest(data);
+      setIsLoading(false);
+
       if (result?.success) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
           type: 'allSuppliers'
@@ -131,10 +144,11 @@ export default function AllGuestsComponent() {
     }
     else {
       console.log('adddddddddddddd');
-      console.log('data',data);
-
+      console.log('data', data);
+      setIsLoading(true);
       // checks
       let result = await window?.electron?.addUser(data);
+      setIsLoading(false);
 
       if (result?.newUser?._id) {
         const usersAfterEdit = await window?.electron?.getAllUsers({
@@ -246,7 +260,7 @@ export default function AllGuestsComponent() {
           <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
             <Modal.Header>
               <Modal.Title>
-                {isEdit ? ' تعديل مورد' : 'اضافة مورد'}
+                {isEdit ? ' تعديل جهة' : 'اضافة جهة'}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -256,7 +270,7 @@ export default function AllGuestsComponent() {
                 <select
 
                   value={type} onChange={(e) => setType(e.target.value)}
-                  
+
                   className="form-control">
                   <option value={0}> من فضلك النوع </option>
                   <option value={'consumer'}> جهة صرف </option>
@@ -267,7 +281,7 @@ export default function AllGuestsComponent() {
               </div>
 
               {
-               (type == 'consumer' || type == 'transfer') ?
+                (type == 'consumer' || type == 'transfer') ?
                   <div className="form-group">
                     <label className="my-2"> الاسم رباعي </label>
                     <input
@@ -275,9 +289,9 @@ export default function AllGuestsComponent() {
                       type="text" className="form-control" placeholder=" الاسم رباعي" />
                   </div>
                   :
-                  type !='0'&&
+                  type != '0' &&
                   <>
-                  <div className="form-group">
+                    <div className="form-group">
                       <label className="my-2"> الرقم الضريبي </label>
                       <input
                         value={taxNumber} onChange={(e) => setTaxNumber(e.target.value)}
@@ -356,13 +370,16 @@ export default function AllGuestsComponent() {
         </>
       }
 
-      <h1> ادارة الجهات </h1>
+
+      <h1> ادارة الجهات  {
+        isLoading && <Spinner />
+      } </h1>
 
       <div className="d-flex justify-content-between my-3">
-        <button onClick={() =>{
+        <button onClick={() => {
           setShowEditModal(true);
           setIsEdit(false);
-        } } className='btn btn-success' > اضافة <BsPlus /> </button>
+        }} className='btn btn-success' > اضافة <BsPlus /> </button>
 
         <div className="d-flex gap-2">
           <input
