@@ -262,7 +262,7 @@ ipcMain.handle('editGuest', async (event, data) => {
 ipcMain.handle('getAllCategories',async(event,data)=>{
   try {
     let categories=await Category.find()
-    .populate('expirationDatesArr')
+    .populate('expirationDatesArr user')
     .sort({createdAt:-1})
     .lean();
 
@@ -271,6 +271,10 @@ ipcMain.handle('getAllCategories',async(event,data)=>{
       return{
         ...el,
         _id:el?._id?.toString(),
+        user:{
+          ...el?.user,
+          _id:el?.user?._id.toString()
+        },
         expirationDatesArr:el?.expirationDatesArr?.map(item=>{
           // console.log('cccccccc');
           // console.log('item',item);
@@ -372,7 +376,7 @@ ipcMain.handle('addCategory',async(event,data)=>{
 // edit category
 ipcMain.handle('editCategory',async(event,data)=>{
   try {
-    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity,lastCode}=data;
+    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity,lastCode,user,editDate}=data;
 
     if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
@@ -431,7 +435,9 @@ ipcMain.handle('editCategory',async(event,data)=>{
       unitPrice,
       unit, 
       expirationDatesArr:expirationDatesArrIDS,
-      totalQuantity:quantity
+      totalQuantity:quantity,
+      user,
+      editDate
     }
 
    // let newCategory=new Category(newCategoryObj);

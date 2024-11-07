@@ -9,6 +9,7 @@ export default function SearchItemsComponent({setCategories,setIsLoading}) {
 
     const search=()=>{
         if(searchType=='') return toast.error(' من فضلك اختر نوع البحث');
+        if(searchValue=='') return toast.error(' من فضلك اكتب ما تريد البحث عنه');
         const value=searchValue.trim();
      
 
@@ -29,6 +30,8 @@ export default function SearchItemsComponent({setCategories,setIsLoading}) {
         console.log('result', result);
   
         setCategories(result?.categories);
+        setSearchType('');
+        setSearchValue('');
     }
 
     return (

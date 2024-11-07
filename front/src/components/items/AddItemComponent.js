@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export default function AddItemComponent() {
 
     const location = useLocation();
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
     const [code, setCode] = useState(
@@ -36,37 +36,48 @@ export default function AddItemComponent() {
     );
 
     const [expirationDatesArr, setExpirationDatesArr] = useState(
-        ()=>{
-            if(location?.state?._id){
-                let expirationDatesWithKey=location?.state?.expirationDatesArr?.map((el,i)=>{
-                    return{
+        () => {
+            if (location?.state?._id) {
+                let expirationDatesWithKey = location?.state?.expirationDatesArr?.map((el, i) => {
+                    return {
                         ...el,
-                        key:i
+                        key: i
                     }
                 });
 
                 return expirationDatesWithKey;
             }
-            else{
+            else {
                 return [];
             }
         }
-       
-      //  () => location?.state?._id ? location?.state?.expirationDatesArr : []
+
+        //  () => location?.state?._id ? location?.state?.expirationDatesArr : []
     );
     const [showExpirationDateModal, setShowExpirationDateModal] = useState(false);
     const [rowToEdit, setRowToEdit] = useState(null);
 
+    const[editDate,setEditDate]=useState(
+        ()=>location?.state?.editDate ?new Date(location?.state?.editDate) : new Date()
+    );
+
+    const[user,setUser]=useState(
+        ()=> location?.state?.user?._id ? location?.state?.user : JSON.parse(localStorage.getItem('user'))
+    );
+
+    const loggedUser = JSON.parse(localStorage.getItem('user'));
+
+
 
     const deleteRow = (row) => {
-        let filter = expirationDatesArr.filter(el =>{
-            if(el?.key != row?.key) return el;
-            else{
-                setQuantity(prev=>Number(Number(prev)-Number(el?.quantity)));
+        let filter = expirationDatesArr.filter(el => {
+            if (el?.key != row?.key) return el;
+            else {
+                setQuantity(prev => Number(Number(prev) - Number(el?.quantity)));
             }
         });
 
-       // setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
+        // setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
         setExpirationDatesArr(filter);
         setRowToEdit(null);
     }
@@ -111,7 +122,7 @@ export default function AddItemComponent() {
                 quantity,
                 unit,
                 unitPrice,
-                expirationDatesArr:expirationDatesArrAfterSubDates
+                expirationDatesArr: expirationDatesArrAfterSubDates
             };
 
             setIsLoading(true);
@@ -139,7 +150,7 @@ export default function AddItemComponent() {
 
     }
 
-    const editCategory=async()=>{
+    const editCategory = async () => {
         try {
             if (code == '') return toast.error('يجب ادخال الكود');
             if (name == '') return toast.error('يجب ادخال اسم الصنف');
@@ -154,7 +165,7 @@ export default function AddItemComponent() {
             let expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
                 // let date=new Date(el.date);
                 // صنف موجود قبل كدة مش هنقص منه تاني
-                if(el?._id) return el;
+                if (el?._id) return el;
 
                 let date = el?.date?.setDate(el?.date?.getDate() - 5);
                 date = new Date(date);
@@ -167,7 +178,7 @@ export default function AddItemComponent() {
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
 
-           //  return;
+            //  return;
 
             const data = {
                 code,
@@ -177,14 +188,17 @@ export default function AddItemComponent() {
                 unit,
                 unitPrice,
                 expirationDatesArr,
-                lastCode:location?.state?.code
+                lastCode: location?.state?.code,
+                user:user?._id,
+                editDate
+
             };
 
             setIsLoading(true);
             const result = await window?.electron?.editCategory(data);
             setIsLoading(false);
 
-            console.log('result',result);
+            console.log('result', result);
 
             if (result.success == true) {
                 toast.success('تم تعديل الصنف');
@@ -196,7 +210,7 @@ export default function AddItemComponent() {
                 // setQuantity('');
                 // setUnit('');
                 // setExpirationDatesArr([]);
-                
+
             }
             else toast.error('فشل في عملية التعديل');
         } catch (error) {
@@ -255,7 +269,7 @@ export default function AddItemComponent() {
                 <label className="my-2"> الكمية </label>
 
                 <CustumNumberInput
-                    value={quantity} 
+                    value={quantity}
                     setValue={setQuantity}
                     placeholder={'الكمية'}
                     disabled={true}
@@ -271,6 +285,27 @@ export default function AddItemComponent() {
                     type="text" className="form-control" placeholder="الوحدة"
                 />
             </div>
+
+            {
+                location?.state?.editDate && <>
+                    <div className="form-group">
+                        <label className="my-2">  تاريخ التعديل </label>
+                        <input
+                            value={FormatDate(editDate)}
+                            disabled
+                            type="text" className="form-control" />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="my-2">   اسم الموظف </label>
+                        <input
+                            value={user?.email}
+                            disabled
+                            type="text" className="form-control" />
+                    </div>
+
+                </>
+            }
 
             <div className="form-group my-3">
 

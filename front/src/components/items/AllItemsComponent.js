@@ -8,6 +8,8 @@ import DataTable from "react-data-table-component";
 import { CiEdit } from "react-icons/ci";
 import ExpirationDatesModal from "../invoices/supplyInvoice/ExpirationDatesModal";
 import { ligthBlue, orange, red, yellow } from "../../Constants"
+import FormatDate from "../../Utilities/FormatDate";
+import { TbHandClick } from "react-icons/tb";
 
 export default function AllItemsComponent() {
 
@@ -37,18 +39,47 @@ export default function AllItemsComponent() {
   }, []);
 
 
+  // if (str.length > maxLength) {
+  //   return str.substring(0, maxLength) + '...';
+  // }
 
   const columns = [
     {
-      name: 'الكود', selector: row => row.criticalValue,
+      name: 'الكود',
       sortable: true,
-      cell: row => (
-        <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', width: '100%', textAlign: 'start' }}>
-          {row.criticalValue}
-        </div>
-      )
+      cell: row =>{
+        let codeStr;
+
+          if(row?.code?.length >10){
+              codeStr=row.code.substring(0, 10) + '...';
+          }
+          else codeStr=row.code;
+
+        return(
+          <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', textAlign: 'start',whiteSpace:'nowrap',textOverflow: 'ellipsis',
+            width:'100%'
+           }}>
+            {codeStr}
+          </div>
+        )
+      } 
     },
-    { name: 'الاسم', selector: row => row.name, sortable: true },
+    { name: 'الاسم',
+      cell: row =>{
+        let codeStr;
+
+        if(row?.code?.length >10){
+            codeStr=row?.name.substring(0, 10) + '...';
+        }
+        else codeStr=row?.name;
+        return(
+          <div style={{ backgroundColor: row?.user?._id &&  ligthBlue,
+           textAlign: 'start',whiteSpace:'nowrap',width:'100%' }}>
+            {codeStr}
+          </div>
+        )
+      } , 
+      sortable: true },
     {
       name: 'الحد الحرج',
       selector: row => row.criticalValue,
@@ -88,7 +119,7 @@ export default function AllItemsComponent() {
               className='btn btn-secondary' style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
-              }} > اضغط هنا  </button>
+              }} > <TbHandClick />  </button>
           </div>
         )
       }
@@ -98,6 +129,14 @@ export default function AllItemsComponent() {
     { name: 'الكمية', selector: row => row.totalQuantity, sortable: true },
     { name: 'سعر الوحدة', selector: row => row.unitPrice, sortable: true },
     { name: 'الاجمالي', selector: row => Number(row?.unitPrice * row?.totalQuantity), sortable: true },
+    {
+      name:'اسم الموظف',
+      selector:row=>row?.user?.email
+    },
+    {
+      name:'تاريخ التعديل',
+      selector:row=> row?.editDate ?FormatDate(new Date(row?.editDate)) : ''
+    },
     {
       name: 'تعديل',
       cell: (row) => <button className='btn btn-warning' onClick={() => {
@@ -217,7 +256,8 @@ export default function AllItemsComponent() {
   //   ],
   // };
 
-
+    console.log('categories',categories);
+    
   return (
     <div className='w-100 h-100' >
       <h1> ادارة الاصناف   {isLoading && <Spinner />} </h1>
@@ -230,7 +270,7 @@ export default function AllItemsComponent() {
       <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} />
 
       {
-        categories?.length > 0 && <DataTable
+        !isLoading && <DataTable
           columns={columns}
           data={categories}
           filter={true}

@@ -32,7 +32,17 @@ const categoriesSchema = new mongoose.Schema({
     // تواريخ الصلاحية
     expirationDatesArr:[
         { type: mongoose.Schema.Types.ObjectId, ref: 'CategoryItem' }
-    ]
+    ],
+    // تاريخ التعديل
+    editDate:{
+        type:String,
+        default:''
+    },
+    // الموظف
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }
 }, {
     timestamps: true
 });
