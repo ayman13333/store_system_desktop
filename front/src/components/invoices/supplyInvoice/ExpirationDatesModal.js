@@ -12,7 +12,7 @@ export default function ExpirationDatesModal({ show, setShow , category , setCat
         } }>
             <Modal.Header>
                 <Modal.Title style={{
-                    whiteSpace: "wrap"
+                    lineBreak:'anywhere'
                 }}>
                      {`الصنف : ${category?.name}`}
                     {/* {isEdit ? ' تعديل موظف' : 'اضافة موظف'} */}
