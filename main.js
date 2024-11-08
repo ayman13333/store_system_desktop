@@ -315,7 +315,9 @@ ipcMain.handle('addCategory',async(event,data)=>{
     const foundCode = await Category.findOne({ code });
       if (foundCode !== null) {
         new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
-        return;
+        return{
+          success:false
+        };
       }
 
     // 1) ضيف تواريخ الصلاحية في ال model

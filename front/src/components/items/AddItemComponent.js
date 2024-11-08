@@ -99,6 +99,7 @@ export default function AddItemComponent() {
             if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
 
+            let expirationDatesArrWithOutSub=expirationDatesArr;
             // نقص 5 ايام من التواريخ
             let expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
                 // let date=new Date(el.date);
@@ -112,6 +113,7 @@ export default function AddItemComponent() {
             });
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
+            console.log('expirationDatesArr',expirationDatesArr);
 
             // return;
 
@@ -139,12 +141,22 @@ export default function AddItemComponent() {
                 setUnit('');
                 setExpirationDatesArr([]);
             }
-            else toast.error('فشل في عملية الاضافة');
+            else{
+                toast.error('فشل في عملية الاضافة');
+                console.log('mmmmmmmmmmmmm');
+               // console.log('expirationDatesArrprev');
+               
+            //    setExpirationDatesArr(prev=>{
+            //     console.log('prev',prev);
+            //    });
+              //  setIsLoading(false);
+            } 
 
         } catch (error) {
 
             console.log('error', error.message);
             toast.error('فشل في عملية الاضافة');
+           // setExpirationDatesArr(expirationDatesArrWithOutSub);
             setIsLoading(false);
         }
 
@@ -216,11 +228,12 @@ export default function AddItemComponent() {
         } catch (error) {
             console.log('error', error.message);
             toast.error('فشل في عملية التعديل');
+            setExpirationDatesArr(prev=>prev);
             setIsLoading(false);
         }
     }
 
-    console.log('location.state', location.state);
+   // console.log('location.state', location.state);
 
     console.log('expirationDatesArr', expirationDatesArr);
 

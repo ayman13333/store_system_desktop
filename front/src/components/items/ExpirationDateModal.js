@@ -60,6 +60,7 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
             quantity:newQuantity
         }
 
+        
         setExpirationDatesArr(prev=>[...prev,obj]);
 
         setNewExpirationDate('');
