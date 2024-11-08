@@ -4,12 +4,24 @@ import { MdBedroomParent, MdLogout, MdModeEdit } from "react-icons/md";
 import { BsBackpack4Fill, BsFillFilePersonFill, BsFillPersonVcardFill, BsGlobeCentralSouthAsia } from "react-icons/bs";
 import { FaFileInvoice } from "react-icons/fa";
 import { Accordion, Dropdown, DropdownButton, Nav } from 'react-bootstrap';
+import CustomDropDown from './CustomDropDown';
+import { HiDocumentReport } from "react-icons/hi";
 
 export default function SideBar() {
   const location = useLocation();
   const navigate = useNavigate();
 
   //  console.log('lllll', localStorage.getItem('type'));
+  const pillsOptions=[
+    { value:'فاتورة توريد',to:'/supplyInvoice'},
+    { value:'فاتورة صرف',to:'/paymentInvoice'},
+    { value:'فاتورة تحويل',to:'/convertInvoice'}
+
+  ]; 
+
+  const reportsOptions=[
+
+  ];
 
   const type = localStorage.getItem('type');
 
@@ -48,63 +60,32 @@ export default function SideBar() {
           </span>
         </NavLink>
 
-        {/* <Nav.Item>
-          <button className='link my-3 w-100 navButton' style={{border:'none',background:'none'}}>
-            الفواتير
-          </button>
-        </Nav.Item>
-                     <FaFileInvoice /> 
-
-        */}
+        
         <Nav.Item>
-          <select 
-          onChange={(e)=>{
-            if(e.target.value=='0') return;
-            navigate(e.target.value);
-          }}
-          style={{background:'#212529',color:'white',border:'none',width:'100%'}}>
-            <option value={'0'}> 
-              الفواتير
-            </option>
-            <option value={'/supplyInvoice'}>
-            فاتورة توريد
-            </option>
-            <option value={'/paymentInvoice'}>
-            فاتورة صرف
-            </option>
-            <option value={'/convertInvoice'}>
-            فاتورة تحويل
-            </option>
-          </select>
+          <CustomDropDown
+          title={'الفواتير'}
+          id={'invoices'}
+          iconTitle={<FaFileInvoice style={{ margin: 'auto' }} />}
+          options={pillsOptions}
+           />
         </Nav.Item>
 
-      
+        <Nav.Item>
+          <CustomDropDown
+          title={'التقارير'}
+          id={'reports'}
+          iconTitle={<HiDocumentReport  style={{ margin: 'auto' }} />}
+          options={reportsOptions}
+           />
+        </Nav.Item>
 
-        {/* <Dropdown>
-          <Dropdown.Toggle variant="black" id="dropdown-basic">
-            الفواتير
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item>
-            <NavLink className='link2' style={{color:'black'}} to={'/supplyInvoice'}>
-            فاتورة توريد
-            </NavLink>
-      
-             </Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Option 2</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Option 3</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown> */}
-
-
-
-
+        
         <button onClick={() => {
           localStorage.removeItem('type');
           localStorage.removeItem('email');
           localStorage.removeItem('user');
           navigate('/');
-        }} className=' my-2 mx-auto w-100 btn btn-danger' style={{
+        }} className=' my-3 mx-auto w-100 btn btn-danger' style={{
         }}>
           <span> <MdLogout />  تسجيل الخروج  </span>
         </button>
