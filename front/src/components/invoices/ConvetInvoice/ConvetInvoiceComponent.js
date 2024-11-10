@@ -115,28 +115,45 @@ export default function ConvetInvoiceComponent() {
 
     const addNewInvoice = async () => {
         try {
-            // if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
-            // if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
-            // if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة الصرف');
-            // if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التحويل');
+            if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
+            if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
+            if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة الصرف');
+            if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التحويل');
 
 
 
             if (selectedOptionArr == null || selectedOptionArr.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف المراد تحويلها");
 
+            if (selectedOptionArr2 == null || selectedOptionArr2.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف بعد تحويلها");
+
+
+            let totalQuantityBefore=0;
+            let totalQuantityAfter=0;
+
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
                 }
+
+                totalQuantityBefore+=el?.totalQuantity;
             });
 
-            if (selectedOptionArr2 == null || selectedOptionArr2.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف بعد تحويلها");
 
             selectedOptionArr2?.map(el => {
                 if (el?.totalQuantity == '0') {
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
                 }
+
+                totalQuantityAfter+=el?.totalQuantity;
             });
+
+            console.log('totalQuantityBefore',totalQuantityBefore);
+            console.log('totalQuantityAfter',totalQuantityAfter);
+
+            if(totalQuantityBefore!=totalQuantityAfter){
+                return toast.error('يجب ان تكون كمية الاصناف قبل وبعد التحويل متساوية');
+
+            }
 
 
            //console.log(' after selectedOptionArr', selectedOptionArr);

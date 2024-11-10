@@ -7,6 +7,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { CiEdit } from 'react-icons/ci';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ConfirmEditModal from './ConfirmEditModal';
 
 
 
@@ -64,6 +65,8 @@ export default function AddItemComponent() {
     const[user,setUser]=useState(
         ()=> location?.state?.user?._id ? location?.state?.user : JSON.parse(localStorage.getItem('user'))
     );
+
+    const[showConfirmEditModal,setShowConfirmEditModal]=useState(false);
 
     const loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -379,12 +382,22 @@ export default function AddItemComponent() {
 
             </div>
 
+            {
+                showConfirmEditModal&&<ConfirmEditModal
+                show={showConfirmEditModal} setShow={setShowConfirmEditModal}
+                func={editCategory}
+                 />
+            }
+
 
             <div className='d-flex justify-content-between'>
                 {
                     location?.state?._id ?
                         <button
-                            onClick={() => editCategory()}
+                            onClick={() =>{
+                                setShowConfirmEditModal(true);
+                               // editCategory()
+                            }}
                             disabled={isLoading}
                             className='btn btn-warning h-50 my-auto'> تعديل  صنف </button>
                         :
