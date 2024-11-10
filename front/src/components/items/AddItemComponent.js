@@ -58,15 +58,15 @@ export default function AddItemComponent() {
     const [showExpirationDateModal, setShowExpirationDateModal] = useState(false);
     const [rowToEdit, setRowToEdit] = useState(null);
 
-    const[editDate,setEditDate]=useState(
-        ()=>location?.state?.editDate ?new Date(location?.state?.editDate) : new Date()
+    const [editDate, setEditDate] = useState(
+        () => location?.state?.editDate ? new Date(location?.state?.editDate) : new Date()
     );
 
-    const[user,setUser]=useState(
-        ()=> location?.state?.user?._id ? location?.state?.user : JSON.parse(localStorage.getItem('user'))
+    const [user, setUser] = useState(
+        () => location?.state?.user?._id ? location?.state?.user : JSON.parse(localStorage.getItem('user'))
     );
 
-    const[showConfirmEditModal,setShowConfirmEditModal]=useState(false);
+    const [showConfirmEditModal, setShowConfirmEditModal] = useState(false);
 
     const loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -102,12 +102,17 @@ export default function AddItemComponent() {
             if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
 
-            let expirationDatesArrWithOutSub=expirationDatesArr;
+            let expirationDatesArrWithOutSub = expirationDatesArr;
             // نقص 5 ايام من التواريخ
-            let expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
+            const expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
                 // let date=new Date(el.date);
-                let date = el?.date?.setDate(el?.date?.getDate() - 5);
-                date = new Date(date);
+                // let date = el?.date?.setDate(el?.date?.getDate() - 5);
+                // date = new Date(date);
+
+                const date = new Date(el.date);
+
+                // Subtract 5 days from the new date instance
+                date.setDate(date.getDate() - 5);
 
                 return {
                     ...el,
@@ -116,7 +121,7 @@ export default function AddItemComponent() {
             });
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
-            console.log('expirationDatesArr',expirationDatesArr);
+            console.log('expirationDatesArr', expirationDatesArr);
 
             // return;
 
@@ -144,22 +149,22 @@ export default function AddItemComponent() {
                 setUnit('');
                 setExpirationDatesArr([]);
             }
-            else{
+            else {
                 toast.error('فشل في عملية الاضافة');
                 console.log('mmmmmmmmmmmmm');
-               // console.log('expirationDatesArrprev');
-               
-            //    setExpirationDatesArr(prev=>{
-            //     console.log('prev',prev);
-            //    });
-              //  setIsLoading(false);
-            } 
+                // console.log('expirationDatesArrprev');
+
+                //    setExpirationDatesArr(prev=>{
+                //     console.log('prev',prev);
+                //    });
+                //  setIsLoading(false);
+            }
 
         } catch (error) {
 
             console.log('error', error.message);
             toast.error('فشل في عملية الاضافة');
-           // setExpirationDatesArr(expirationDatesArrWithOutSub);
+            // setExpirationDatesArr(expirationDatesArrWithOutSub);
             setIsLoading(false);
         }
 
@@ -204,7 +209,7 @@ export default function AddItemComponent() {
                 unitPrice,
                 expirationDatesArr,
                 lastCode: location?.state?.code,
-                user:user?._id,
+                user: user?._id,
                 editDate
 
             };
@@ -231,12 +236,12 @@ export default function AddItemComponent() {
         } catch (error) {
             console.log('error', error.message);
             toast.error('فشل في عملية التعديل');
-            setExpirationDatesArr(prev=>prev);
+            setExpirationDatesArr(prev => prev);
             setIsLoading(false);
         }
     }
 
-   // console.log('location.state', location.state);
+    // console.log('location.state', location.state);
 
     console.log('expirationDatesArr', expirationDatesArr);
 
@@ -383,10 +388,10 @@ export default function AddItemComponent() {
             </div>
 
             {
-                showConfirmEditModal&&<ConfirmEditModal
-                show={showConfirmEditModal} setShow={setShowConfirmEditModal}
-                func={editCategory}
-                 />
+                showConfirmEditModal && <ConfirmEditModal
+                    show={showConfirmEditModal} setShow={setShowConfirmEditModal}
+                    func={editCategory}
+                />
             }
 
 
@@ -394,9 +399,9 @@ export default function AddItemComponent() {
                 {
                     location?.state?._id ?
                         <button
-                            onClick={() =>{
+                            onClick={() => {
                                 setShowConfirmEditModal(true);
-                               // editCategory()
+                                // editCategory()
                             }}
                             disabled={isLoading}
                             className='btn btn-warning h-50 my-auto'> تعديل  صنف </button>
