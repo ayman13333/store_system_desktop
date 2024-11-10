@@ -57,6 +57,7 @@ export default function PaymentInvoiceComponent() {
                     label: el?.name,
                     value: el?._id,
                     totalQuantity: 0,
+                    originalQuantity:el?.totalQuantity
                     //expirationDatesArr:[]
                 }
             })

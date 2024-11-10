@@ -59,7 +59,8 @@ export default function SupplyInvoiceComponent() {
                     value: el?._id,
                     totalQuantity: 0,
                     expirationDatesArr: [],
-                    unitPrice: 0
+                    unitPrice: 0,
+                    originalQuantity:el?.totalQuantity
                 }
             })
             setCategories(categoriesForSelect);
@@ -276,6 +277,7 @@ export default function SupplyInvoiceComponent() {
                                     category={categoryToShow} setCategory={setCategoryToShow}
                                     categories={categories} setCategories={setCategories}
                                     setSelectedOptionArr={setSelectedOptionArr}
+                                    type={'supply'}
                                 />
                             }
 

@@ -10,7 +10,7 @@ export default function CustomDropDown({ title, id, iconTitle, options }) {
             onClick={() => {
                 document.getElementById(id).style.display = document.getElementById(id).style.display == 'none' ? 'block' : 'none';
             }}
-            style={{ background: '#212529', color: 'white', border: 'none', width: '100%' }}>
+            style={{ background: '#212529', color: 'white', border: 'none', width: '100%',cursor:'pointer' }}>
             <div className='link d-flex justify-content-between my-3' value={'0'}>
                 <span className='d-flex' style={{ gap: '10px' }}>
                     {iconTitle}
@@ -19,7 +19,7 @@ export default function CustomDropDown({ title, id, iconTitle, options }) {
 
                 <span className='my-auto'> <FaChevronCircleDown /> </span>
             </div>
-            <div id={id} style={{ display: 'none' }}>
+            <div id={id} style={{ display: 'none',cursor:'pointer' }}>
                 {
                     options?.map((el, i) =>
                         <div key={i}
