@@ -210,7 +210,7 @@ export default function AddItemComponent() {
                 expirationDatesArr,
                 lastCode: location?.state?.code,
                 user: user?._id,
-                editDate
+                editDate:new Date()
 
             };
 

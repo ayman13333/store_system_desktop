@@ -56,7 +56,7 @@ export default function AllItemsComponent() {
           else codeStr=row.code;
 
         return(
-          <div style={{ backgroundColor: row.criticalValue === row.totalQuantity ? orange : '', textAlign: 'start',whiteSpace:'nowrap',textOverflow: 'ellipsis',
+          <div style={{  textAlign: 'start',whiteSpace:'nowrap',textOverflow: 'ellipsis',
             width:'100%'
            }}>
             {codeStr}
@@ -73,7 +73,7 @@ export default function AllItemsComponent() {
         }
         else codeStr=row?.name;
         return(
-          <div style={{ backgroundColor: row?.user?._id &&  ligthBlue,
+          <div style={{
            textAlign: 'start',whiteSpace:'nowrap',width:'100%' }}>
             {codeStr}
           </div>
@@ -87,7 +87,7 @@ export default function AllItemsComponent() {
     },
     { name: 'الوحدة', selector: row => row.unit, sortable: true },
     {
-      name: 'تاريخ الصلاحية',
+      name: ' الصلاحية',
       cell: (row) => {
         const currentDate = new Date();
         let isYellow = false;
@@ -116,10 +116,10 @@ export default function AllItemsComponent() {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className='btn btn-secondary' style={{
+              className={`btn ${row.criticalValue === row.totalQuantity ?'btn-info' : 'btn-secondary'} py-1`}  style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
-              }} > <TbHandClick />  </button>
+              }} > <TbHandClick height={'5px'} />  </button>
           </div>
         )
       }
@@ -139,7 +139,7 @@ export default function AllItemsComponent() {
     },
     {
       name: 'تعديل',
-      cell: (row) => <button className='btn btn-warning' onClick={() => {
+      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-warning'} btn  py-1`} onClick={() => {
         //  console.log('row',row);
         navigate('/allitems/edit', {
           state: row
@@ -157,7 +157,7 @@ export default function AllItemsComponent() {
     {
       when: row => true, // Apply to all rows
       style: {
-        fontWeight: 'bold',
+         fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
 
@@ -187,8 +187,8 @@ export default function AllItemsComponent() {
       },
       style: {
         backgroundColor: red,
-        fontWeight: 'bold',
-        fontSize: 'large',
+         fontWeight: 'bold',
+         fontSize: 'large',
         textAlign: 'center',
       }
     },
@@ -212,7 +212,7 @@ export default function AllItemsComponent() {
       },
       style: {
         backgroundColor: yellow,
-        fontWeight: 'bold',
+         fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
       }
