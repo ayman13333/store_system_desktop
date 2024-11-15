@@ -25,7 +25,7 @@ export default function Login() {
 
         // localStorage.setItem('type','admin');
 
-        // navigate('/bookings');
+    //  return   navigate('/allitems');
 
         if(result?.success){
             localStorage.setItem('type',result?.user.type);

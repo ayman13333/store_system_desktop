@@ -68,7 +68,6 @@ export default function AddItemComponent() {
 
     const [showConfirmEditModal, setShowConfirmEditModal] = useState(false);
 
-    const loggedUser = JSON.parse(localStorage.getItem('user'));
 
 
 

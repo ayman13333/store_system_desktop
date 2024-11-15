@@ -38,12 +38,14 @@ export default function AllItemsComponent() {
     get();
   }, []);
 
+  const loggedUser = JSON.parse(localStorage.getItem('user'));
 
+  console.log('loggedUser',loggedUser);
   // if (str.length > maxLength) {
   //   return str.substring(0, maxLength) + '...';
   // }
 
-  const columns = [
+  let columns = [
     {
       name: 'الكود',
       sortable: true,
@@ -153,6 +155,10 @@ export default function AllItemsComponent() {
 
   ];
 
+  if(loggedUser?.type=="storekeeper"){
+    columns=columns?.filter(el=>el?.name!='تعديل' && el?.name!='الحد الحرج' && el?.name!='سعر الوحدة' && el?.name!='الاجمالي' );
+  }
+
   const conditionalRowStyles = [
     {
       when: row => true, // Apply to all rows
@@ -261,10 +267,12 @@ export default function AllItemsComponent() {
   return (
     <div className='w-100 h-100' >
       <h1> ادارة الاصناف   {isLoading && <Spinner />} </h1>
-
-      <button className='btn btn-success' onClick={() => {
-        navigate('/allitems/add');
-      }} > اضافة <BsPlus /> </button>
+      {
+        loggedUser?.type!="storekeeper" &&<button className='btn btn-success my-2' onClick={() => {
+          navigate('/allitems/add');
+        }} > اضافة <BsPlus /> </button>
+      }
+      
 
       <AlarmComponent />
       <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} />
