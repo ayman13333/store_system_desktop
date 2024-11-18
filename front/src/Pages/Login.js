@@ -17,7 +17,8 @@ export default function Login() {
 
         //  login
         const data={
-            email,password
+            email:email.trim(),
+            password : password.trim()
         }
         setIsLoading(true);
         let result = await window?.electron?.login(data);

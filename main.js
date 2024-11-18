@@ -38,12 +38,12 @@ async function createWindow() {
 
 
   // test
-  //  mainWindow.webContents.openDevTools();
-  // mainWindow.loadURL('http://localhost:3000');
+   mainWindow.webContents.openDevTools();
+  mainWindow.loadURL('http://localhost:3000');
 
   // production
-  const startUrl = path.join(__dirname,'front','build','index.html');
-   mainWindow.loadFile(startUrl);
+  // const startUrl = path.join(__dirname,'front','build','index.html');
+  //  mainWindow.loadFile(startUrl);
 }
 
 app.whenReady().then(async () => {
@@ -468,6 +468,15 @@ ipcMain.handle('editCategory',async(event,data)=>{
   }
 });
 
+// فاتورة توريد
+ipcMain.handle('addSupplyInvoice',async(event,data)=>{
+  try {
+    
+  } catch (error) {
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+
+  }
+});
 
 
 
