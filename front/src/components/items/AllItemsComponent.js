@@ -70,7 +70,7 @@ export default function AllItemsComponent() {
       cell: row =>{
         let codeStr;
 
-        if(row?.code?.length >10){
+        if(row?.name?.length >7){
             codeStr=row?.name.substring(0, 10) + '...';
         }
         else codeStr=row?.name;
@@ -131,14 +131,14 @@ export default function AllItemsComponent() {
     { name: 'الكمية', selector: row => row.totalQuantity, sortable: true },
     { name: 'سعر الوحدة', selector: row => row.unitPrice, sortable: true },
     { name: 'الاجمالي', selector: row => Number(row?.unitPrice * row?.totalQuantity), sortable: true },
-    {
-      name:'اسم الموظف',
-      selector:row=>row?.user?.email
-    },
-    {
-      name:'تاريخ التعديل',
-      selector:row=> row?.editDate ?FormatDate(new Date(row?.editDate)) : ''
-    },
+    // {
+    //   name:'اسم الموظف',
+    //   selector:row=>row?.user?.email
+    // },
+    // {
+    //   name:'تاريخ التعديل',
+    //   selector:row=> row?.editDate ?FormatDate(new Date(row?.editDate)) : ''
+    // },
     {
       name: 'تعديل',
       cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-warning'} btn  py-1`} onClick={() => {

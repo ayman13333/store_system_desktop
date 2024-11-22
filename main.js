@@ -1,9 +1,9 @@
- const { app, BrowserWindow, ipcMain, Notification, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, Notification, screen } = require('electron');
 // const url = require('url');
- const path = require('path');
- const connectDB = require('./back/db'); // Import the database connection
- const _ = require('lodash');
- const mongoose = require('mongoose');
+const path = require('path');
+const connectDB = require('./back/db'); // Import the database connection
+const _ = require('lodash');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('./back/Models/User');
 const Category = require('./back/Models/Category');
@@ -26,7 +26,7 @@ async function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-        webPreferences: {
+    webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js'),
@@ -34,11 +34,11 @@ async function createWindow() {
     }
   });
 
-  
+
 
 
   // test
-   mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.loadURL('http://localhost:3000');
 
   // production
@@ -110,7 +110,7 @@ ipcMain.handle('add-user', async (event, userData) => {
 
     console.log('userData:', userData);
 
-   
+
     const newUser = new User(userData);
     await newUser.save();
 
@@ -150,16 +150,16 @@ ipcMain.handle('getAllUsers', async (event, data) => {
     }
 
     // // صفحة الموردين
-   else if (data.type == 'allSuppliers') {
+    else if (data.type == 'allSuppliers') {
       filter = [
         { type: 'consumer' },
         { type: 'supplier' },
         { type: 'transfer' },
       ];
     }
-    else{
-      filter=[
-        {type:data.type}
+    else {
+      filter = [
+        { type: data.type }
       ];
     }
     let users = await User.find({
@@ -211,7 +211,7 @@ ipcMain.handle('editUser', async (event, data) => {
     };
 
     if (data.password) updateObj.password = data.password;
-    if(data.type) updateObj.type=data.type;
+    if (data.type) updateObj.type = data.type;
 
     let user = await User.findByIdAndUpdate(data?._id, updateObj, {
       new: true
@@ -259,38 +259,45 @@ ipcMain.handle('editGuest', async (event, data) => {
 });
 
 // الاصناف (categories)
-ipcMain.handle('getAllCategories',async(event,data)=>{
+ipcMain.handle('getAllCategories', async (event, data) => {
   try {
-    let categories=await Category.find()
-    .populate('expirationDatesArr user')
-    .sort({createdAt:-1})
-    .lean();
+    let categories = await Category.find()
+      .populate('expirationDatesArr user')
+      .sort({ createdAt: -1 })
+      .lean();
 
     // convert objectid to string
-    categories=categories?.map(el=>{
-      return{
+    categories = categories?.map(el => {
+      return {
         ...el,
-        _id:el?._id?.toString(),
-        user:{
+        _id: el?._id?.toString(),
+        user: {
           ...el?.user,
-          _id:el?.user?._id.toString()
+          _id: el?.user?._id.toString()
         },
-        expirationDatesArr:el?.expirationDatesArr?.map(item=>{
+        expirationDatesArr: el?.expirationDatesArr?.map(item => {
           // console.log('cccccccc');
           // console.log('item',item);
           // console.log('cccccccc');
-          return{
+          return {
             ...item,
-            _id:item?._id?.toString()
+            _id: item?._id?.toString()
           }
         })
       }
-    })
+    });
 
-   // console.log('categories',categories);
+    // Sort expirationDatesArr in descending order by createdAt
+    categories = categories.map(category => {
 
-    return{
-      success:true,
+      category.expirationDatesArr.sort((a, b) => new Date(b.date) - new Date(a.date)); // Descending
+      return category;
+    });
+
+    // console.log('categories',categories);
+
+    return {
+      success: true,
       categories
     }
 
@@ -298,65 +305,65 @@ ipcMain.handle('getAllCategories',async(event,data)=>{
     console.log(error);
     new Notification({ title: 'حدث مشكلة اثناء الاتصال بالانترنت' }).show();
 
-    return{
-      success:false
+    return {
+      success: false
     };
   }
 });
 
 // 1) add category
-ipcMain.handle('addCategory',async(event,data)=>{
+ipcMain.handle('addCategory', async (event, data) => {
   try {
-    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity}=data;
+    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity } = data;
 
-    if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+    if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
     // الاول شوف الكود ده دخل قبل كدة ولا لا
     const foundCode = await Category.findOne({ code });
-      if (foundCode !== null) {
-        new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
-        return{
-          success:false
-        };
-      }
+    if (foundCode !== null) {
+      new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
+      return {
+        success: false
+      };
+    }
 
     // 1) ضيف تواريخ الصلاحية في ال model
-    let totalQuantity=0;
-    let expirationDatesArrIDS=[];
+    let totalQuantity = 0;
+    let expirationDatesArrIDS = [];
 
     await Promise.all(
-      expirationDatesArr?.map(async(el)=>{
-       // console.log("el",el);
-        totalQuantity+= Number(el?.quantity);
+      expirationDatesArr?.map(async (el) => {
+        // console.log("el",el);
+        totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem(el);
         await newCategoryItem.save();
-        
-        newCategoryItem=newCategoryItem.toJSON();
 
-        
+        newCategoryItem = newCategoryItem.toJSON();
+
+
         expirationDatesArrIDS.push(newCategoryItem?._id);
 
         console.log('CategoryItem saved:', newCategoryItem);
       })
     );
 
-    console.log('expirationDatesArrIDS',expirationDatesArrIDS);
-    console.log('totalQuantity',totalQuantity);
+    console.log('expirationDatesArrIDS', expirationDatesArrIDS);
+    console.log('totalQuantity', totalQuantity);
 
-   //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
+    //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
 
     //2) ضيف الصنف
-    let newCategoryObj={
+    let newCategoryObj = {
       code,
       name,
       criticalValue,
       unitPrice,
-      unit, 
-      expirationDatesArr:expirationDatesArrIDS,
-      totalQuantity:quantity
+      unit,
+      expirationDatesArr: expirationDatesArrIDS,
+      totalQuantity: quantity
     }
 
-    let newCategory=new Category(newCategoryObj);
+    let newCategory = new Category(newCategoryObj);
 
     await newCategory.save();
 
@@ -364,95 +371,95 @@ ipcMain.handle('addCategory',async(event,data)=>{
       success: true
     };
   } catch (error) {
-    
+
     console.log(error);
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
 
-    return{
-      success:false
+    return {
+      success: false
     };
 
   }
 })
 
 // edit category
-ipcMain.handle('editCategory',async(event,data)=>{
+ipcMain.handle('editCategory', async (event, data) => {
   try {
-    let{expirationDatesArr,code,name,criticalValue,unitPrice,unit,quantity,lastCode,user,editDate}=data;
+    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate } = data;
 
-    if(expirationDatesArr.length==0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+    if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
-   // const oldCategory=await Category.findById(_id);
+    // const oldCategory=await Category.findById(_id);
 
     if (code !== lastCode) {
       // الاول شوف الكود ده دخل قبل كدة ولا لا
-    const foundCode = await Category.findOne({ code });
-    if (foundCode !== null) {
-      new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
-      return;
-    }
+      const foundCode = await Category.findOne({ code });
+      if (foundCode !== null) {
+        new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
+        return;
+      }
     }
 
-   // console.log('oldCategory',oldCategory);
+    // console.log('oldCategory',oldCategory);
 
     const oldCategory = await Category.findOne({ code });
-    let oldCategoryItems= oldCategory?.expirationDatesArr;
+    let oldCategoryItems = oldCategory?.expirationDatesArr;
 
     //1) امسح كل ال category items بتوع الصنف 
-  const result= await CategoryItem.deleteMany({ _id: { $in: oldCategoryItems } });
+    const result = await CategoryItem.deleteMany({ _id: { $in: oldCategoryItems } });
 
-    console.log('result',result);
+    console.log('result', result);
     //2) save new category items
 
-     // 1) ضيف تواريخ الصلاحية في ال model
-     let totalQuantity=0;
-     let expirationDatesArrIDS=[];
+    // 1) ضيف تواريخ الصلاحية في ال model
+    let totalQuantity = 0;
+    let expirationDatesArrIDS = [];
 
     await Promise.all(
-      expirationDatesArr?.map(async(el)=>{
-       // console.log("el",el);
-        totalQuantity+= Number(el?.quantity);
+      expirationDatesArr?.map(async (el) => {
+        // console.log("el",el);
+        totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem(el);
         await newCategoryItem.save();
-        
-        newCategoryItem=newCategoryItem.toJSON();
 
-        
+        newCategoryItem = newCategoryItem.toJSON();
+
+
         expirationDatesArrIDS.push(newCategoryItem?._id);
 
         console.log('CategoryItem saved:', newCategoryItem);
       })
     );
 
-    console.log('expirationDatesArrIDS',expirationDatesArrIDS);
-    console.log('totalQuantity',totalQuantity);
+    console.log('expirationDatesArrIDS', expirationDatesArrIDS);
+    console.log('totalQuantity', totalQuantity);
 
-   //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
+    //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
 
     //2) ضيف الصنف
-    let newCategoryObj={
+    let newCategoryObj = {
       code,
       name,
       criticalValue,
       unitPrice,
-      unit, 
-      expirationDatesArr:expirationDatesArrIDS,
-      totalQuantity:quantity,
+      unit,
+      expirationDatesArr: expirationDatesArrIDS,
+      totalQuantity: quantity,
       user,
       editDate
     }
 
-   // let newCategory=new Category(newCategoryObj);
+    // let newCategory=new Category(newCategoryObj);
 
-   // await newCategory.save();
+    // await newCategory.save();
 
-   await Category.findByIdAndUpdate(
-    oldCategory?._id,
-    newCategoryObj,
-    {
-      new:true
-    }
-   );
+    await Category.findByIdAndUpdate(
+      oldCategory?._id,
+      newCategoryObj,
+      {
+        new: true
+      }
+    );
 
     console.log('edited');
 
@@ -462,16 +469,16 @@ ipcMain.handle('editCategory',async(event,data)=>{
 
 
 
-    
+
   } catch (error) {
     new Notification({ title: 'فشل في عملية التعديل' }).show();
   }
 });
 
 // فاتورة توريد
-ipcMain.handle('addSupplyInvoice',async(event,data)=>{
+ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
-    
+
   } catch (error) {
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
 

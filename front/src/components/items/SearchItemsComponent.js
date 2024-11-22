@@ -13,8 +13,11 @@ export default function SearchItemsComponent({setCategories,setIsLoading}) {
         const value=searchValue.trim();
      
 
+        // setCategories((prev) =>
+        //     prev.filter(el => el?.[searchType]?.includes(value) ? el : '')
+        //   );
         setCategories((prev) =>
-            prev.filter(el => el?.[searchType]?.includes(value) ? el : '')
+            prev.filter(el => el?.[searchType]==value)
           );
 
     }
@@ -64,7 +67,7 @@ export default function SearchItemsComponent({setCategories,setIsLoading}) {
 
                 <button onClick={() => search()} className='btn btn-success'> بحث </button>
 
-                <button onClick={() => cancelFilter()} className='btn btn-danger' > الغاء الفلتر  </button>
+                <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh  </button>
 
             </div>
 
