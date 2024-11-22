@@ -17,6 +17,7 @@ export default function AllItemsComponent() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [originalCategories, setOriginalCategories] = useState([]);
   const [showExpirationDatesModal, setShowExpirationDatesModal] = useState(false);
   const [categoryToShow, setCategoryToShow] = useState(null);
 
@@ -33,6 +34,7 @@ export default function AllItemsComponent() {
       console.log('result', result);
 
       setCategories(result?.categories);
+      setOriginalCategories(result?.categories);
     }
 
     get();
@@ -275,7 +277,7 @@ export default function AllItemsComponent() {
       
 
       <AlarmComponent />
-      <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} />
+      <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} originalCategories={originalCategories} />
 
       {
         !isLoading && <DataTable

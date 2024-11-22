@@ -3,7 +3,7 @@ import FormatDate from '../../Utilities/FormatDate';
 import { BsBackspaceFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 
-export default function SearchItemsComponent({setCategories,setIsLoading}) {
+export default function SearchItemsComponent({setCategories,setIsLoading,originalCategories}) {
     const [searchType, setSearchType] = useState('');
     const [searchValue, setSearchValue] = useState('');
 
@@ -16,23 +16,23 @@ export default function SearchItemsComponent({setCategories,setIsLoading}) {
         // setCategories((prev) =>
         //     prev.filter(el => el?.[searchType]?.includes(value) ? el : '')
         //   );
-        setCategories((prev) =>
-            prev.filter(el => el?.[searchType]==value)
-          );
+        let categoriesAfterSearch=originalCategories.filter(el => el?.[searchType]==value);
+
+        setCategories(categoriesAfterSearch);
 
     }
 
     const cancelFilter = async () => {
-        setIsLoading(true);
-        const [result] = await Promise.all([
-          window?.electron?.getAllCategories()
-        ]);
+        // setIsLoading(true);
+        // const [result] = await Promise.all([
+        //   window?.electron?.getAllCategories()
+        // ]);
   
-        // console.log('categories', categories);
-        setIsLoading(false);
-        console.log('result', result);
+        // // console.log('categories', categories);
+        // setIsLoading(false);
+        // console.log('result', result);
   
-        setCategories(result?.categories);
+        setCategories(originalCategories);
         setSearchType('');
         setSearchValue('');
     }
