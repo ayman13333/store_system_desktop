@@ -45,9 +45,11 @@ function App() {
 
 
       {/* التقرير */}
-      {/*  تقرير جرد  */}
-      <Route path='/inventoryReport' element={<InventoryReportPage />} />
       {/*  تقرير جرد مسعر */}
+      <Route path='/inventoryReport' element={<InventoryReportPage />} />
+      
+      {/*  تقرير جرد  */}
+
       <Route path='/InventoryReportWithoutPrice' element={<InventoryReportWithoutPricePage />} />
 
       </Routes>

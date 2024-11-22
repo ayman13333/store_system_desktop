@@ -294,7 +294,7 @@ export default function PaymentInvoiceComponent() {
                     className='btn btn-success  my-auto'> اضافة  فاتورة </button>
                 </div>
                
-                <div>
+                <div className="total">
                     <h3> 
                         الاجمالي    :{CalculateSum({selectedOptionArr})}
                     </h3>
