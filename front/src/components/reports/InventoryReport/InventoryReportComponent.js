@@ -60,12 +60,12 @@ const totalUnitPrice = categories.reduce((sum, category) => {
 
       setCategories(result?.categories);
 
-      setTableData(dynamicData);  // Set dynamic data to tableData
+      setTableData(result?.categories);  // Set dynamic data to tableData
 
     }
 
     get();
-  }, [dynamicData]);
+  }, []);
 
   // console.log("categoriesUsers",categoriesUsers)
   console.log("categories",categories)

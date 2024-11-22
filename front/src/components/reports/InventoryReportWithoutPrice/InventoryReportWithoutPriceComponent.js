@@ -27,12 +27,12 @@ export default function InventoryReportWithoutPriceComponent() {
 
       setCategories(result?.categories);
 
-      setTableData(dynamicData);  // Set dynamic data to tableData
+      setTableData(result?.categories);  // Set dynamic data to tableData
 
     }
 
     get();
-  }, [dynamicData]);
+  }, []);
 
 
   const columns = [
