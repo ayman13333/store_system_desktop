@@ -18,10 +18,15 @@ export default function SideBar() {
     { value:'فاتورة تحويل',to:'/convertInvoice'}
 
   ]; 
-
   const reportsOptions=[
+    { value:'تقرير الجرد',to:'/inventoryReport'},
+    { value:'تقرير الجرد 2',to:'/inventoryReport'},
+    { value:'تقرير 3 ',to:'/inventoryReport'},
+    { value:'تقرير الصنف',to:'/inventoryReport'},
 
-  ];
+  ]; 
+
+
 
   const type = localStorage.getItem('type');
 
