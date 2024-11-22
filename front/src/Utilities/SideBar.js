@@ -12,23 +12,23 @@ export default function SideBar() {
   const navigate = useNavigate();
 
   //  console.log('lllll', localStorage.getItem('type'));
-  const pillsOptions=[
-    { value:'فاتورة توريد',to:'/supplyInvoice'},
-    { value:'فاتورة صرف',to:'/paymentInvoice'},
-    { value:'فاتورة تحويل',to:'/convertInvoice'}
+  const pillsOptions = [
+    { value: 'فاتورة توريد', to: '/supplyInvoice' },
+    { value: 'فاتورة صرف', to: '/paymentInvoice' },
+    { value: 'فاتورة تحويل', to: '/convertInvoice' }
 
   ]; 
+
   const reportsOptions=[
-    { value:'تقرير الجرد',to:'/inventoryReport'},
-    { value:'تقرير الجرد 2',to:'/inventoryReport'},
-    { value:'تقرير 3 ',to:'/inventoryReport'},
-    { value:'تقرير الصنف',to:'/inventoryReport'},
 
   ]; 
 
 
 
-  const type = localStorage.getItem('type');
+  // const type = localStorage.getItem('type');
+
+  const loggedUser = JSON.parse(localStorage.getItem('user'));
+
 
   return (
     <div style={{ width: '20%', backgroundColor: '#212529', color: 'white' }}>
@@ -43,48 +43,53 @@ export default function SideBar() {
           <span> <BsBackpack4Fill />  ادارة الاصناف  </span>
         </NavLink>
 
-        <NavLink className='link my-3' to={'/users'}>
-          <span style={{ display: "flex", gap: "10px" }}>
-            <div>
-              <BsGlobeCentralSouthAsia />
-            </div>
-            <div>
-              ادارة الموظفين
-            </div>
-          </span>
-        </NavLink>
+        {
+          loggedUser?.type != "storekeeper" && <>
+            <NavLink className='link my-3' to={'/users'}>
+              <span style={{ display: "flex", gap: "10px" }}>
+                <div>
+                  <BsGlobeCentralSouthAsia />
+                </div>
+                <div>
+                  ادارة الموظفين
+                </div>
+              </span>
+            </NavLink>
 
-        <NavLink className='link my-3' to={'/guests'}>
-          <span style={{ display: "flex", gap: "10px" }}>
-            <div>
-              <BsFillPersonVcardFill />
-            </div>
-            <div>
-              سجل الجهات
-            </div>
-          </span>
-        </NavLink>
+            <NavLink className='link my-3' to={'/guests'}>
+              <span style={{ display: "flex", gap: "10px" }}>
+                <div>
+                  <BsFillPersonVcardFill />
+                </div>
+                <div>
+                  سجل الجهات
+                </div>
+              </span>
+            </NavLink>
 
-        
-        <Nav.Item>
-          <CustomDropDown
-          title={'الفواتير'}
-          id={'invoices'}
-          iconTitle={<FaFileInvoice style={{ margin: 'auto' }} />}
-          options={pillsOptions}
-           />
-        </Nav.Item>
 
-        <Nav.Item>
-          <CustomDropDown
-          title={'التقارير'}
-          id={'reports'}
-          iconTitle={<HiDocumentReport  style={{ margin: 'auto' }} />}
-          options={reportsOptions}
-           />
-        </Nav.Item>
+            <Nav.Item>
+              <CustomDropDown
+                title={'الفواتير'}
+                id={'invoices'}
+                iconTitle={<FaFileInvoice style={{ margin: 'auto' }} />}
+                options={pillsOptions}
+              />
+            </Nav.Item>
 
-        
+            <Nav.Item>
+              <CustomDropDown
+                title={'التقارير'}
+                id={'reports'}
+                iconTitle={<HiDocumentReport style={{ margin: 'auto' }} />}
+                options={reportsOptions}
+              />
+            </Nav.Item>
+          </>
+        }
+
+
+
         <button onClick={() => {
           localStorage.removeItem('type');
           localStorage.removeItem('email');

@@ -13,5 +13,8 @@ contextBridge.exposeInMainWorld('electron', {
   // الاصناف
   addCategory:(data)=>ipcRenderer.invoke('addCategory',data),
   getAllCategories:(data)=>ipcRenderer.invoke('getAllCategories',data),
-  editCategory:(data)=>ipcRenderer.invoke('editCategory',data)
+  editCategory:(data)=>ipcRenderer.invoke('editCategory',data),
+  addSupplyInvoice:(data)=>ipcRenderer.invoke('addSupplyInvoice',data),
 });
+
+

@@ -468,6 +468,15 @@ ipcMain.handle('editCategory',async(event,data)=>{
   }
 });
 
+// فاتورة توريد
+ipcMain.handle('addSupplyInvoice',async(event,data)=>{
+  try {
+    
+  } catch (error) {
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+
+  }
+});
 
 
 

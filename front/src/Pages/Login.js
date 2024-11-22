@@ -17,7 +17,8 @@ export default function Login() {
 
         //  login
         const data={
-            email,password
+            email:email.trim(),
+            password : password.trim()
         }
         setIsLoading(true);
         let result = await window?.electron?.login(data);
@@ -25,7 +26,7 @@ export default function Login() {
 
         // localStorage.setItem('type','admin');
 
-        // navigate('/bookings');
+    //  return   navigate('/allitems');
 
         if(result?.success){
             localStorage.setItem('type',result?.user.type);
