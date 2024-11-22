@@ -16,23 +16,37 @@ export default function InventoryReportComponent() {
   }, [selectedValue]);
 
 
-  useEffect(() => {
-    const get = async () => {
-      const result = await window?.electron?.getAllUsers({
-        type: 'allSuppliers'
-      });
+  // useEffect(() => {
+  //   const get = async () => {
+  //     const result = await window?.electron?.getAllUsers({
+  //       type: 'allSuppliers'
+  //     });
       
-      console.log('result', result);
+  //     console.log('result', result);
 
-      setUsers(result?.users);
-    }
+  //     setUsers(result?.users);
+  //   }
 
    
-    get();
+  //   get();
     
-  }, []);
-  console.log('users', users);
+  // }, []);
+  // console.log('users', users);
 
+  const dynamicData = categories.map(category => ({
+    code: category?.code,
+    name: category?.name,
+    unit: category?.unit,
+    totalQuantity: category?.totalQuantity,
+    unitPrice: category?.unitPrice,
+  }));
+
+  // Calculate the sum of all unitPrice
+const totalUnitPrice = categories.reduce((sum, category) => {
+  return sum + ((category?.unitPrice* category?.totalQuantity) || 0); // Add unitPrice or 0 if it's undefined
+}, 0);
+
+  console.log("dynamicData",dynamicData)
 
 
   useEffect(() => {
@@ -45,10 +59,13 @@ export default function InventoryReportComponent() {
       console.log('result', result);
 
       setCategories(result?.categories);
+
+      setTableData(dynamicData);  // Set dynamic data to tableData
+
     }
 
     get();
-  }, []);
+  }, [dynamicData]);
 
   // console.log("categoriesUsers",categoriesUsers)
   console.log("categories",categories)
@@ -59,31 +76,31 @@ export default function InventoryReportComponent() {
 
   console.log("selectedValue",selectedValue)
   console.log("secondSelectValue",secondSelectValue)
-  const Staticoptions = [
-    { value: '1', label: 'اسم المورد' },
-    { value: '2', label: 'اسم جهة الصرف' },
-    { value: '3', label: 'اسم جهه التحويل' },
-  ];
+  // const Staticoptions = [
+  //   { value: '1', label: 'اسم المورد' },
+  //   { value: '2', label: 'اسم جهة الصرف' },
+  //   { value: '3', label: 'اسم جهه التحويل' },
+  // ];
 
-  const options1 = users.filter(user => user.type === "supplier").map(user => ({
-    value: user._id, 
-    label: user.fullName
-  }));
+  // const options1 = users.filter(user => user.type === "supplier").map(user => ({
+  //   value: user._id, 
+  //   label: user.fullName
+  // }));
 
-  const options2 = users.filter(user => user.type === "consumer").map(user => ({
-    value: user._id, 
-    label: user.fullName
-  }));
+  // const options2 = users.filter(user => user.type === "consumer").map(user => ({
+  //   value: user._id, 
+  //   label: user.fullName
+  // }));
 
-  const options3 = users.filter(user => user.type === "transfer").map(user => ({
-    value: user._id, 
-    label: user.fullName
-  }));
+  // const options3 = users.filter(user => user.type === "transfer").map(user => ({
+  //   value: user._id, 
+  //   label: user.fullName
+  // }));
 
-  const dynamicOptions =
-    selectedValue === '1' ? options1 :
-    selectedValue === '2' ? options2 :
-    selectedValue === '3' ? options3 : [];
+  // const dynamicOptions =
+  //   selectedValue === '1' ? options1 :
+  //   selectedValue === '2' ? options2 :
+  //   selectedValue === '3' ? options3 : [];
 
   const staticData = [
     { code: 'A001', name: 'منتج 1', unit: 'قطعة', totalQuantity: 100, unitPrice: 50 },
@@ -154,28 +171,31 @@ export default function InventoryReportComponent() {
     },
   };
 
-  const search = () => {
-    if (selectedValue === '1' && secondSelectValue) {
+  // const search = () => {
+    // if (selectedValue === '1' && secondSelectValue) {
       // Filter categories based on selectedValue and secondSelectValue
-      const filteredCategories = categories.filter(category => category?.user?._id === secondSelectValue);
-      const dynamicData = filteredCategories.map(category => ({
-        code: category?.code,
-        name: category?.name,
-        unit: category?.unit,
-        totalQuantity: category?.totalQuantity,
-        unitPrice: category?.unitPrice,
-      }));
-      setTableData(dynamicData);  // Set dynamic data to tableData
-    } else {
-      setTableData([]); // Reset tableData if no match
-    }
-  };
+      // const filteredCategories = categories.filter(category => category?.user?._id === secondSelectValue);
+      // const dynamicData = categories.map(category => ({
+      //   code: category?.code,
+      //   name: category?.name,
+      //   unit: category?.unit,
+      //   totalQuantity: category?.totalQuantity,
+      //   unitPrice: category?.unitPrice,
+      // }));
+    // } else {
+      // setTableData([]); // Reset tableData if no match
+    // }
+  // };
+
+
   
-  const cancelSearch = () => {
-    setSelectedValue(null);
-    setSecondSelectValue(null);
-    setTableData([]);
-  };
+  // const cancelSearch = () => {
+  //   setSelectedValue(null);
+  //   setSecondSelectValue(null);
+  //   setTableData([]);
+  // };
+
+
   // Function to handle the print action
   const printReport = () => {
     const printWindow = window.open('', '', 'height=800,width=1200');
@@ -229,7 +249,7 @@ export default function InventoryReportComponent() {
       <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <ReactSelect
+        {/* <ReactSelect
           options={Staticoptions}
           value={selectedValue}
           onChange={setSelectedValue}
@@ -242,9 +262,9 @@ export default function InventoryReportComponent() {
           onChange={setSecondSelectValue}
           placeholder="اختر"
           width="350px"
-        />
-        <button onClick={search} className="btn btn-success">بحث</button>
-        <button onClick={cancelSearch} className="btn btn-danger">إلغاء البحث</button>
+        /> */}
+        {/* <button onClick={search} className="btn btn-success">بحث</button> */}
+        {/* <button onClick={cancelSearch} className="btn btn-danger">إلغاء البحث</button> */}
 
       </div>
       <br />
@@ -264,6 +284,34 @@ export default function InventoryReportComponent() {
           pagination
         />
       </div>
+      <div style={{
+  display: "flex",
+  justifyContent: "flex-start",
+  gap: "20px",
+  alignItems: "center",
+  backgroundColor: "#f9f9f9",
+  padding: "10px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
+}}>
+  <div style={{
+    color: "#bb0000",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}>
+    إجمالي سعر الأصناف بالمخزن :
+  </div>
+  <div style={{
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#bb0000"
+  }}>
+    <span>{totalUnitPrice}</span>
+    <span> </span>
+    <span>جنيه </span>
+  </div>
+</div>
+
     </div>
   );
 }

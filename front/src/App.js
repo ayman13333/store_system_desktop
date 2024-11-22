@@ -14,6 +14,7 @@ import SupplyInvoicePage from './Pages/invoices/SupplyInvoicePage';
 import PaymentInvoicePage from './Pages/invoices/PaymentInvoicePage';
 import ConvetInvoicePage from './Pages/invoices/ConvetInvoicePage';
 import InventoryReportPage from './Pages/reports/InventoryReportPage';
+import InventoryReportWithoutPricePage from './Pages/reports/InventoryReportWithoutPricePage';
 
 
 
@@ -46,6 +47,7 @@ function App() {
       {/* التقرير */}
       {/* تقرير جرد */}
       <Route path='/inventoryReport' element={<InventoryReportPage />} />
+      <Route path='/InventoryReportWithoutPrice' element={<InventoryReportWithoutPricePage />} />
 
       </Routes>
      </HashRouter>
