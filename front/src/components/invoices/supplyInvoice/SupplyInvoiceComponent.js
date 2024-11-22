@@ -8,6 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import ExpirationDatesModal from "./ExpirationDatesModal";
 import AddQuantityModal from "./AddQuantityModal";
 import { toast } from "react-toastify";
+import CalculateSum from "../../../Utilities/CalculateSum";
 
 export default function SupplyInvoiceComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +33,8 @@ export default function SupplyInvoiceComponent() {
     const [showAddQuantityModal, setShowAddQuantityModal] = useState(false);
 
     const [notes, setNotes] = useState('');
+    // الاجمالي
+    // const[sum,setSum]=useState(0);
 
 
     const loggedUser=JSON.parse(localStorage.getItem('user'));
@@ -278,6 +281,7 @@ export default function SupplyInvoiceComponent() {
                                     categories={categories} setCategories={setCategories}
                                     setSelectedOptionArr={setSelectedOptionArr}
                                     type={'supply'}
+                                   
                                 />
                             }
 
@@ -286,17 +290,19 @@ export default function SupplyInvoiceComponent() {
                 </div>
             }
 
-            <div className='d-flex justify-content-between'>
-
+            <div className='d-flex justify-content-between my-4'>
+                <div>
                 <button
                     onClick={() => addNewInvoice()}
                     disabled={isLoading}
-                    className='btn btn-success h-50 my-auto'> اضافة  فاتورة </button>
+                    className='btn btn-success  my-auto'> اضافة  فاتورة </button>
+                </div>
 
-
-                {/* <button
-                    onClick={() => window.history.back()}
-                    className='btn btn-primary h-50 my-auto'> رجوع </button> */}
+                <div>
+                    <h3> 
+                        الاجمالي    :{CalculateSum({selectedOptionArr})}
+                    </h3>
+                </div>
 
             </div>
 

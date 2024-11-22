@@ -47,11 +47,11 @@ export default function AddQuantityModal({ show, setShow, category, setCategory,
 
         let newCategory = {
             ...category,
-            unitPrice: Number(price),
+            unitPrice: type=='payment' ? category?.unitPrice  :Number(price),
             totalQuantity:  Number(newQuantity),
             newExpirationDate: removeTimeFromDate(date),
             expirationDatesArr: [
-                ...category.expirationDatesArr,
+                // ...category.expirationDatesArr,
                 {
                     quantity: Number(newQuantity),
                     date: removeTimeFromDate(date)
@@ -73,6 +73,7 @@ export default function AddQuantityModal({ show, setShow, category, setCategory,
         // setCategories(...newCategories);
         setSelectedOptionArr(prev => prev?.map(el => el?._id == newCategory?._id ? newCategory : el));
 
+       
         setShow(false);
         // category.totalQuantity=Number(price * el?.totalQuantity)
     }

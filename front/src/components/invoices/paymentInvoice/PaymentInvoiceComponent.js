@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import FormatDate from "../../../Utilities/FormatDate";
 import Select from 'react-select';
 import { toast } from "react-toastify";
+import CalculateSum from "../../../Utilities/CalculateSum";
 
 
 export default function PaymentInvoiceComponent() {
@@ -57,8 +58,8 @@ export default function PaymentInvoiceComponent() {
                     label: el?.name,
                     value: el?._id,
                     totalQuantity: 0,
-                    originalQuantity:el?.totalQuantity
-                    //expirationDatesArr:[]
+                    originalQuantity:el?.totalQuantity,
+                    expirationDatesArr:[]
                 }
             })
             setCategories(categoriesForSelect);
@@ -284,18 +285,20 @@ export default function PaymentInvoiceComponent() {
                 </div>
             }
 
-            <div className='d-flex justify-content-between'>
-
+           
+            <div className='d-flex justify-content-between my-4'>
+                <div>
                 <button
                     onClick={() => addNewInvoice()}
                     disabled={isLoading}
-                    className='btn btn-success h-50 my-auto'> اضافة  فاتورة </button>
-
-
-                {/* <button
-                onClick={() => window.history.back()}
-                className='btn btn-primary h-50 my-auto'> رجوع </button> */}
-
+                    className='btn btn-success  my-auto'> اضافة  فاتورة </button>
+                </div>
+               
+                <div>
+                    <h3> 
+                        الاجمالي    :{CalculateSum({selectedOptionArr})}
+                    </h3>
+                </div>
             </div>
 
             {isLoading && <Spinner />}
