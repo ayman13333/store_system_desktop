@@ -140,25 +140,16 @@ export default function SupplyInvoiceComponent() {
  
              if (result.success == true) {
                  toast.success('تم اضافة الفاتورة بنجاح');
-                //  setCode('');
-                //  setName('');
-                //  setCriticalValue('');
-                //  setUnitPrice('');
-                //  setQuantity('');
-                //  setUnit('');
-                //  setExpirationDatesArr([]);
+                 setInvoiceNumber('');
+                 setSelectedSupplier('0');
+                setSupplyDate('');
+                setInvoiceCode('');
+                setNotes('');
              }
              else {
                  toast.error('فشل في عملية الاضافة');
                  console.log('mmmmmmmmmmmmm');
-                 // console.log('expirationDatesArrprev');
- 
-                 //    setExpirationDatesArr(prev=>{
-                 //     console.log('prev',prev);
-                 //    });
-                 //  setIsLoading(false);
              }
-           // console.log(' after CalculateSum',CalculateSum({selectedOptionArr}));
             
 
         } catch (error) {
