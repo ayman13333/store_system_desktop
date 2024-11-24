@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component"
 import { FaEye } from "react-icons/fa";
-;
+import { toast } from 'react-toastify';
+
+
 
 export default function EntityTransactionReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
@@ -197,6 +199,10 @@ export default function EntityTransactionReportComponent() {
   };
 
   const search = () => {
+    
+    if(!selectedValue || !secondSelectValue){
+      return  toast.error('يجب اختيار الجهة');
+      }
     let filteredData = staticData;
   
     // Helper function to convert DD-MM-YYYY to Date object
@@ -270,6 +276,11 @@ export default function EntityTransactionReportComponent() {
 
 
   const printReport = () => {
+    if (tableData.length === 0) {
+      return toast.warning('لا يوجد بيانات للطباعة');
+
+    }
+    
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير معاملات الجهة</title><style>');
   

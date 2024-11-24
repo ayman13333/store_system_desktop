@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
+import { toast } from 'react-toastify';
 
 export default function InventoryReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
@@ -198,6 +199,10 @@ const totalUnitPrice = categories.reduce((sum, category) => {
 
   // Function to handle the print action
   const printReport = () => {
+    if (tableData.length === 0) {
+      return toast.warning('لا يوجد بيانات للطباعة');
+
+    }
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير الجرد</title><style>');
     

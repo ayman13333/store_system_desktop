@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 
 export default function FinancialTransactionsReportComponent() {
@@ -159,6 +160,10 @@ export default function FinancialTransactionsReportComponent() {
   };
 
   const search = () => {
+
+    if(!selectedValue){
+    return  toast.error('يجب اختيار الجهة');
+    }
     let filteredData = staticData;
   
     // Helper function to convert DD-MM-YYYY to Date object
@@ -235,6 +240,12 @@ export default function FinancialTransactionsReportComponent() {
 
 
   const printReport = () => {
+
+    if (tableData.length === 0) {
+      return toast.warning('لا يوجد بيانات للطباعة');
+
+    }
+   
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير المعاملات المالية</title><style>');
   
@@ -293,7 +304,7 @@ export default function FinancialTransactionsReportComponent() {
           options={Staticoptions}
           value={selectedValue}
           onChange={setSelectedValue}
-          placeholder="اختر"
+          placeholder="اختر الجهة"
           width="350px"
         />
 
@@ -345,7 +356,7 @@ export default function FinancialTransactionsReportComponent() {
           pagination
         />
       </div>
-      <div style={{
+  {  tableData.length !== 0 &&  <div style={{
   display: "flex",
   justifyContent: "flex-start",
   gap: "20px",
@@ -371,7 +382,7 @@ export default function FinancialTransactionsReportComponent() {
     <span> </span>
     <span>جنيه </span>
   </div>
-</div>
+</div>}
 
 
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 
 export default function InventoryReportWithoutPriceComponent() {
@@ -93,6 +94,10 @@ export default function InventoryReportWithoutPriceComponent() {
  
   // Function to handle the print action
   const printReport = () => {
+    if (tableData.length === 0) {
+      return toast.warning('لا يوجد بيانات للطباعة');
+
+    }
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير الجرد</title><style>');
     
