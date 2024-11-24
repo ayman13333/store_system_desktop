@@ -489,6 +489,9 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
       notes,
       totalQuantity
     }=body;
+
+   
+
    // const categoryObject = await Invoice.findById("6738a377501e48b91eb6821c");
     const invoiceObject = await Invoice.find().sort({createdAt : -1});
     const invoiceCodeCheck = await Invoice.findOne({invoiceCode});

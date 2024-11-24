@@ -98,6 +98,7 @@ export default function SupplyInvoiceComponent() {
         setShowAddQuantityModal(true);
     }
 
+   // console.log('supplyDate',new Date(supplyDate)?.toString());
     const addNewInvoice=async()=>{
         try {
             if(invoiceCode=='') return toast.error('من فضلك ادخل كود الفاتورة');
@@ -115,11 +116,55 @@ export default function SupplyInvoiceComponent() {
                 }
             });
 
+             const data={
+                type:'supply',
+                selectedOptionArr,
+                invoiceCode,
+                supplierID:selectedSupplier,
+                employeeID:loggedUser?._id,
+                notes,
+                registerDate:new Date().toString(),
+                supplyDate:new Date(supplyDate)?.toString(),
+                totalQuantity:CalculateSum({selectedOptionArr})
 
-            console.log(' after selectedOptionArr',selectedOptionArr);
+             };
+
+             console.log('data',data);
+
+          //   return;
+
+
+             setIsLoading(true);
+             const result = await window?.electron?.addSupplyInvoice(data);
+             setIsLoading(false);
+ 
+             if (result.success == true) {
+                 toast.success('تم اضافة الفاتورة بنجاح');
+                //  setCode('');
+                //  setName('');
+                //  setCriticalValue('');
+                //  setUnitPrice('');
+                //  setQuantity('');
+                //  setUnit('');
+                //  setExpirationDatesArr([]);
+             }
+             else {
+                 toast.error('فشل في عملية الاضافة');
+                 console.log('mmmmmmmmmmmmm');
+                 // console.log('expirationDatesArrprev');
+ 
+                 //    setExpirationDatesArr(prev=>{
+                 //     console.log('prev',prev);
+                 //    });
+                 //  setIsLoading(false);
+             }
+           // console.log(' after CalculateSum',CalculateSum({selectedOptionArr}));
+            
 
         } catch (error) {
-            
+
+            setIsLoading(false);
+            toast.error('فشل في عملية الاضافة');
         }
     }
 
