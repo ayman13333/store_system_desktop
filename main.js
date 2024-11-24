@@ -478,7 +478,97 @@ ipcMain.handle('editCategory', async (event, data) => {
 // فاتورة توريد
 ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
+    let serial_nmber = 0;
+    const categoryObject = await Invoice.findById("6738a377501e48b91eb6821c");
+    const invoiceObject = await Invoice.find().sort({createdAt : -1});
+    const invoiceCode = await Invoice.findOne({invoiceCode: 124});
+    if(invoiceCode){
+        // new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
+        return res.send("Invoice Code Is Here")
+    }
 
+    
+    if(invoiceObject.length>0){
+
+      serial_nmber =invoiceObject[0].serialNumber + 1;
+  
+    }
+    else{ serial_nmber = 1; }
+
+    let expirationDatesArr = [
+        {
+        quantity: 1, 
+        date: "Wed Nov 20 2024 00:00:00 GMT+0200 (Eastern European Standard Time)"
+    },
+    {
+      quantity: 3, 
+      date: "Wed Nov 20 2024 00:00:00 GMT+0200 (Eastern European Standard Time)"
+  }
+];
+  
+    let newTotalQuantity = 0;
+    await Promise.all(
+        expirationDatesArr?.map(async(el)=>{
+          newTotalQuantity+= el.quantity;
+          let newCategoryItem = new CategoryItem({
+            quantity : el.quantity,
+            date : el.date,
+            // invoiceId : data._id
+            categoryID : "6738a377501e48b91eb6821c"
+          });
+          await newCategoryItem.save();
+          newCategoryItem=newCategoryItem.toJSON();  
+        })
+      );
+      const data = {
+        type: "supp",
+        serialNumber: serial_nmber,
+        invoiceCode: 124,
+        invoicesData : [],
+        // invoiceCode: data.invoiceCode,
+        supplierID: "67127baa4d253af21c4d21bc",
+        employeeID: "671136026c8fb942a8b8f06c",
+        registerDate: "2024-11-20",
+        supplyDate: "2024-11-25",
+        notes: "Delivery scheduled for next week",
+        quantity: 10,
+      };      
+      
+     
+      let newInvoice=new Invoice(data);
+      await newInvoice.save();
+
+      if(data.type=="supply"){
+        const categoryItemObject = await CategoryItem.find({invoiceId : "6738a377501e48b91eb6821c"});
+       
+        const finalUnitPrice= (
+          ((newTotalQuantity * data.unitPrice) + categoryObject.totalQuantity)/
+           newTotalQuantity + categoryObject.totalQuantity
+          )
+        let finalTotalQuantity=0;
+        categoryItemObject.map((ele)=>{    return totalQuantity += ele.quantity   })
+        await Category.findByIdAndUpdate("6738a377501e48b91eb6821c", 
+          { 
+            totalQuantity : finalTotalQuantity,
+            unitPrice : finalUnitPrice
+
+            } , { new: true });  
+     
+
+      }
+      // else if(data.type=="exchange"){
+
+      //   const categoryItemObject = await CategoryItem.find({invoiceId : "6738a377501e48b91eb6821c"});
+      //   categoryItemObject.map((ele)=>{    return totalQuantity += ele.quantity   })
+      //   await Category.findByIdAndUpdate("6738a377501e48b91eb6821c", { totalQuantity : totalQuantity  } , { new: true });  
+     
+
+
+
+      
+      // }else{
+        
+      // }
   } catch (error) {
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
 
