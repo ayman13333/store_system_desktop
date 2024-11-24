@@ -537,7 +537,7 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
         })
       );
       const data = {
-        type: "supp",
+        type: "supply",
         serialNumber,
         invoiceCode,
         invoicesData : selectedOptionArr,
