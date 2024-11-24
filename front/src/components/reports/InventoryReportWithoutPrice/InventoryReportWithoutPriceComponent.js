@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
+import { FaEye } from "react-icons/fa";
+
 
 export default function InventoryReportWithoutPriceComponent() {
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table

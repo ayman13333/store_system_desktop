@@ -15,6 +15,10 @@ import PaymentInvoicePage from './Pages/invoices/PaymentInvoicePage';
 import ConvetInvoicePage from './Pages/invoices/ConvetInvoicePage';
 import InventoryReportPage from './Pages/reports/InventoryReportPage';
 import InventoryReportWithoutPricePage from './Pages/reports/InventoryReportWithoutPricePage';
+import EntityTransactionReportPage from './Pages/reports/EntityTransactionReportPage';
+import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage';
+import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactionsReportPage';
+
 
 
 
@@ -52,6 +56,15 @@ function App() {
 
       <Route path='/InventoryReportWithoutPrice' element={<InventoryReportWithoutPricePage />} />
 
+      {/* تقرير معاملات الجهة */}
+
+      <Route path='/EntityTransactionReport' element={<EntityTransactionReportPage />} />
+
+      {/*  تقرير معاملات الصنف */}
+      <Route path='/ItemTransactionReport' element={<ItemTransactionReportPage />} />
+
+      {/* تقرير المعاملات المالية */}
+      <Route path='/FinancialTransactionsReport' element={<FinancialTransactionsReportPage />} />
       </Routes>
      </HashRouter>
 

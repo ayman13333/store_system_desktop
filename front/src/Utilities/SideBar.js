@@ -22,6 +22,9 @@ export default function SideBar() {
   const reportsOptions=[
     { value: ' تقرير جرد ', to: '/InventoryReportWithoutPrice' },
     { value: ' تقرير جرد مسعر', to: '/inventoryReport' },
+    { value: ' تقرير معاملات الجهة', to: '/EntityTransactionReport' },
+    { value: ' تقرير معاملات الصنف', to: '/ItemTransactionReport' },
+    { value: 'تقرير المعاملات المالية', to: '/FinancialTransactionsReport' },
   ]; 
 
 
