@@ -9,6 +9,11 @@ const categoryItemsSchema=new mongoose.Schema({
     quantity:{
         type:Number,
         required:true
+    },
+    categoryID:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Category',
+        required:false
     }
 },{
     timestamps:true
