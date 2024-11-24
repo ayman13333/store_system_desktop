@@ -476,15 +476,28 @@ ipcMain.handle('editCategory', async (event, data) => {
 });
 
 // فاتورة توريد
-ipcMain.handle('addSupplyInvoice', async (event, data) => {
+ipcMain.handle('addSupplyInvoice', async (event, body) => {
   try {
     let serial_nmber = 0;
-    const categoryObject = await Invoice.findById("6738a377501e48b91eb6821c");
+    const{
+      invoiceCode,
+      selectedOptionArr,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      totalQuantity
+    }=body;
+   // const categoryObject = await Invoice.findById("6738a377501e48b91eb6821c");
     const invoiceObject = await Invoice.find().sort({createdAt : -1});
-    const invoiceCode = await Invoice.findOne({invoiceCode: 124});
-    if(invoiceCode){
-        // new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-        return res.send("Invoice Code Is Here")
+    const invoiceCodeCheck = await Invoice.findOne({invoiceCode});
+    if(invoiceCodeCheck){
+          new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
+          return{
+            success:false
+          }
+       // return res.send("Invoice Code Is Here")
     }
 
     
@@ -505,6 +518,9 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       date: "Wed Nov 20 2024 00:00:00 GMT+0200 (Eastern European Standard Time)"
   }
 ];
+
+
+  // selectedOptionArr (looop)
   
     let newTotalQuantity = 0;
     await Promise.all(
@@ -522,16 +538,16 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       );
       const data = {
         type: "supp",
-        serialNumber: serial_nmber,
-        invoiceCode: 124,
-        invoicesData : [],
+        serialNumber,
+        invoiceCode,
+        invoicesData : selectedOptionArr,
         // invoiceCode: data.invoiceCode,
-        supplierID: "67127baa4d253af21c4d21bc",
-        employeeID: "671136026c8fb942a8b8f06c",
-        registerDate: "2024-11-20",
-        supplyDate: "2024-11-25",
-        notes: "Delivery scheduled for next week",
-        quantity: 10,
+        supplierID,
+        employeeID,
+        registerDate,
+        supplyDate,
+        notes,
+        totalQuantity,
       };      
       
      
@@ -541,10 +557,11 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       if(data.type=="supply"){
         const categoryItemObject = await CategoryItem.find({invoiceId : "6738a377501e48b91eb6821c"});
        
-        const finalUnitPrice= (
-          ((newTotalQuantity * data.unitPrice) + categoryObject.totalQuantity)/
-           newTotalQuantity + categoryObject.totalQuantity
-          )
+        // const finalUnitPrice= (
+        //   ((newTotalQuantity * data.unitPrice) + categoryObject.totalQuantity)/
+        //    newTotalQuantity + categoryObject.totalQuantity
+        //   )
+
         let finalTotalQuantity=0;
         categoryItemObject.map((ele)=>{    return totalQuantity += ele.quantity   })
         await Category.findByIdAndUpdate("6738a377501e48b91eb6821c", 
