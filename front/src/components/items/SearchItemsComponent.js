@@ -16,7 +16,13 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
         // setCategories((prev) =>
         //     prev.filter(el => el?.[searchType]?.includes(value) ? el : '')
         //   );
-        let categoriesAfterSearch=originalCategories.filter(el => el?.[searchType]==value);
+        let categoriesAfterSearch=[];
+
+        if(searchType=='name')
+            categoriesAfterSearch=originalCategories.filter(el => el?.[searchType]?.includes(value) ? el : '');
+        else
+        categoriesAfterSearch=originalCategories.filter(el => el?.[searchType]==value);
+        
 
         setCategories(categoriesAfterSearch);
 
@@ -60,6 +66,11 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
 
                     <input
                         value={searchValue}
+                        onKeyDown={(event)=>{
+                            if (event.key === "Enter") {
+                                search();
+                              }
+                        }}
                         onChange={(e) => setSearchValue(e.target.value)}
                         placeholder='ابحث هنا'
                         type="text" className="form-control" />
