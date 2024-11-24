@@ -16,6 +16,7 @@ import ConvetInvoicePage from './Pages/invoices/ConvetInvoicePage';
 import InventoryReportPage from './Pages/reports/InventoryReportPage';
 import InventoryReportWithoutPricePage from './Pages/reports/InventoryReportWithoutPricePage';
 import EntityTransactionReportPage from './Pages/reports/EntityTransactionReportPage';
+import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage';
 
 
 
@@ -56,6 +57,9 @@ function App() {
       {/* تقرير معاملات الجهة */}
 
       <Route path='/EntityTransactionReport' element={<EntityTransactionReportPage />} />
+
+      {/*  تقرير معاملات الصنف */}
+      <Route path='/ItemTransactionReport' element={<ItemTransactionReportPage />} />
       </Routes>
      </HashRouter>
 
