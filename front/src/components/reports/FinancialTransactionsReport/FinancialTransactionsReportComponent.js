@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
 
 
-export default function ItemTransactionReportComponent() {
+export default function FinancialTransactionsReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
   const [startDate, setStartDate] = useState(''); // Track start date
   const [endDate, setEndDate] = useState(''); // Track end date
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
-
+  const [users, setUsers] = useState([])
 
 
   console.log("tableData",tableData)
 
+
+
+
+
   // "supplier"
   // "consumer"
   // "transfer"
+
+  console.log("selectedValue", selectedValue)
+  const Staticoptions = [
+    { value: '1', label: 'اسم المورد' },
+    { value: '2', label: 'اسم جهة الصرف' },
+    { value: '3', label: 'اسم جهه التحويل' },
+  ];
+
 
   const staticData = [
     {
@@ -24,7 +37,8 @@ export default function ItemTransactionReportComponent() {
       type: "صرف",
       name: 'جهة صرف 1',
       invoiceDate: '20-11-2024',
-      registrationDate: "20-11-2024"
+      registrationDate: "20-11-2024",
+      price: 100
     },
     {
       code: 'A002',
@@ -32,7 +46,8 @@ export default function ItemTransactionReportComponent() {
       type: "تحصيل",
       name: 'جهة تحصيل 1',
       invoiceDate: '21-11-2024',
-      registrationDate: "21-11-2024"
+      registrationDate: "21-11-2024",
+      price: 200
     },
     {
       code: 'A003',
@@ -40,7 +55,8 @@ export default function ItemTransactionReportComponent() {
       type: "صرف",
       name: 'جهة صرف 2',
       invoiceDate: '22-11-2024',
-      registrationDate: "22-11-2024"
+      registrationDate: "22-11-2024",
+      price: 150
     },
     {
       code: 'A004',
@@ -48,7 +64,8 @@ export default function ItemTransactionReportComponent() {
       type: "تحصيل",
       name: 'جهة تحصيل 2',
       invoiceDate: '23-11-2024',
-      registrationDate: "23-11-2024"
+      registrationDate: "23-11-2024",
+      price: 300
     },
     {
       code: 'A005',
@@ -56,7 +73,8 @@ export default function ItemTransactionReportComponent() {
       type: "صرف",
       name: 'جهة صرف 3',
       invoiceDate: '24-11-2024',
-      registrationDate: "24-11-2024"
+      registrationDate: "24-11-2024",
+      price: 350
     },
     {
       code: 'A006',
@@ -64,12 +82,14 @@ export default function ItemTransactionReportComponent() {
       type: "تحصيل",
       name: 'جهة تحصيل 3',
       invoiceDate: '25-11-2024',
-      registrationDate: "25-11-2024"
+      registrationDate: "25-11-2024",
+      price: 500
     }
   ];
 
   const numberColumnHeader = selectedValue === '2' ? "رقم اذن الصرف" : "رقم الفاتوره";
   const nameColumnHeader = selectedValue === '1' ? "اسم جهة التوريد" : selectedValue === '2' ? "اسم جهة الصرف" : "اسم جهة التحويل";
+  const totalInvoicesNames = selectedValue === '1' ? "إجمالي فواتير التوريد : " : selectedValue === '2' ? "إجمالي فواتير الصرف : " : "إجمالي فواتير التحويل : ";
 
   const columns = [
     {
@@ -85,7 +105,7 @@ export default function ItemTransactionReportComponent() {
       }
     },
     {
-      name: "رقم الفاتورة",
+      name: numberColumnHeader,
       sortable: true,
       cell: row => {
         let numberStr = row?.number?.length > 10 ? row.numberStr.substring(0, 10) + '...' : row?.number;
@@ -102,7 +122,7 @@ export default function ItemTransactionReportComponent() {
       sortable: true,
     },
     {
-      name: "اسم الجهة",
+      name: nameColumnHeader,
       selector: row => row.name,
       sortable: true,
     },
@@ -118,7 +138,7 @@ export default function ItemTransactionReportComponent() {
     },
     {
       name: 'استعراض',
-      cell: row =>  <div><FaEye size={32} /></div>,
+      cell: row => <div><FaEye size={32} /></div>,
     },
   ];
 
@@ -173,6 +193,8 @@ export default function ItemTransactionReportComponent() {
     
       return formattedDate;
     };
+
+ 
     
 
     // Format the start and end dates correctly
@@ -200,7 +222,9 @@ export default function ItemTransactionReportComponent() {
     setTableData(filteredData);
   };
   
-  
+  const totalInvoicesPrice = tableData.reduce((sum, tableData) => {
+    return sum + ((tableData?.price) || 0); // Add unitPrice or 0 if it's undefined
+  }, 0); 
   
   const cancelSearch = () => {
     setSelectedValue(null);
@@ -212,7 +236,7 @@ export default function ItemTransactionReportComponent() {
 
   const printReport = () => {
     const printWindow = window.open('', '', 'height=800,width=1200');
-    printWindow.document.write('<html><head><title>تقرير معاملات الصنف</title><style>');
+    printWindow.document.write('<html><head><title>تقرير المعاملات المالية</title><style>');
   
     // Define the print media query and apply RTL styles
     printWindow.document.write('@media print {');
@@ -225,12 +249,12 @@ export default function ItemTransactionReportComponent() {
     printWindow.document.write('</style></head><body>');
   
     // Print the table data with RTL column order
-    printWindow.document.write('<div><h2 style="text-align: center;">تقرير معاملات الصنف</h2></div>');
+    printWindow.document.write('<div><h2 style="text-align: center;">تقرير المعاملات المالية</h2></div>');
     printWindow.document.write('<div class="table-container">');
     printWindow.document.write('<table border="1" style="width:100%; border-collapse: collapse; direction: rtl;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
-    printWindow.document.write(`<thead><tr><th>كود الفاتوره</th><th>رقم الفاتورة</th><th>نوع الفاتورة</th><th>اسم الجهة</th><th>تاريخ الفاتورة</th><th>تاريخ التسجيل</th></tr></thead><tbody>`);
+    printWindow.document.write(`<thead><tr><th>كود الفاتوره</th><th>${numberColumnHeader}</th><th>نوع الفاتورة</th><th>${nameColumnHeader}</th><th>تاريخ الفاتورة</th><th>تاريخ التسجيل</th></tr></thead><tbody>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
     tableData.forEach(row => {
@@ -246,7 +270,9 @@ export default function ItemTransactionReportComponent() {
       `);
     });
   
+    
     printWindow.document.write('</tbody></table>');
+    printWindow.document.write(`<h2 style="text-align: center;">${totalInvoicesNames} ${totalInvoicesPrice}</h2>`);
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
   
@@ -258,20 +284,19 @@ export default function ItemTransactionReportComponent() {
 
   return (
     <div className="h-100">
-      <h1>تقرير معاملات الصنف</h1>
+      <h1>تقرير المعاملات المالية</h1>
 
       <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-
-      <input
-          style={{ padding: "5px", border:"1px solid #c2c2c2" , borderRadius:"5px" }}
-          type="text"
+        <ReactSelect
+          options={Staticoptions}
           value={selectedValue}
-          onChange={(e) => setSelectedValue(e.target.value)}
-          placeholder=" ادخل كود الصنف"
+          onChange={setSelectedValue}
+          placeholder="اختر"
+          width="350px"
         />
-        
+
         <div>
         <label style={{margin:"0 3px"}}>تاريخ البدايه </label>
         <input
@@ -320,6 +345,33 @@ export default function ItemTransactionReportComponent() {
           pagination
         />
       </div>
+      <div style={{
+  display: "flex",
+  justifyContent: "flex-start",
+  gap: "20px",
+  alignItems: "center",
+  backgroundColor: "#f9f9f9",
+  padding: "10px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
+}}>
+  <div style={{
+    color: "#bb0000",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}>
+{totalInvoicesNames}
+  </div>
+  <div style={{
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#bb0000"
+  }}>
+    <span>{totalInvoicesPrice}</span>
+    <span> </span>
+    <span>جنيه </span>
+  </div>
+</div>
 
 
     </div>

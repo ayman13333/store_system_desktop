@@ -24,6 +24,7 @@ export default function SideBar() {
     { value: ' تقرير جرد مسعر', to: '/inventoryReport' },
     { value: ' تقرير معاملات الجهة', to: '/EntityTransactionReport' },
     { value: ' تقرير معاملات الصنف', to: '/ItemTransactionReport' },
+    { value: 'تقرير المعاملات المالية', to: '/FinancialTransactionsReport' },
   ]; 
 
 

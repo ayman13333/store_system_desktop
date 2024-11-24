@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
-import DataTable from "react-data-table-component";
+import DataTable from "react-data-table-component"
+import { FaEye } from "react-icons/fa";
+;
 
 export default function EntityTransactionReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
@@ -174,7 +176,7 @@ export default function EntityTransactionReportComponent() {
     },
     {
       name: 'استعراض',
-      cell: row => <div>استعراض</div>,
+      cell: row =>  <div><FaEye size={32} /></div>,
     },
   ];
 

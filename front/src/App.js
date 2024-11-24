@@ -17,6 +17,8 @@ import InventoryReportPage from './Pages/reports/InventoryReportPage';
 import InventoryReportWithoutPricePage from './Pages/reports/InventoryReportWithoutPricePage';
 import EntityTransactionReportPage from './Pages/reports/EntityTransactionReportPage';
 import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage';
+import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactionsReportPage';
+
 
 
 
@@ -60,6 +62,9 @@ function App() {
 
       {/*  تقرير معاملات الصنف */}
       <Route path='/ItemTransactionReport' element={<ItemTransactionReportPage />} />
+
+      {/* تقرير المعاملات المالية */}
+      <Route path='/FinancialTransactionsReport' element={<FinancialTransactionsReportPage />} />
       </Routes>
      </HashRouter>
 
