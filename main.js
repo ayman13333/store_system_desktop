@@ -487,111 +487,94 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
       registerDate,
       supplyDate,
       notes,
-      totalQuantity
+      totalQuantity,
+      type
     }=body;
 
-   
-
-   // const categoryObject = await Invoice.findById("6738a377501e48b91eb6821c");
+    console.log("TYPE  : " , type)
     const invoiceObject = await Invoice.find().sort({createdAt : -1});
     const invoiceCodeCheck = await Invoice.findOne({invoiceCode});
     if(invoiceCodeCheck){
-          new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-          return{
-            success:false
-          }
-       // return res.send("Invoice Code Is Here")
+        
+      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
+          return{  success:false  }
+      //  return res.send("Invoice Code Is Here")
     }
 
     
-    if(invoiceObject.length>0){
-
-      serial_nmber =invoiceObject[0].serialNumber + 1;
-  
-    }
+    if(invoiceObject.length>0){     serial_nmber =invoiceObject[0].serialNumber + 1;    }
     else{ serial_nmber = 1; }
 
-    let expirationDatesArr = [
-        {
-        quantity: 1, 
-        date: "Wed Nov 20 2024 00:00:00 GMT+0200 (Eastern European Standard Time)"
-    },
-    {
-      quantity: 3, 
-      date: "Wed Nov 20 2024 00:00:00 GMT+0200 (Eastern European Standard Time)"
-  }
-];
 
-
-  // selectedOptionArr (looop)
-  
-    let newTotalQuantity = 0;
     await Promise.all(
-        expirationDatesArr?.map(async(el)=>{
-          newTotalQuantity+= el.quantity;
-          let newCategoryItem = new CategoryItem({
-            quantity : el.quantity,
-            date : el.date,
-            // invoiceId : data._id
-            categoryID : "6738a377501e48b91eb6821c"
+      selectedOptionArr?.map(async (el) => {
+        let newTotalQuantity = 0; // Initialize newTotalQuantity
+        let totalQuantity = 0;   // Initialize totalQuantity
+        
+        // Process expiration dates and save CategoryItem
+        await Promise.all(
+          el.expirationDatesArr.map(async (ele) => {
+            newTotalQuantity += ele.quantity;
+
+            let newCategoryItem = new CategoryItem({
+              quantity: ele.quantity,
+              date: ele.date,
+              categoryID: el._id,
+            });
+            await newCategoryItem.save();
+          })
+        );
+
+        if (type === "supply") {
+          const categoryItemObject = await CategoryItem.find({
+            categoryID: el._id,
           });
-          await newCategoryItem.save();
-          newCategoryItem=newCategoryItem.toJSON();  
-        })
-      );
-      const data = {
-        type: "supply",
-        serialNumber,
+
+          // Calculate totalQuantity from database items
+          categoryItemObject.forEach((ele) => {
+            totalQuantity += ele.quantity;
+          });
+
+          // Calculate finalUnitPrice
+          const finalUnitPrice =
+            (newTotalQuantity * el.unitPrice + el.originalQuantity) / (newTotalQuantity + el.originalQuantity);
+
+          // Update the Category
+          const finalTotalQuantity = totalQuantity + newTotalQuantity;
+
+          console.log("totalQuantity : " , totalQuantity , "newTotalQuantity :  " , newTotalQuantity)
+          console.log("finalTotalQuantity : " , finalTotalQuantity , "finalUnitPrice :  " , finalUnitPrice)
+          await Category.findByIdAndUpdate( el._id,
+            {
+              totalQuantity: finalTotalQuantity,
+              unitPrice: finalUnitPrice,
+            },  { new: true }
+          );
+        }
+      })
+    );
+
+      const finalObject = {
+        type: type,
+        //supply
+        serialNumber :serial_nmber,
         invoiceCode,
         invoicesData : selectedOptionArr,
-        // invoiceCode: data.invoiceCode,
         supplierID,
         employeeID,
         registerDate,
         supplyDate,
         notes,
-        totalQuantity,
+        quantity: totalQuantity,
       };      
       
      
-      let newInvoice=new Invoice(data);
+      let newInvoice=new Invoice(finalObject);
       await newInvoice.save();
-
-      if(data.type=="supply"){
-        const categoryItemObject = await CategoryItem.find({invoiceId : "6738a377501e48b91eb6821c"});
-       
-        // const finalUnitPrice= (
-        //   ((newTotalQuantity * data.unitPrice) + categoryObject.totalQuantity)/
-        //    newTotalQuantity + categoryObject.totalQuantity
-        //   )
-
-        let finalTotalQuantity=0;
-        categoryItemObject.map((ele)=>{    return totalQuantity += ele.quantity   })
-        await Category.findByIdAndUpdate("6738a377501e48b91eb6821c", 
-          { 
-            totalQuantity : finalTotalQuantity,
-            unitPrice : finalUnitPrice
-
-            } , { new: true });  
-     
-
-      }
-      // else if(data.type=="exchange"){
-
-      //   const categoryItemObject = await CategoryItem.find({invoiceId : "6738a377501e48b91eb6821c"});
-      //   categoryItemObject.map((ele)=>{    return totalQuantity += ele.quantity   })
-      //   await Category.findByIdAndUpdate("6738a377501e48b91eb6821c", { totalQuantity : totalQuantity  } , { new: true });  
-     
-
-
-
       
-      // }else{
-        
-      // }
+      // res.status(201).send(newInvoice)
   } catch (error) {
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
-
   }
 });
 
