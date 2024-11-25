@@ -7,10 +7,11 @@ import FormatDate from '../../../Utilities/FormatDate';
 import CustumNumberInput from '../../../Utilities/CustumNumberInput';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
+import CalculateSum from '../../../Utilities/CalculateSum';
 
 
 export default function ConvetInvoiceComponent() {
-  const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState('');
     // جهات الصرف
@@ -35,10 +36,10 @@ export default function ConvetInvoiceComponent() {
 
     const [notes, setNotes] = useState('');
 
-        // المراد تحويلها الاصناف
-        const [categoriesToConvert, setCategoriesToConvert] = useState([]);
+    // المراد تحويلها الاصناف
+    const [categoriesToConvert, setCategoriesToConvert] = useState([]);
 
-            // بعد تحويلها الاصناف
+    // بعد تحويلها الاصناف
     const [categoriesAfterConvert, setCategoriesAfterConvert] = useState([]);
     const [selectedOptionArr2, setSelectedOptionArr2] = useState(null);
 
@@ -67,8 +68,9 @@ export default function ConvetInvoiceComponent() {
                     label: el?.name,
                     value: el?._id,
                     totalQuantity: 0,
-                    originalQuantity:el?.totalQuantity
-                    //expirationDatesArr:[]
+                    originalQuantity: el?.totalQuantity,
+                    unitPrice: parseFloat(el.unitPrice.toFixed(2)),
+                    expirationDatesArr: []
                 }
             })
             setCategoriesToConvert(categoriesForSelect);
@@ -81,7 +83,7 @@ export default function ConvetInvoiceComponent() {
 
     const toDayDate = FormatDate(new Date);
 
-   // console.log('categoriesToConvert', categoriesToConvert);
+    // console.log('categoriesToConvert', categoriesToConvert);
     console.log('selectedOptionArr', selectedOptionArr);
 
 
@@ -108,7 +110,7 @@ export default function ConvetInvoiceComponent() {
     }
 
     // after
-    const showQuantityAfter=(el)=>{
+    const showQuantityAfter = (el) => {
         setCategoryToShow(el);
         setShowAddQuantityModalAfter(true);
     }
@@ -127,15 +129,15 @@ export default function ConvetInvoiceComponent() {
             if (selectedOptionArr2 == null || selectedOptionArr2.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف بعد تحويلها");
 
 
-            let totalQuantityBefore=0;
-            let totalQuantityAfter=0;
+            let totalQuantityBefore = 0;
+            let totalQuantityAfter = 0;
 
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
                 }
 
-                totalQuantityBefore+=el?.totalQuantity;
+                totalQuantityBefore += el?.totalQuantity;
             });
 
 
@@ -144,26 +146,26 @@ export default function ConvetInvoiceComponent() {
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
                 }
 
-                totalQuantityAfter+=el?.totalQuantity;
+                totalQuantityAfter += el?.totalQuantity;
             });
 
-            console.log('totalQuantityBefore',totalQuantityBefore);
-            console.log('totalQuantityAfter',totalQuantityAfter);
+            console.log('totalQuantityBefore', totalQuantityBefore);
+            console.log('totalQuantityAfter', totalQuantityAfter);
 
-            if(totalQuantityBefore!=totalQuantityAfter){
+            if (totalQuantityBefore != totalQuantityAfter) {
                 return toast.error('يجب ان تكون كمية الاصناف قبل وبعد التحويل متساوية');
 
             }
 
 
-           //console.log(' after selectedOptionArr', selectedOptionArr);
+            //console.log(' after selectedOptionArr', selectedOptionArr);
 
         } catch (error) {
 
         }
     }
 
-
+        console.log('selectedOptionArr2',selectedOptionArr2);
 
     return (
         <div className='w-75 h-100' style={{
@@ -246,7 +248,19 @@ export default function ConvetInvoiceComponent() {
 
             {
                 categoriesToConvert && <div className="form-group my-2">
-                    <label className="my-2">  قائمة الاصناف المراد تحويلها </label>
+                    <div className='d-flex justify-content-between my-4'>
+                        <div>
+                            <label className="my-2">  قائمة الاصناف المراد تحويلها </label>
+                        </div>
+
+                        <div className="total">
+                            <label className="my-2">
+                                {`اجمالي الاصناف المراد تحويلها : ${CalculateSum({ selectedOptionArr })} جنيه`}
+
+                            </label>
+                        </div>
+
+                    </div>
                     <Select
                         isMulti={true}
                         value={selectedOptionArr}
@@ -293,7 +307,7 @@ export default function ConvetInvoiceComponent() {
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13">{Number(el?.unitPrice * el?.totalQuantity)} </td>
+                                        <td className="text-center p-13">{parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
                                         <td className="text-center">
                                             <div className='d-flex h-25 gap-2'>
                                                 {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
@@ -333,7 +347,19 @@ export default function ConvetInvoiceComponent() {
             {/* بعد التحويل */}
             {
                 categoriesAfterConvert && <div className="form-group my-2">
-                    <label className="my-2">  قائمة الاصناف بعد تحويلها </label>
+                    <div className='d-flex justify-content-between my-4'>
+                        <div>
+                            <label className="my-2">  قائمة الاصناف بعد تحويلها </label>
+                        </div>
+
+                        <div className="total">
+                            <label className="my-2">
+                                {`اجمالي الاصناف بعد تحويلها : ${CalculateSum({ selectedOptionArr: selectedOptionArr2 })} جنيه`}
+
+                            </label>
+                        </div>
+
+                    </div>
                     <Select
                         isMulti={true}
                         value={selectedOptionArr2}
@@ -380,7 +406,7 @@ export default function ConvetInvoiceComponent() {
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13">{Number(el?.unitPrice * el?.totalQuantity)} </td>
+                                        <td className="text-center p-13">{ parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
                                         <td className="text-center">
                                             <div className='d-flex h-25 gap-2'>
                                                 {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
@@ -399,8 +425,8 @@ export default function ConvetInvoiceComponent() {
                                 showExpirationDatesModal && <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
-                                    // setSelectedOptionArr={setSelectedOptionArr}
-                                    // type={'payment'}
+                                // setSelectedOptionArr={setSelectedOptionArr}
+                                // type={'payment'}
 
                                 />
                             }

@@ -95,7 +95,7 @@ export default function AddItemComponent() {
             if (code == '') return toast.error('يجب ادخال الكود');
             if (name == '') return toast.error('يجب ادخال اسم الصنف');
             if (criticalValue == '' || criticalValue == '0') return toast.error('يجب ادخال الحد الحرج');
-            if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
+            // if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
             if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
             if (unit == '') return toast.error('يجب ادخال الوحدة');
             if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
@@ -174,7 +174,7 @@ export default function AddItemComponent() {
             if (code == '') return toast.error('يجب ادخال الكود');
             if (name == '') return toast.error('يجب ادخال اسم الصنف');
             if (criticalValue == '' || criticalValue == '0') return toast.error('يجب ادخال الحد الحرج');
-            if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
+            // if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
             if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
             if (unit == '') return toast.error('يجب ادخال الوحدة');
             if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
@@ -247,7 +247,15 @@ export default function AddItemComponent() {
 
     return (
         <div className='w-75 h-100'>
+            <div className="d-flex justify-content-between">
             <h1> {location?.state?._id ? 'تعديل صنف' : 'اضافة صنف'}     {isLoading && <Spinner />} </h1>
+
+                <div>
+                <button
+                    onClick={() => window.history.back()}
+                    className='btn btn-primary  my-auto'> رجوع </button>
+                </div>
+            </div>
 
             <div className="form-group">
                 <label className="my-2"> الكود </label>
@@ -411,9 +419,7 @@ export default function AddItemComponent() {
                             className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
                 }
 
-                <button
-                    onClick={() => window.history.back()}
-                    className='btn btn-primary h-50 my-auto'> رجوع </button>
+                
 
             </div>
 

@@ -248,7 +248,7 @@ export default function PaymentInvoiceComponent() {
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13">{Number(el?.unitPrice * el?.totalQuantity)} </td>
+                                        <td className="text-center p-13"> { parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
                                         <td className="text-center">
                                             <div className='d-flex h-25 gap-2'>
                                                 {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
@@ -296,7 +296,7 @@ export default function PaymentInvoiceComponent() {
                
                 <div className="total">
                     <h3> 
-                        الاجمالي    :{CalculateSum({selectedOptionArr})}
+                    {`الاجمالي : ${CalculateSum({selectedOptionArr})} جنيه`}
                     </h3>
                 </div>
             </div>

@@ -6,5 +6,8 @@ export default function CalculateSum({selectedOptionArr}) {
   });
 
   console.log('sum',sum);
+
+ sum=parseFloat(sum.toFixed(2));
+
   return sum;
 }
