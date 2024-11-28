@@ -43,11 +43,41 @@ export default function InventoryReportComponent() {
   }));
 
   // Calculate the sum of all unitPrice
-const totalUnitPrice = categories.reduce((sum, category) => {
-  return sum + ((category?.unitPrice* category?.totalQuantity) || 0); // Add unitPrice or 0 if it's undefined
-}, 0);
+  const totalUnitPrice = parseFloat(categories.reduce((sum, category) => {
+    return sum + ((category?.unitPrice * category?.totalQuantity) || 0);
+  }, 0).toFixed(3));
 
   console.log("dynamicData",dynamicData)
+
+  const getCurrentDate = () => {
+    const now = new Date();
+  
+    // First variable: day, month, and year
+    const datePart = {
+      day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
+      month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
+      year: now.getFullYear(),
+    };
+  
+    // Second variable: time with AM/PM
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
+    hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
+  
+    const timePart = `${hours}:${minutes}:${seconds} ${amPm}`;
+  
+    return { datePart, timePart };
+  };
+  
+  // Store the values in variables
+  const { datePart, timePart } = getCurrentDate();
+  
+  // Usage examples
+  console.log(`التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}`); // e.g., "2024-11-24"
+  console.log(`الوفت: ${timePart}`); // e.g., "03:45:23 PM"
+  
 
 
   useEffect(() => {
@@ -112,11 +142,12 @@ const totalUnitPrice = categories.reduce((sum, category) => {
   const columns = [
     {
       name: 'الكود',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
         return (
-          <div style={{ textAlign: 'start', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
+          <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {codeStr}
           </div>
         );
@@ -124,11 +155,12 @@ const totalUnitPrice = categories.reduce((sum, category) => {
     },
     {
       name: 'الاسم',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let nameStr = row?.name?.length > 10 ? row.name.substring(0, 10) + '...' : row?.name;
         return (
-          <div style={{ textAlign: 'start', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
+          <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {nameStr}
           </div>
         );
@@ -136,21 +168,25 @@ const totalUnitPrice = categories.reduce((sum, category) => {
     },
     {
       name: 'الوحدة',
+      minWidth: '180px',
       selector: row => row.unit,
       sortable: true,
     },
     {
       name: 'الكمية',
+      minWidth: '180px',
       selector: row => row.totalQuantity,
       sortable: true,
     },
     {
       name: 'سعر الوحدة',
+      minWidth: '180px',
       selector: row => row.unitPrice,
       sortable: true,
     },
     {
       name: 'الاجمالي',
+      minWidth: '180px',
       selector: row => row.unitPrice * row.totalQuantity,
       sortable: true,
     },
@@ -160,14 +196,21 @@ const totalUnitPrice = categories.reduce((sum, category) => {
     headCells: {
       style: {
         fontWeight: 'bold',
-        fontSize: 'larger',
+        fontSize: '18px',
+        alignItems:"center",
+        justifyContent: 'center',
+        textAlign: 'center',
       },
     },
     cells: {
       style: {
         whiteSpace: 'normal', 
+        fontSize: '16px',
         overflow: 'visible', 
         userSelect: 'text', 
+        alignItems:"center",
+        justifyContent: 'center',
+        textAlign: 'center',
       },
     },
   };
@@ -201,8 +244,8 @@ const totalUnitPrice = categories.reduce((sum, category) => {
   const printReport = () => {
     if (tableData.length === 0) {
       return toast.warning('لا يوجد بيانات للطباعة');
-
     }
+  
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير الجرد</title><style>');
     
@@ -213,18 +256,23 @@ const totalUnitPrice = categories.reduce((sum, category) => {
     printWindow.document.write('th, td { padding: 10px; text-align: right; border: 1px solid #ddd; }'); // Set text alignment to right for RTL
     printWindow.document.write('@page { direction: rtl; }'); // Ensure the page itself is in RTL for printing
     printWindow.document.write('}');
-    
     printWindow.document.write('</style></head><body>');
+  
+    // Print the title and date/time in flex layout
+    printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
+    printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
+    printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
+    printWindow.document.write('</div>');
     
     // Print the table data with RTL column order
     printWindow.document.write('<div><h2 style="text-align: center;">تقرير الجرد</h2></div>');
     printWindow.document.write('<div class="table-container">');
     printWindow.document.write('<table border="1" style="width:100%; border-collapse: collapse; direction: rtl;">');
     
-    // Define the column headers in RTL order (columns order adjusted here)
+    // Define the column headers in RTL order
     printWindow.document.write('<thead><tr><th>الكود</th><th>الاسم</th><th>الوحدة</th><th>الكمية</th><th>سعر الوحدة</th><th>الاجمالي</th></tr></thead><tbody>');
     
-    // Populate the rows with the reversed order of columns (values adjusted for RTL)
+    // Populate the rows with the reversed order of columns
     tableData.forEach(row => {
       printWindow.document.write(`
         <tr>
@@ -233,25 +281,42 @@ const totalUnitPrice = categories.reduce((sum, category) => {
         <td>${row.unit}</td>
         <td>${row.totalQuantity}</td>
         <td>${row.unitPrice}</td>
-          <td>${row.unitPrice * row.totalQuantity}</td>
+        <td>${row.unitPrice * row.totalQuantity}</td>
         </tr>
-      `);
-    });
-  
-    printWindow.document.write('</tbody></table>');
+        `);
+      });
+      
+      printWindow.document.write('</tbody></table>');
+      printWindow.document.write('<div style="display: flex; justify-content: center ; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
+      printWindow.document.write(`<div><h2 style="margin: 0;"> إجمالي سعر الأصناف بالمخزن : ${totalUnitPrice}</h2></div>`);
+    printWindow.document.write('</div>');
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
-    
+  
     printWindow.document.close(); // Necessary for IE >= 10
     printWindow.print();
   };
   
+  
 
   return (
     <div className="h-100">
-      <h1>تقرير الجرد</h1>
-
-      <br />
+      <div style={{
+display: "flex",
+        justifyContent:"space-between",
+        alignItems:"center",
+        padding:"10px",
+        background:"#f9f9f9",
+        borderRadius:"8px",
+        marginBottom:"20px"
+        
+      }}>
+<div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
+<div><h4>الوقت : {timePart}</h4></div>
+      </div>
+        <h1>تقرير الجرد</h1>
+  
+        <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         {/* <ReactSelect

@@ -134,11 +134,12 @@ export default function EntityTransactionReportComponent() {
   const columns = [
     {
       name: 'كود الفاتوره',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
         return (
-          <div style={{ textAlign: 'start', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
+          <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {codeStr}
           </div>
         );
@@ -146,11 +147,12 @@ export default function EntityTransactionReportComponent() {
     },
     {
       name: numberColumnHeader,
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let numberStr = row?.number?.length > 10 ? row.numberStr.substring(0, 10) + '...' : row?.number;
         return (
-          <div style={{ textAlign: 'start', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
+          <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {numberStr}
           </div>
         );
@@ -158,27 +160,31 @@ export default function EntityTransactionReportComponent() {
     },
     {
       name: 'نوع الفاتورة',
+      minWidth: '180px',
       selector: row => row.type,
       sortable: true,
     },
     {
       name: nameColumnHeader,
+      minWidth: '200px',
       selector: row => row.name,
       sortable: true,
     },
     {
       name: 'تاريخ الفاتورة',
+      minWidth: '180px',
       selector: row => row.invoiceDate,
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
+      minWidth: '180px',
       selector: row => row.registrationDate,
       sortable: true,
     },
     {
       name: 'استعراض',
-      cell: row =>  <div><FaEye size={32} /></div>,
+      cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} /></div>,
     },
   ];
 
@@ -186,14 +192,21 @@ export default function EntityTransactionReportComponent() {
     headCells: {
       style: {
         fontWeight: 'bold',
-        fontSize: 'larger',
+        fontSize: '18px',
+        alignItems:"center",
+        justifyContent: 'center',
+        textAlign: 'center',
       },
     },
     cells: {
       style: {
-        whiteSpace: 'normal',
-        overflow: 'visible',
-        userSelect: 'text',
+        whiteSpace: 'normal', 
+        fontSize: '16px',
+        overflow: 'visible', 
+        userSelect: 'text', 
+        alignItems:"center",
+        justifyContent: 'center',
+        textAlign: 'center',
       },
     },
   };
@@ -238,7 +251,7 @@ export default function EntityTransactionReportComponent() {
       return formattedDate;
     };
     
-
+    
     // Format the start and end dates correctly
     const formattedStartDate = formatDateToObject(startDate);
     const formattedEndDate = formatDateToObject(endDate);
@@ -265,6 +278,30 @@ export default function EntityTransactionReportComponent() {
   };
   
   
+  const getCurrentDate = () => {
+    const now = new Date();
+  
+    // First variable: day, month, and year
+    const datePart = {
+      day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
+      month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
+      year: now.getFullYear(),
+    };
+  
+    // Second variable: time with AM/PM
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
+    hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
+  
+    const timePart = `${hours}:${minutes}:${seconds} ${amPm}`;
+  
+    return { datePart, timePart };
+  };
+  
+  // Store the values in variables
+  const { datePart, timePart } = getCurrentDate();
   
   const cancelSearch = () => {
     setSelectedValue(null);
@@ -280,7 +317,7 @@ export default function EntityTransactionReportComponent() {
       return toast.warning('لا يوجد بيانات للطباعة');
 
     }
-    
+
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير معاملات الجهة</title><style>');
   
@@ -293,6 +330,11 @@ export default function EntityTransactionReportComponent() {
     printWindow.document.write('}');
   
     printWindow.document.write('</style></head><body>');
+  
+    printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
+    printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
+    printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
+    printWindow.document.write('</div>');
   
     // Print the table data with RTL column order
     printWindow.document.write('<div><h2 style="text-align: center;">تقرير معاملات الجهة</h2></div>');
@@ -328,11 +370,27 @@ export default function EntityTransactionReportComponent() {
 
   return (
     <div className="h-100">
+     <div style={{
+display: "flex",
+justifyContent:"space-between",
+alignItems:"center",
+padding:"10px",
+background:"#f9f9f9",
+borderRadius:"8px",
+marginBottom:"20px"
+
+      }}>
+<div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
+<div><h4>الوقت : {timePart}</h4></div>
+      </div>
+
       <h1>تقرير معاملات الجهة</h1>
 
       <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
+      <label style={{margin:"0 3px"}}> اختر الجهة </label>
         <ReactSelect
           options={Staticoptions}
           value={selectedValue}
@@ -340,6 +398,10 @@ export default function EntityTransactionReportComponent() {
           placeholder="اختر"
           width="200px"
         />
+        </div>
+        <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
+        <label style={{margin:"0 3px"}}> اختر الاسم </label>
+
         <ReactSelect
           options={dynamicOptions}
           value={secondSelectValue}
@@ -347,7 +409,8 @@ export default function EntityTransactionReportComponent() {
           placeholder="اختر"
           width="200px"
         />
-        <div>
+        </div>
+        <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
         <label style={{margin:"0 3px"}}>تاريخ البدايه </label>
         <input
           style={{ padding: "5px", border:"1px solid #c2c2c2" , borderRadius:"5px" }}
@@ -357,7 +420,7 @@ export default function EntityTransactionReportComponent() {
           placeholder="تاريخ البدايه"
         />
         </div>
-        <div>
+        <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
         <label style={{margin:"0 3px"}}> تاريخ النهايه</label>
 
         <input
