@@ -95,7 +95,7 @@ export default function FinancialTransactionsReportComponent() {
   const columns = [
     {
       name: 'كود الفاتوره',
-      minWidth: '180px',
+      minwidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
@@ -108,7 +108,7 @@ export default function FinancialTransactionsReportComponent() {
     },
     {
       name: numberColumnHeader,
-      minWidth: '200px',
+      minwidth: '200px',
       sortable: true,
       cell: row => {
         let numberStr = row?.number?.length > 10 ? row.numberStr.substring(0, 10) + '...' : row?.number;
@@ -121,25 +121,25 @@ export default function FinancialTransactionsReportComponent() {
     },
     {
       name: 'نوع الفاتورة',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.type,
       sortable: true,
     },
     {
       name: nameColumnHeader,
-      minWidth: '200px',
+      minwidth: '200px',
       selector: row => row.name,
       sortable: true,
     },
     {
       name: 'تاريخ الفاتورة',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.invoiceDate,
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.registrationDate,
       sortable: true,
     },

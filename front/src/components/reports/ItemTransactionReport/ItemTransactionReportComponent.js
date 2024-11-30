@@ -100,7 +100,7 @@ export default function ItemTransactionReportComponent() {
   const columns = [
     {
       name: 'كود الفاتوره',
-      minWidth:"180px",
+      minwidth:"180px",
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
@@ -113,7 +113,7 @@ export default function ItemTransactionReportComponent() {
     },
     {
       name: "رقم الفاتورة",
-      minWidth:"180px",
+      minwidth:"180px",
       sortable: true,
       cell: row => {
         let numberStr = row?.number?.length > 10 ? row.numberStr.substring(0, 10) + '...' : row?.number;
@@ -126,26 +126,26 @@ export default function ItemTransactionReportComponent() {
     },
     {
       name: 'نوع الفاتورة',
-      minWidth:"180px",
+      minwidth:"180px",
       selector: row => row.type,
       sortable: true,
     },
     {
       name: "اسم الجهة",
-      minWidth:"180px",
+      minwidth:"180px",
       selector: row => row.name,
       sortable: true,
     },
     {
       name: 'تاريخ الفاتورة',
       selector: row => row.invoiceDate,
-      minWidth:"180px",
+      minwidth:"180px",
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
       selector: row => row.registrationDate,
-      minWidth:"180px",
+      minwidth:"180px",
       sortable: true,
     },
     {

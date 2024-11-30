@@ -142,7 +142,7 @@ export default function InventoryReportComponent() {
   const columns = [
     {
       name: 'الكود',
-      minWidth: '180px',
+      minwidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
@@ -155,7 +155,7 @@ export default function InventoryReportComponent() {
     },
     {
       name: 'الاسم',
-      minWidth: '180px',
+      minwidth: '180px',
       sortable: true,
       cell: row => {
         let nameStr = row?.name?.length > 10 ? row.name.substring(0, 10) + '...' : row?.name;
@@ -168,25 +168,25 @@ export default function InventoryReportComponent() {
     },
     {
       name: 'الوحدة',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.unit,
       sortable: true,
     },
     {
       name: 'الكمية',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.totalQuantity,
       sortable: true,
     },
     {
       name: 'سعر الوحدة',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.unitPrice,
       sortable: true,
     },
     {
       name: 'الاجمالي',
-      minWidth: '180px',
+      minwidth: '180px',
       selector: row => row.unitPrice * row.totalQuantity,
       sortable: true,
     },
