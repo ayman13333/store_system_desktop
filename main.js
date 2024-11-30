@@ -8,8 +8,7 @@ const bcrypt = require('bcrypt');
 const User = require('./back/Models/User');
 const Category = require('./back/Models/Category');
 const CategoryItem = require('./back/Models/CategoryItem');
-
-
+const Invoice=require('./back/Models/Invoice');
 
 
 
@@ -476,7 +475,7 @@ ipcMain.handle('editCategory', async (event, data) => {
 });
 
 // فاتورة توريد
-ipcMain.handle('addSupplyInvoice', async (event, body) => {
+ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
     let serial_nmber = 0;
     const{
@@ -489,10 +488,12 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
       notes,
       totalQuantity,
       type
-    }=body;
+    }=data;
 
     console.log("TYPE  : " , type)
     const invoiceObject = await Invoice.find().sort({createdAt : -1});
+
+   // console.log('invoiceObject',invoiceObject);
     const invoiceCodeCheck = await Invoice.findOne({invoiceCode});
     if(invoiceCodeCheck){
         
@@ -501,7 +502,7 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
       //  return res.send("Invoice Code Is Here")
     }
 
-    
+    console.log('bbbbbbbbbbbbbbbbb');    
     if(invoiceObject.length>0){     serial_nmber =invoiceObject[0].serialNumber + 1;    }
     else{ serial_nmber = 1; }
 
@@ -570,11 +571,20 @@ ipcMain.handle('addSupplyInvoice', async (event, body) => {
       
      
       let newInvoice=new Invoice(finalObject);
+      console.log("newInvoice",newInvoice);
       await newInvoice.save();
-      
+      console.log('ggggggggggggggg');
+
+      return{
+        success:true
+      }
       // res.status(201).send(newInvoice)
   } catch (error) {
+    console.log('error',error);
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
+    return{
+      success:false
+    }
   }
 });
 

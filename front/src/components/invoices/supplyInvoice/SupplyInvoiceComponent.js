@@ -110,11 +110,17 @@ export default function SupplyInvoiceComponent() {
 
             if(selectedOptionArr==null || selectedOptionArr.length==0) return toast.error(" من فضلك اختر قائمة الاصناف");
 
+            let hasError=false;
+
             selectedOptionArr?.map(el=>{
-                if(el?.totalQuantity=='0'||el?.expirationDatesArr?.length==0 || el?.unitPrice=='0'){
-                    return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
+                if(el?.expirationDatesArr?.length==0){
+                    hasError=true;
+                    console.log("el?.expirationDatesArr",el?.expirationDatesArr);
+                   // return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
                 }
             });
+
+            if(hasError==true) return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
 
              const data={
                 type:'supply',
@@ -145,6 +151,7 @@ export default function SupplyInvoiceComponent() {
                 setSupplyDate('');
                 setInvoiceCode('');
                 setNotes('');
+                setSelectedOptionArr(null);
              }
              else {
                  toast.error('فشل في عملية الاضافة');
@@ -153,7 +160,7 @@ export default function SupplyInvoiceComponent() {
             
 
         } catch (error) {
-
+            console.log('error',error);
             setIsLoading(false);
             toast.error('فشل في عملية الاضافة');
         }

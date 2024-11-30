@@ -36,7 +36,7 @@ const InvoiceSchema=new mongoose.Schema({
     // ملاحظات
     notes:{
         type:String,
-        required:true
+        required:false
     },
     quantity:{
         type:Number,
