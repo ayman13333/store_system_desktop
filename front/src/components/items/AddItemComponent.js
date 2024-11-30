@@ -290,6 +290,7 @@ export default function AddItemComponent() {
                     value={unitPrice} setValue={setUnitPrice}
                     placeholder={'سعر الوحدة'}
                     required={true}
+                    type={'float'}
                 />
             </div>
 
@@ -302,6 +303,7 @@ export default function AddItemComponent() {
                     placeholder={'الكمية'}
                     disabled={true}
                     required={true}
+                    type={'float'}
                 />
             </div>
 

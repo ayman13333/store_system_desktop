@@ -115,6 +115,7 @@ export default function AddQuantityModal({ show, setShow, category, setCategory,
                     <CustumNumberInput
                         value={newQuantity} setValue={setNewQuantity}
                         placeholder={'الكمية'}
+                        type={'float'}
 
                     />
                 </div>
@@ -125,6 +126,7 @@ export default function AddQuantityModal({ show, setShow, category, setCategory,
                         <CustumNumberInput
                             value={price} setValue={setPrice}
                             placeholder={'السعر'}
+                            type={'float'}
 
                         />
                     </div>

@@ -122,6 +122,7 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
                     value={newQuantity} setValue={setNewQuantity}
                     placeholder={'الكمية'}
                     required={true}
+                    type={'float'}
                 />
                 </div>
 
