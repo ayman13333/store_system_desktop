@@ -326,15 +326,33 @@ ipcMain.handle('addCategory', async (event, data) => {
       };
     }
 
+     //2) ضيف الصنف
+     let newCategoryObj = {
+      code,
+      name,
+      criticalValue,
+      unitPrice,
+      unit,
+    //  expirationDatesArr: expirationDatesArrIDS,
+      totalQuantity: quantity
+    }
+
+    let newCategory = new Category(newCategoryObj);
+    await newCategory.save();
+
+    console.log('newCategory',newCategory);
     // 1) ضيف تواريخ الصلاحية في ال model
     let totalQuantity = 0;
     let expirationDatesArrIDS = [];
 
-    await Promise.all(
+   await Promise.all(
       expirationDatesArr?.map(async (el) => {
         // console.log("el",el);
         totalQuantity += Number(el?.quantity);
-        let newCategoryItem = new CategoryItem(el);
+        let newCategoryItem = new CategoryItem({
+          ...el,
+          categoryID:newCategory?._id
+        });
         await newCategoryItem.save();
 
         newCategoryItem = newCategoryItem.toJSON();
@@ -346,25 +364,21 @@ ipcMain.handle('addCategory', async (event, data) => {
       })
     );
 
-    console.log('expirationDatesArrIDS', expirationDatesArrIDS);
-    console.log('totalQuantity', totalQuantity);
+    newCategory.expirationDatesArr=expirationDatesArrIDS;
+
+    await newCategory.save();
+
+    console.log(newCategory);
+
+
+    // console.log('expirationDatesArrIDS', expirationDatesArrIDS);
+    // console.log('totalQuantity', totalQuantity);
 
     //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
 
-    //2) ضيف الصنف
-    let newCategoryObj = {
-      code,
-      name,
-      criticalValue,
-      unitPrice,
-      unit,
-      expirationDatesArr: expirationDatesArrIDS,
-      totalQuantity: quantity
-    }
+   
 
-    let newCategory = new Category(newCategoryObj);
 
-    await newCategory.save();
 
     return {
       success: true
@@ -418,7 +432,10 @@ ipcMain.handle('editCategory', async (event, data) => {
       expirationDatesArr?.map(async (el) => {
         // console.log("el",el);
         totalQuantity += Number(el?.quantity);
-        let newCategoryItem = new CategoryItem(el);
+        let newCategoryItem = new CategoryItem({
+          ...el,
+          categoryID:oldCategory?._id
+        });
         await newCategoryItem.save();
 
         newCategoryItem = newCategoryItem.toJSON();
@@ -527,6 +544,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
         );
 
         if (type === "supply") {
+
           const categoryItemObject = await CategoryItem.find({
             categoryID: el._id,
           });
