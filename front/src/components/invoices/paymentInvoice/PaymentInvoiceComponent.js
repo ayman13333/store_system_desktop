@@ -105,17 +105,55 @@ export default function PaymentInvoiceComponent() {
 
             if (selectedOptionArr == null || selectedOptionArr.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف");
 
+            let hasError=false;
+
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
-                    return toast.error('من فضلك تاكد من  وجود كميه بكل صنف ');
+                    hasError=true;
+                   // 
                 }
             });
 
+            if(hasError==true) return toast.error('من فضلك تاكد من  وجود كميه بكل صنف ');
 
+            const data={
+                type:'payment',
+                selectedOptionArr,
+                invoiceCode,
+                supplierID:selectedSupplier,
+                employeeID:loggedUser?._id,
+                notes,
+                registerDate:new Date().toString(),
+                supplyDate:new Date(supplyDate)?.toString(),
+                totalQuantity:CalculateSum({selectedOptionArr})
+
+             };
+
+            setIsLoading(true);
+            const result = await window?.electron?.addPaymentInvoice(data);
+            setIsLoading(false);
+
+            if (result.success == true) {
+                toast.success('تم اضافة الفاتورة بنجاح');
+                setInvoiceNumber('');
+                setSelectedSupplier('0');
+               setSupplyDate('');
+               setInvoiceCode('');
+               setNotes('');
+               setSelectedOptionArr(null);
+            }
+            else {
+                toast.error('فشل في عملية الاضافة');
+                console.log('mmmmmmmmmmmmm');
+            }
+
+            // addPaymentInvoice
             console.log(' after selectedOptionArr', selectedOptionArr);
 
         } catch (error) {
-
+            console.log('error',error);
+            setIsLoading(false);
+            toast.error('فشل في عملية الاضافة');
         }
     }
 
@@ -245,8 +283,8 @@ export default function PaymentInvoiceComponent() {
                                                 اضغط هنا
                                             </button>
                                         </td>
-                                        <td className="text-center p-13" >{el?.unitPrice}</td>
-                                        <td className="text-center p-13" >{el?.totalQuantity}</td>
+                                        <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
+                                        <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
                                         <td className="text-center p-13"> { parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
                                         <td className="text-center">

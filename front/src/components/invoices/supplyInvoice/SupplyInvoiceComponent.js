@@ -292,8 +292,8 @@ export default function SupplyInvoiceComponent() {
                                                 اضغط هنا
                                             </button>
                                         </td>
-                                        <td className="text-center p-13" >{el?.unitPrice}</td>
-                                        <td className="text-center p-13" >{el?.totalQuantity}</td>
+                                        <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
+                                        <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
                                         <td className="text-center p-13">{ parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
                                         <td className="text-center">
