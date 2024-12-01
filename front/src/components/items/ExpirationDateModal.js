@@ -77,7 +77,7 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
                 return el;
             }    
            // console.log('el.date',el?.date);
-        })
+        });
         
         if(isFound==true) 
         setExpirationDatesArr(newExpirations);
