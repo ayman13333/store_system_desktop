@@ -398,7 +398,7 @@ ipcMain.handle('addCategory', async (event, data) => {
 // edit category
 ipcMain.handle('editCategory', async (event, data) => {
   try {
-    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate } = data;
+    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate , _id } = data;
 
     if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
@@ -413,9 +413,11 @@ ipcMain.handle('editCategory', async (event, data) => {
       }
     }
 
-    // console.log('oldCategory',oldCategory);
 
-    const oldCategory = await Category.findOne({ code });
+    const oldCategory = await Category.findById(_id);
+
+     console.log('oldCategory',oldCategory);
+
     let oldCategoryItems = oldCategory?.expirationDatesArr;
 
     //1) امسح كل ال category items بتوع الصنف 
@@ -433,7 +435,8 @@ ipcMain.handle('editCategory', async (event, data) => {
         // console.log("el",el);
         totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem({
-          ...el,
+          date:el?.date,
+          quantity:el?.quantity,
           categoryID:oldCategory?._id
         });
         await newCategoryItem.save();
@@ -465,11 +468,13 @@ ipcMain.handle('editCategory', async (event, data) => {
       editDate
     }
 
+    console.log('newCategoryObj',newCategoryObj);
+
     // let newCategory=new Category(newCategoryObj);
 
     // await newCategory.save();
 
-    await Category.findByIdAndUpdate(
+    let newCategory= await Category.findByIdAndUpdate(
       oldCategory?._id,
       newCategoryObj,
       {
@@ -477,8 +482,13 @@ ipcMain.handle('editCategory', async (event, data) => {
       }
     );
 
-    console.log('edited');
+    console.log('newCategory',newCategory);
 
+    if(newCategory==null) 
+    return{
+      success:false
+    }
+    else
     return {
       success: true
     };
@@ -487,6 +497,7 @@ ipcMain.handle('editCategory', async (event, data) => {
 
 
   } catch (error) {
+    console.log("error",error);
     new Notification({ title: 'فشل في عملية التعديل' }).show();
   }
 });

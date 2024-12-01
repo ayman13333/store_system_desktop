@@ -200,6 +200,7 @@ export default function AddItemComponent() {
             //  return;
 
             const data = {
+                _id:location?.state?._id,
                 code,
                 name,
                 criticalValue,

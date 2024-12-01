@@ -130,9 +130,9 @@ export default function AllItemsComponent() {
       ,
       sortable: true
     },
-    { name: 'الكمية', selector: row => row.totalQuantity, sortable: true },
-    { name: 'سعر الوحدة', selector: row => row.unitPrice, sortable: true },
-    { name: 'الاجمالي', selector: row => Number(row?.unitPrice * row?.totalQuantity), sortable: true },
+    { name: 'الكمية', selector: row => parseFloat(row.totalQuantity).toFixed(2), sortable: true },
+    { name: 'سعر الوحدة', selector: row => parseFloat(row.unitPrice).toFixed(2), sortable: true },
+    { name: 'الاجمالي', selector: row => parseFloat(Number(row?.unitPrice * row?.totalQuantity)).toFixed(2), sortable: true },
     // {
     //   name:'اسم الموظف',
     //   selector:row=>row?.user?.email
