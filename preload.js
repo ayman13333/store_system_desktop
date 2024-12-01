@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld('electron', {
   getAllCategories:(data)=>ipcRenderer.invoke('getAllCategories',data),
   editCategory:(data)=>ipcRenderer.invoke('editCategory',data),
   addSupplyInvoice:(data)=>ipcRenderer.invoke('addSupplyInvoice',data),
+  addPaymentInvoice:(data)=>ipcRenderer.invoke('addSupplyInvoice',data),
+
 });
 
 

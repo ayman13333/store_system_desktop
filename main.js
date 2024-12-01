@@ -617,6 +617,18 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
   }
 });
 
+// فاتورة صرف
+ipcMain.handle('addPaymentInvoice',async(event,data)=>{
+  try {
+    
+  } catch (error) {
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+    return{
+      success:false
+    }
+  }
+});
+
 
 
 app.on('window-all-closed', () => {
