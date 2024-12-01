@@ -60,7 +60,28 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
             quantity:newQuantity
         }
 
+        let newExpirations=expirationDatesArr;
+
+        let isFound=false;
+
+        newExpirations=newExpirations?.map(el=>{
+            if(new Date(el?.date)?.getTime()==obj?.date?.getTime()){
+                console.log('doooooooo');
+                isFound=true;
+                return{
+                    ...el,
+                    quantity: Number( Number(el?.quantity) + Number(newQuantity) )
+                }
+            }
+            else{
+                return el;
+            }    
+           // console.log('el.date',el?.date);
+        })
         
+        if(isFound==true) 
+        setExpirationDatesArr(newExpirations);
+        else 
         setExpirationDatesArr(prev=>[...prev,obj]);
 
         setNewExpirationDate('');
