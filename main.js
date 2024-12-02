@@ -704,8 +704,9 @@ ipcMain.handle('addPaymentInvoice',async(event,data)=>{
           let newInvoice=new Invoice(finalObject);
         
             await newInvoice.save();
-            // res.status(201).send(newInvoice)
-
+            return{
+              success:true
+            }
   } catch (error) {
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
   }
