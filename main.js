@@ -602,8 +602,6 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       let newInvoice=new Invoice(finalObject);
       console.log("newInvoice",newInvoice);
       await newInvoice.save();
-      console.log('ggggggggggggggg');
-
       return{
         success:true
       }
@@ -620,8 +618,100 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
 // فاتورة صرف
 ipcMain.handle('addPaymentInvoice',async(event,data)=>{
   try {
-    
+    let serial_nmber = 0;
+    const {
+      invoiceCode,
+      selectedOptionArr,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      totalQuantity,
+      type
+    } = data;
+
+    const invoiceObject = await Invoice.find().sort({ createdAt: -1 });
+    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
+    if (invoiceCodeCheck) {
+
+      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
+      return { success: false }
+      //  return res.send("Invoice Code Is Here")
+    }
+
+
+    if (invoiceObject.length > 0) { serial_nmber = invoiceObject[0].serialNumber + 1; }
+    else { serial_nmber = 1; }
+
+
+    await Promise.all(
+      selectedOptionArr?.map(async (el) => {
+
+        const ItemsObjectForCategory = await CategoryItem.find({ categoryID: el._id, }).sort({ createdAt: 1 });
+        let remaining = totalQuantity;
+
+        for (let obj of ItemsObjectForCategory) {
+          if (remaining <= 0) return;
+          if (obj.quantity >= remaining) {
+            obj.quantity -= remaining;
+            remaining = 0;
+          } else {
+            remaining -= obj.quantity;
+            obj.quantity = 0;
+          }
+
+          await CategoryItem.findByIdAndUpdate(obj._id, { quantity: obj.quantity }, { new: true });
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        const categoryItemList = await CategoryItem.find({ categoryID: el._id,  });
+      
+        let totalQuantityForCategory=0;
+        // Calculate totalQuantity from database items
+        categoryItemList.forEach((ele) => {  totalQuantityForCategory += ele.quantity;  });
+
+        // Calculate finalUnitPrice
+        const finalUnitPrice = (totalQuantity * el.unitPrice + el.originalQuantity) / (totalQuantity + el.originalQuantity);
+
+        // Update the Category
+        const finalTotalQuantity = totalQuantityForCategory + totalQuantity;
+
+        console.log("totalQuantity : ", totalQuantityForCategory, "newTotalQuantity :  ", totalQuantity)
+        console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice);
+
+        await Category.findByIdAndUpdate(el._id,
+          {
+            totalQuantity: finalTotalQuantity,
+            unitPrice: finalUnitPrice,
+          }, { new: true }
+        );
+      }),
+    );
+
+
+          const finalObject = {
+            type: "payment",
+            //supply
+            serialNumber :serial_nmber,
+            invoiceCode,
+            invoicesData : selectedOptionArr,
+            supplierID,
+            employeeID,
+            registerDate,
+            supplyDate,
+            notes,
+            quantity: totalQuantity,
+          };      
+
+          let newInvoice=new Invoice(finalObject);
+          await newInvoice.save();
+          return{
+            success:true
+          }
   } catch (error) {
+
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
     return{
       success:false
