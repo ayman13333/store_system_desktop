@@ -506,7 +506,6 @@ ipcMain.handle('editCategory', async (event, data) => {
 // فاتورة توريد
 ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
-    let serial_nmber = 0;
     const {
       invoiceCode,
       selectedOptionArr,
@@ -516,13 +515,12 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       supplyDate,
       notes,
       totalQuantity,
-      type
+      type,
+      invoiceNumber
     } = data;
 
     console.log("TYPE  : ", type)
-    const invoiceObject = await Invoice.find().sort({ createdAt: -1 });
 
-    // console.log('invoiceObject',invoiceObject);
     const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
     if (invoiceCodeCheck) {
 
@@ -532,8 +530,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     }
 
     console.log('bbbbbbbbbbbbbbbbb');
-    if (invoiceObject.length > 0) { serial_nmber = invoiceObject[0].serialNumber + 1; }
-    else { serial_nmber = 1; }
+    let serial_nmber = invoiceNumber; 
 
 
     await Promise.all(
@@ -628,7 +625,6 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
 // فاتورة صرف
 ipcMain.handle('addPaymentInvoice', async (event, data) => {
   try {
-    let serial_nmber = 0;
     const {
       invoiceCode,
       selectedOptionArr,
@@ -638,10 +634,10 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       supplyDate,
       notes,
       totalQuantity,
-      type
+      type,
+      invoiceNumber
     } = data;
 
-    const invoiceObject = await Invoice.find().sort({ createdAt: -1 });
     const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
     if (invoiceCodeCheck) {
       new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
@@ -649,8 +645,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
     }
 
 
-    if (invoiceObject.length > 0) { serial_nmber = invoiceObject[0].serialNumber + 1; }
-    else { serial_nmber = 1; }
+    let serial_nmber = invoiceNumber; 
 
     await Promise.all(
       selectedOptionArr?.map(async (el) => {
