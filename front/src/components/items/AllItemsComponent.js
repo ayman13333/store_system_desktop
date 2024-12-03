@@ -120,7 +120,7 @@ export default function AllItemsComponent() {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className={`btn ${row.criticalValue === row.totalQuantity ?'btn-info' : 'btn-secondary'} py-1`}  style={{
+              className={`btn ${row.criticalValue >= row.totalQuantity ?'btn-info' : 'btn-secondary'} py-1`}  style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
               }} > <TbHandClick height={'5px'} />  </button>

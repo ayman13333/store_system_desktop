@@ -3,8 +3,8 @@ import { ligthBlue, orange, red, yellow } from "../../Constants"
 export default function AlarmComponent() {
     let alarms=[
         {value:yellow,text:'صنف به كميات منتهية الصلاحية'},
-        {value:red,text:'صنف منتهي الصلاحية'},
-        {value:orange,text:'الكمية تساوي الحد الحرج'},
+        {value:red,text:' صنف منتهي الصلاحية / لا يوجد به كمية' },
+        {value:orange,text:'الكمية اقل من او تساوي الحد الحرج'},
         {value:ligthBlue,text:'تم التعديل عليه من قبل الموظف'}
     ]
     return (

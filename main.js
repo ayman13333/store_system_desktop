@@ -8,9 +8,10 @@ const bcrypt = require('bcrypt');
 const User = require('./back/Models/User');
 const Category = require('./back/Models/Category');
 const CategoryItem = require('./back/Models/CategoryItem');
-const Invoice=require('./back/Models/Invoice');
+const Invoice = require('./back/Models/Invoice');
+// const { fiveDays } = require('./front/src/Constants');
 
-
+const fiveDays = 5;
 
 
 
@@ -326,32 +327,32 @@ ipcMain.handle('addCategory', async (event, data) => {
       };
     }
 
-     //2) ضيف الصنف
-     let newCategoryObj = {
+    //2) ضيف الصنف
+    let newCategoryObj = {
       code,
       name,
       criticalValue,
       unitPrice,
       unit,
-    //  expirationDatesArr: expirationDatesArrIDS,
+      //  expirationDatesArr: expirationDatesArrIDS,
       totalQuantity: quantity
     }
 
     let newCategory = new Category(newCategoryObj);
     await newCategory.save();
 
-    console.log('newCategory',newCategory);
+    console.log('newCategory', newCategory);
     // 1) ضيف تواريخ الصلاحية في ال model
     let totalQuantity = 0;
     let expirationDatesArrIDS = [];
 
-   await Promise.all(
+    await Promise.all(
       expirationDatesArr?.map(async (el) => {
         // console.log("el",el);
         totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem({
           ...el,
-          categoryID:newCategory?._id
+          categoryID: newCategory?._id
         });
         await newCategoryItem.save();
 
@@ -364,7 +365,7 @@ ipcMain.handle('addCategory', async (event, data) => {
       })
     );
 
-    newCategory.expirationDatesArr=expirationDatesArrIDS;
+    newCategory.expirationDatesArr = expirationDatesArrIDS;
 
     await newCategory.save();
 
@@ -376,7 +377,7 @@ ipcMain.handle('addCategory', async (event, data) => {
 
     //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
 
-   
+
 
 
 
@@ -398,7 +399,7 @@ ipcMain.handle('addCategory', async (event, data) => {
 // edit category
 ipcMain.handle('editCategory', async (event, data) => {
   try {
-    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate , _id } = data;
+    let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate, _id } = data;
 
     if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
@@ -416,7 +417,7 @@ ipcMain.handle('editCategory', async (event, data) => {
 
     const oldCategory = await Category.findById(_id);
 
-     console.log('oldCategory',oldCategory);
+    console.log('oldCategory', oldCategory);
 
     let oldCategoryItems = oldCategory?.expirationDatesArr;
 
@@ -435,9 +436,9 @@ ipcMain.handle('editCategory', async (event, data) => {
         // console.log("el",el);
         totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem({
-          date:el?.date,
-          quantity:el?.quantity,
-          categoryID:oldCategory?._id
+          date: el?.date,
+          quantity: el?.quantity,
+          categoryID: oldCategory?._id
         });
         await newCategoryItem.save();
 
@@ -468,13 +469,13 @@ ipcMain.handle('editCategory', async (event, data) => {
       editDate
     }
 
-    console.log('newCategoryObj',newCategoryObj);
+    console.log('newCategoryObj', newCategoryObj);
 
     // let newCategory=new Category(newCategoryObj);
 
     // await newCategory.save();
 
-    let newCategory= await Category.findByIdAndUpdate(
+    let newCategory = await Category.findByIdAndUpdate(
       oldCategory?._id,
       newCategoryObj,
       {
@@ -482,22 +483,22 @@ ipcMain.handle('editCategory', async (event, data) => {
       }
     );
 
-    console.log('newCategory',newCategory);
+    console.log('newCategory', newCategory);
 
-    if(newCategory==null) 
-    return{
-      success:false
-    }
+    if (newCategory == null)
+      return {
+        success: false
+      }
     else
-    return {
-      success: true
-    };
+      return {
+        success: true
+      };
 
 
 
 
   } catch (error) {
-    console.log("error",error);
+    console.log("error", error);
     new Notification({ title: 'فشل في عملية التعديل' }).show();
   }
 });
@@ -506,7 +507,7 @@ ipcMain.handle('editCategory', async (event, data) => {
 ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
     let serial_nmber = 0;
-    const{
+    const {
       invoiceCode,
       selectedOptionArr,
       supplierID,
@@ -516,38 +517,42 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       notes,
       totalQuantity,
       type
-    }=data;
+    } = data;
 
-    console.log("TYPE  : " , type)
-    const invoiceObject = await Invoice.find().sort({createdAt : -1});
+    console.log("TYPE  : ", type)
+    const invoiceObject = await Invoice.find().sort({ createdAt: -1 });
 
-   // console.log('invoiceObject',invoiceObject);
-    const invoiceCodeCheck = await Invoice.findOne({invoiceCode});
-    if(invoiceCodeCheck){
-        
+    // console.log('invoiceObject',invoiceObject);
+    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
+    if (invoiceCodeCheck) {
+
       new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-          return{  success:false  }
+      return { success: false }
       //  return res.send("Invoice Code Is Here")
     }
 
-    console.log('bbbbbbbbbbbbbbbbb');    
-    if(invoiceObject.length>0){     serial_nmber =invoiceObject[0].serialNumber + 1;    }
-    else{ serial_nmber = 1; }
+    console.log('bbbbbbbbbbbbbbbbb');
+    if (invoiceObject.length > 0) { serial_nmber = invoiceObject[0].serialNumber + 1; }
+    else { serial_nmber = 1; }
 
 
     await Promise.all(
       selectedOptionArr?.map(async (el) => {
         let newTotalQuantity = 0; // Initialize newTotalQuantity
         let totalQuantity = 0;   // Initialize totalQuantity
-        
+        let category = await Category.findById(el._id);
         // Process expiration dates and save CategoryItem
         await Promise.all(
           el.expirationDatesArr.map(async (ele) => {
             newTotalQuantity += ele.quantity;
-
+            const date2 = new Date(ele.date);
+            let date = date2.setDate(date2.getDate() - fiveDays);
+            const date3 = new Date(date); // Convert to Date object
+            const dateString = date3.toString();
+            console.log("DATE ======>  ", date.toString());
             let newCategoryItem = new CategoryItem({
               quantity: ele.quantity,
-              date: ele.date,
+              date: dateString,
               categoryID: el._id,
             });
             await newCategoryItem.save();
@@ -560,63 +565,68 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
             categoryID: el._id,
           });
 
+          let expiration_dates = [];
           // Calculate totalQuantity from database items
           categoryItemObject.forEach((ele) => {
             totalQuantity += ele.quantity;
+            expiration_dates.push(ele._id);
           });
 
+          console.log("Category  : ", category);
           // Calculate finalUnitPrice
           const finalUnitPrice =
-            (newTotalQuantity * el.unitPrice + el.originalQuantity) / (newTotalQuantity + el.originalQuantity);
+            (newTotalQuantity * el.unitPrice + (category.unitPrice * category.totalQuantity)) / (totalQuantity);
 
           // Update the Category
-          const finalTotalQuantity = totalQuantity + newTotalQuantity;
+          const finalTotalQuantity = totalQuantity;
 
-          console.log("totalQuantity : " , totalQuantity , "newTotalQuantity :  " , newTotalQuantity)
-          console.log("finalTotalQuantity : " , finalTotalQuantity , "finalUnitPrice :  " , finalUnitPrice)
-          await Category.findByIdAndUpdate( el._id,
+          console.log("totalQuantity : ", totalQuantity)
+          console.log("Expiration_Dates : ", expiration_dates)
+          console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice)
+          await Category.findByIdAndUpdate(el._id,
             {
               totalQuantity: finalTotalQuantity,
               unitPrice: finalUnitPrice,
-            },  { new: true }
+              expirationDatesArr: expiration_dates
+            }, { new: true }
           );
         }
       })
     );
 
-      const finalObject = {
-        type: type,
-        //supply
-        serialNumber :serial_nmber,
-        invoiceCode,
-        invoicesData : selectedOptionArr,
-        supplierID,
-        employeeID,
-        registerDate,
-        supplyDate,
-        notes,
-        quantity: totalQuantity,
-      };      
-      
-     
-      let newInvoice=new Invoice(finalObject);
-      console.log("newInvoice",newInvoice);
-      await newInvoice.save();
-      return{
-        success:true
-      }
-      // res.status(201).send(newInvoice)
+    const finalObject = {
+      type: type,
+      //supply
+      serialNumber: serial_nmber,
+      invoiceCode,
+      invoicesData: selectedOptionArr,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      quantity: totalQuantity,
+    };
+
+
+    let newInvoice = new Invoice(finalObject);
+    console.log("newInvoice", newInvoice);
+    await newInvoice.save();
+    return {
+      success: true
+    }
+    // res.status(201).send(newInvoice)
   } catch (error) {
-    console.log('error',error);
+    console.log('error', error);
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
-    return{
-      success:false
+    return {
+      success: false
     }
   }
 });
 
 // فاتورة صرف
-ipcMain.handle('addPaymentInvoice',async(event,data)=>{
+ipcMain.handle('addPaymentInvoice', async (event, data) => {
   try {
     let serial_nmber = 0;
     const {
@@ -644,10 +654,11 @@ ipcMain.handle('addPaymentInvoice',async(event,data)=>{
 
     await Promise.all(
       selectedOptionArr?.map(async (el) => {
-        console.log("Quantity For Category : " , el.totalQuantity)
-        const ItemsObjectForCategory = await CategoryItem.find({ categoryID: el._id, }).sort({ createdAt: 1 });
+        console.log("Quantity For Category : ", el.totalQuantity)
+        let ItemsObjectForCategory = await CategoryItem.find({ categoryID: el._id, });
+        ItemsObjectForCategory = ItemsObjectForCategory.sort((a, b) => new Date(a.date) - new Date(b.date));
         let remaining = el.totalQuantity;
-        
+
         for (let obj of ItemsObjectForCategory) {
           if (obj.quantity >= remaining) {
             obj.quantity -= remaining;
@@ -655,58 +666,60 @@ ipcMain.handle('addPaymentInvoice',async(event,data)=>{
           } else {
             remaining -= obj.quantity;
             obj.quantity = 0;
+
           }
-          await CategoryItem.findByIdAndUpdate(obj._id, { quantity: obj.quantity }, { new: true });
+          if (obj.quantity == 0) {
+            await CategoryItem.findByIdAndDelete(obj._id);
+          }
+          else {
+            await CategoryItem.findByIdAndUpdate(obj._id, { quantity: obj.quantity }, { new: true });
+          }
         }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        const categoryItemList = await CategoryItem.find({ categoryID: el._id,  });
-      
-        let totalQuantityForCategory=0;
-        categoryItemList.forEach((ele) => { 
-          console.log("===  > " , ele.quantity)
-          totalQuantityForCategory += ele.quantity;  });
+        const categoryItemList = await CategoryItem.find({ categoryID: el._id, });
 
-        // Calculate finalUnitPrice
-        const finalUnitPrice = (totalQuantity * el.unitPrice + el.originalQuantity) / (totalQuantity + el.originalQuantity);
+        let totalQuantityForCategory = 0;
+        let expiration_dates = [];
+        categoryItemList.forEach((ele) => {
+          // console.log("===  > ", ele.quantity)
+          totalQuantityForCategory += ele.quantity;
+          expiration_dates.push(ele._id);
 
-        // Update the Category
-        const finalTotalQuantity = totalQuantityForCategory ;
+        });
 
-        console.log("newTotalQuantity :  ", totalQuantity)
-        console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice);
+        const finalTotalQuantity = totalQuantityForCategory;
+        await Category.findByIdAndUpdate(el._id, {
+          totalQuantity: finalTotalQuantity,
+          expirationDatesArr: expiration_dates
 
-        await Category.findByIdAndUpdate(el._id,
-          {
-            totalQuantity: finalTotalQuantity,
-            unitPrice: finalUnitPrice,
-          }, { new: true }
-        );
+        }, { new: true });
+
 
       }),
 
     );
 
-          const finalObject = {
-            type: "payment",
-            //supply
-            serialNumber :serial_nmber,
-            invoiceCode,
-            invoicesData : selectedOptionArr,
-            supplierID,
-            employeeID,
-            registerDate,
-            supplyDate,
-            notes,
-            quantity: totalQuantity,
-          };      
+    const finalObject = {
+      type: "payment",
+      //supply
+      serialNumber: serial_nmber,
+      invoiceCode,
+      invoicesData: selectedOptionArr,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      quantity: totalQuantity,
+    };
 
-          let newInvoice=new Invoice(finalObject);
-        
-            await newInvoice.save();
-            return{
-              success:true
-            }
+    let newInvoice = new Invoice(finalObject);
+
+    await newInvoice.save();
+    return {
+      success: true
+    }
   } catch (error) {
     new Notification({ title: 'فشل في عملية الاضافة' }).show();
   }

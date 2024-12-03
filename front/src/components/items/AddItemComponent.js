@@ -7,6 +7,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ConfirmEditModal from './ConfirmEditModal';
+import { fiveDays } from '../../Constants';
 
 
 
@@ -110,7 +111,7 @@ export default function AddItemComponent() {
                 const date = new Date(el.date);
 
                 // Subtract 5 days from the new date instance
-                date.setDate(date.getDate() - 5);
+                date.setDate(date.getDate() - fiveDays);
 
                 return {
                     ...el,
@@ -185,7 +186,7 @@ export default function AddItemComponent() {
                 // صنف موجود قبل كدة مش هنقص منه تاني
                 if (el?._id) return el;
 
-                let date = el?.date?.setDate(el?.date?.getDate() - 5);
+                let date = el?.date?.setDate(el?.date?.getDate() - fiveDays);
                 date = new Date(date);
 
                 return {
