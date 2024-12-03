@@ -132,22 +132,30 @@ export default function ConvetInvoiceComponent() {
             let totalQuantityBefore = 0;
             let totalQuantityAfter = 0;
 
+            let hasError1=false;
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
-                    return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
+                    hasError1=true;
+                   // 
                 }
 
                 totalQuantityBefore += el?.totalQuantity;
             });
 
+            if(hasError1==true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
+            let hasError2=false;
             selectedOptionArr2?.map(el => {
                 if (el?.totalQuantity == '0') {
+                    hasError2=true;
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
                 }
 
                 totalQuantityAfter += el?.totalQuantity;
             });
+
+            if(hasError2==true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
+
 
             console.log('totalQuantityBefore', totalQuantityBefore);
             console.log('totalQuantityAfter', totalQuantityAfter);
@@ -158,10 +166,46 @@ export default function ConvetInvoiceComponent() {
             }
 
 
-            //console.log(' after selectedOptionArr', selectedOptionArr);
+            const data={
+                type:'convert',
+                selectedOptionArr,
+                invoiceCode,
+                supplierID:selectedSupplier,
+                employeeID:loggedUser?._id,
+                notes,
+                registerDate:new Date().toString(),
+                supplyDate:new Date(supplyDate)?.toString(),
+                totalQuantity:CalculateSum({selectedOptionArr}),
+                invoiceNumber,
+                selectedOptionArr2
+             };
+
+             setIsLoading(true);
+             const result = await window?.electron?.changeInvoice(data);
+             setIsLoading(false);
+
+             console.log('data',data);
+            // changeInvoice
+
+            if (result.success == true) {
+                toast.success('تم اضافة الفاتورة بنجاح');
+                setInvoiceNumber('');
+                setSelectedSupplier('0');
+               setSupplyDate('');
+               setInvoiceCode('');
+               setNotes('');
+               setSelectedOptionArr(null);
+               setSelectedOptionArr2(null);
+            }
+            else {
+                toast.error('فشل في عملية الاضافة');
+                console.log('mmmmmmmmmmmmm');
+            }
 
         } catch (error) {
-
+            console.log('error',error);
+            setIsLoading(false);
+            toast.error('فشل في عملية الاضافة');
         }
     }
 

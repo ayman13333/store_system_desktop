@@ -33,6 +33,16 @@ const InvoiceSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    // بيانات الصرف
+    invoicesData:{
+        type:Array,
+        required:true
+    },
+    // بيانات التوريد
+    invoicesData2:{
+        type:Array,
+        required:true
+    },
     // ملاحظات
     notes:{
         type:String,

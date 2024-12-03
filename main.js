@@ -720,6 +720,169 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
   }
 });
 
+// فاتورة تحويل
+ipcMain.handle('changeInvoice',async(event, data)=>{
+  try {
+    const {
+      invoiceCode,
+      selectedOptionArr,
+      selectedOptionArr2,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      totalQuantity,
+      type,
+      invoiceNumber
+    } = data;
+
+    console.log("TYPE  : ", type)
+
+    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
+    if (invoiceCodeCheck) {
+      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
+      return { success: false }
+    }
+    let serial_nmber = invoiceNumber; 
+
+
+    await Promise.all(
+      selectedOptionArr2?.map(async (el) => {
+        let newTotalQuantity = 0; // Initialize newTotalQuantity
+        let totalQuantity = 0;   // Initialize totalQuantity
+        let category = await Category.findById(el._id);
+        // Process expiration dates and save CategoryItem
+        await Promise.all(
+          el.expirationDatesArr.map(async (ele) => {
+            newTotalQuantity += ele.quantity;
+            const date2 = new Date(ele.date);
+            let date = date2.setDate(date2.getDate() - fiveDays);
+            const date3 = new Date(date); // Convert to Date object
+            const dateString = date3.toString();
+            console.log("DATE ======>  ", date.toString());
+            let newCategoryItem = new CategoryItem({
+              quantity: ele.quantity,
+              date: dateString,
+              categoryID: el._id,
+            });
+            await newCategoryItem.save();
+          })
+        );
+          const categoryItemObject = await CategoryItem.find({
+            categoryID: el._id,
+          });
+
+          let expiration_dates = [];
+          // Calculate totalQuantity from database items
+          categoryItemObject.forEach((ele) => {
+            totalQuantity += ele.quantity;
+            expiration_dates.push(ele._id);
+          });
+
+          console.log("Category  : ", category);
+          // Calculate finalUnitPrice
+          const finalUnitPrice =
+            (newTotalQuantity * el.unitPrice + (category.unitPrice * category.totalQuantity)) / (totalQuantity);
+
+          // Update the Category
+          const finalTotalQuantity = totalQuantity;
+
+          console.log("totalQuantity : ", totalQuantity)
+          console.log("Expiration_Dates : ", expiration_dates)
+          console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice)
+          await Category.findByIdAndUpdate(el._id,
+            {
+              totalQuantity: finalTotalQuantity,
+              unitPrice: finalUnitPrice,
+              expirationDatesArr: expiration_dates
+            }, { new: true }
+          );
+        
+      })
+    );
+
+
+    await Promise.all(
+      selectedOptionArr?.map(async (el) => {
+        console.log("Quantity For Category : ", el.totalQuantity)
+        let ItemsObjectForCategory = await CategoryItem.find({ categoryID: el._id, });
+        ItemsObjectForCategory = ItemsObjectForCategory.sort((a, b) => new Date(a.date) - new Date(b.date));
+        let remaining = el.totalQuantity;
+
+        for (let obj of ItemsObjectForCategory) {
+          if (obj.quantity >= remaining) {
+            obj.quantity -= remaining;
+            remaining = 0;
+          } else {
+            remaining -= obj.quantity;
+            obj.quantity = 0;
+
+          }
+          if (obj.quantity == 0) {
+            await CategoryItem.findByIdAndDelete(obj._id);
+          }
+          else {
+            await CategoryItem.findByIdAndUpdate(obj._id, { quantity: obj.quantity }, { new: true });
+          }
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        const categoryItemList = await CategoryItem.find({ categoryID: el._id, });
+
+        let totalQuantityForCategory = 0;
+        let expiration_dates = [];
+        categoryItemList.forEach((ele) => {
+          // console.log("===  > ", ele.quantity)
+          totalQuantityForCategory += ele.quantity;
+          expiration_dates.push(ele._id);
+
+        });
+
+        const finalTotalQuantity = totalQuantityForCategory;
+        await Category.findByIdAndUpdate(el._id, {
+          totalQuantity: finalTotalQuantity,
+          expirationDatesArr: expiration_dates
+
+        }, { new: true });
+
+
+      }),
+
+    );
+   
+    const finalObject = {
+      type: type,
+      //supply
+      serialNumber: serial_nmber,
+      invoiceCode,
+      invoicesData: selectedOptionArr,
+      invoicesData2: selectedOptionArr2,
+      supplierID,
+      employeeID,
+      registerDate,
+      supplyDate,
+      notes,
+      quantity: totalQuantity,
+    };
+
+
+    let newInvoice = new Invoice(finalObject);
+    console.log("newInvoice", newInvoice);
+    await newInvoice.save();
+    return {
+      success: true
+    }
+    // res.status(201).send(newInvoice)
+  } catch (error) {
+    console.log('error', error);
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+    return {
+      success: false
+    }
+  }
+});
+
 
 
 app.on('window-all-closed', () => {
