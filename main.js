@@ -512,9 +512,9 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       supplierID,
       employeeID,
       registerDate,
+      total_bill_price,
       supplyDate,
       notes,
-      totalQuantity,
       type,
       invoiceNumber
     } = data;
@@ -600,9 +600,10 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       supplierID,
       employeeID,
       registerDate,
+      total_bill_price,
       supplyDate,
       notes,
-      quantity: totalQuantity,
+      quantity: 0,
     };
 
 
@@ -631,9 +632,9 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       supplierID,
       employeeID,
       registerDate,
+      total_bill_price,
       supplyDate,
       notes,
-      totalQuantity,
       type,
       invoiceNumber
     } = data;
@@ -700,13 +701,14 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       //supply
       serialNumber: serial_nmber,
       invoiceCode,
+      total_bill_price,
       invoicesData: selectedOptionArr,
       supplierID,
       employeeID,
       registerDate,
       supplyDate,
       notes,
-      quantity: totalQuantity,
+      quantity: 0,
     };
 
     let newInvoice = new Invoice(finalObject);
@@ -732,7 +734,8 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
       registerDate,
       supplyDate,
       notes,
-      totalQuantity,
+      total_payment_price,
+      total_suplly_price,
       type,
       invoiceNumber
     } = data;
@@ -860,10 +863,12 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
       invoicesData2: selectedOptionArr2,
       supplierID,
       employeeID,
+      total_payment_price,
+      total_suplly_price,
       registerDate,
       supplyDate,
       notes,
-      quantity: totalQuantity,
+      quantity: 0,
     };
 
 

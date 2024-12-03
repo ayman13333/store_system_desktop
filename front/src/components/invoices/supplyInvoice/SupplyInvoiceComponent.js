@@ -131,7 +131,7 @@ export default function SupplyInvoiceComponent() {
                 notes,
                 registerDate:new Date().toString(),
                 supplyDate:new Date(supplyDate)?.toString(),
-                totalQuantity:CalculateSum({selectedOptionArr}),
+                total_bill_price:CalculateSum({selectedOptionArr}),
                 invoiceNumber
 
              };

@@ -175,7 +175,8 @@ export default function ConvetInvoiceComponent() {
                 notes,
                 registerDate:new Date().toString(),
                 supplyDate:new Date(supplyDate)?.toString(),
-                totalQuantity:CalculateSum({selectedOptionArr}),
+                total_payment_price:CalculateSum({selectedOptionArr}),
+                total_suplly_price:CalculateSum({selectedOptionArr:selectedOptionArr2}),
                 invoiceNumber,
                 selectedOptionArr2
              };
@@ -481,7 +482,7 @@ export default function ConvetInvoiceComponent() {
                                     category={categoryToShow} setCategory={setCategoryToShow}
                                     categories={categoriesAfterConvert} setCategories={setCategoriesAfterConvert}
                                     setSelectedOptionArr={setSelectedOptionArr2}
-                                    type={'convert'}
+                                    type={'supply'}
                                 />
                             }
 

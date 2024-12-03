@@ -48,6 +48,21 @@ const InvoiceSchema=new mongoose.Schema({
         type:String,
         required:false
     },
+    // سعر فاتوره العاديه (صرف - توريد)
+    total_bill_price:{
+        type:String,
+        required:false
+    },
+    // سعر فاتوره التوريد
+    total_suplly_price:{
+        type:String,
+        required:false
+    },
+    // سعر فاتوره الصرف
+    total_payment_price:{
+        type:String,
+        required:false
+    },
     quantity:{
         type:Number,
         required:true
