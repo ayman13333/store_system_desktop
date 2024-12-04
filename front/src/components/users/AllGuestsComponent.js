@@ -220,7 +220,10 @@ export default function AllGuestsComponent() {
           setTypeOfSupply(row?.typeOfSupply);
           setAdvantages(row?.advantages);
           setDisAdvantages(row?.disAdvantages);
+          setSerialNumber(row?.serialNumber ? row?.serialNumber : '');
 
+          setTaxNumber(row?.taxNumber ? row?.taxNumber : '');
+          
           setShowEditModal(true);
           setIsEdit(true);
         }}

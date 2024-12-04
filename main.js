@@ -253,9 +253,28 @@ ipcMain.handle('editGuest', async (event, data) => {
     // data=data.delete('_id');
     delete data['_id'];
 
+    // للمورد
+    if(data.type=='supplier'){
+      // اتأكد ان الرقم القومي مش موجود قبل كدة
+      const foundUser = await User.findOne({
+        $and: [
+          { serialNumber: data.serialNumber },
+          { _id: { $ne: id } }, // Exclude users with status 'inactive'
+        ],
+      }
+       );
+       
+      if (foundUser !== null) {
+        new Notification({ title: 'هذا الرقم القومي تم ادخاله من قبل' }).show();
+        return;
+      }
+    }
+
     let user = await User.findByIdAndUpdate(id, data, {
       new: true
     }).lean();
+
+    
 
     // console.log("user",user);
     user = {
