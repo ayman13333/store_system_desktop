@@ -97,6 +97,8 @@ ipcMain.handle('add-user', async (event, userData) => {
 
     //console.log('ggggggggggggggggggggggggggg');
     let hashedPassword = '';
+
+    // للموظف
     if (userData.email || userData.password) {
       const foundUser = await User.findOne({ email: userData.email });
       if (foundUser !== null) {
@@ -109,6 +111,16 @@ ipcMain.handle('add-user', async (event, userData) => {
     }
 
     console.log('userData:', userData);
+
+    // للمورد
+    if(userData.type=='supplier'){
+      // اتأكد ان الرقم القومي مش موجود قبل كدة
+      const foundUser = await User.findOne({ serialNumber: userData.serialNumber });
+      if (foundUser !== null) {
+        new Notification({ title: 'هذا الرقم القومي تم ادخاله من قبل' }).show();
+        return;
+      }
+    }
 
 
     const newUser = new User(userData);

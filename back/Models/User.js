@@ -15,6 +15,10 @@ const usersSchema=new mongoose.Schema({
     taxNumber:{
         type:String
     },
+    // الرقم القومي
+    serialNumber:{
+        type:String
+    },
     fullName:{
         type:String
     },

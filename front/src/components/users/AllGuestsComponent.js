@@ -22,6 +22,8 @@ export default function AllGuestsComponent() {
   const [taxNumber, setTaxNumber] = useState('');
   const [isEdit, setIsEdit] = useState(false);
 
+  const[serialNumber,setSerialNumber]=useState('');
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -87,8 +89,9 @@ export default function AllGuestsComponent() {
       if (taxNumber == '') return toast.error("من فضلك   ادخل الرقم الضريبي");
       if (fullName == '') return toast.error("من فضلك ادخل الاسم رباعي");
       if (mobile == '') return toast.error("من فضلك   ادخل الهاتف");
+      if (serialNumber == '') return toast.error("من فضلك   ادخل الرقم القومي");
 
-
+      // serialNumber
       data = {
         fullName,
         type,
@@ -97,7 +100,8 @@ export default function AllGuestsComponent() {
         advantages,
         disAdvantages,
         typeOfSupply,
-        taxNumber
+        taxNumber,
+        serialNumber
       };
     }
 
@@ -136,6 +140,7 @@ export default function AllGuestsComponent() {
         setAdvantages('');
         setDisAdvantages('');
         setTaxNumber('');
+        setSerialNumber('');
 
         setIsEdit(false);
 
@@ -170,6 +175,7 @@ export default function AllGuestsComponent() {
         setAdvantages('');
         setDisAdvantages('');
         setTaxNumber('');
+        setSerialNumber('');
 
         setIsEdit(false);
       }
@@ -340,6 +346,13 @@ export default function AllGuestsComponent() {
                       <input
                         value={taxNumber} onChange={(e) => setTaxNumber(e.target.value)}
                         type="number" className="form-control" placeholder=" الرقم الضريبي" onWheel={handleWheel} />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="my-2"> الرقم القومي </label>
+                      <input
+                        value={serialNumber} onChange={(e) => setSerialNumber(e.target.value)}
+                        type="number" className="form-control" placeholder=" الرقم القومي" onWheel={handleWheel} />
                     </div>
 
                     <div className="form-group">
