@@ -40,10 +40,23 @@ const usersSchema=new mongoose.Schema({
     },
     password:{
         type:String
+    },
+    status:{
+        type:Boolean,
+        default:true,
+        select: true,
     }
 },
 {
     timestamps:true
 });
+
+usersSchema.post('find', function (docs) {
+    docs.forEach(doc => {
+      if (doc.status === undefined) {
+        doc.status = true; // Apply default manually
+      }
+    });
+  });
 
 module.exports=mongoose.model('User',usersSchema);

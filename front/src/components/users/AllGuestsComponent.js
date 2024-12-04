@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { BsBackspaceFill, BsPlus } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
+import { CiEdit, CiLock, CiUnlock } from "react-icons/ci";
 import { toast } from "react-toastify";
 
 export default function AllGuestsComponent() {
@@ -199,12 +199,6 @@ export default function AllGuestsComponent() {
       },
       sortable: true,
     },
-    // {
-    //   name: 'الهاتف',
-    //   selector: row => row.mobile,
-    //   sortable: true,
-    // },
-
     {
       name: 'تعديل',
       cell: (row) => <button
@@ -225,6 +219,56 @@ export default function AllGuestsComponent() {
           setIsEdit(true);
         }}
         className='btn btn-warning' > تعديل  <CiEdit /> </button>
+    },
+    {
+      name: 'الحالة',
+      cell: (row) => <button
+        onClick={ async() => {
+        
+
+          let data={
+          _id:row?._id,
+          status:!row?.status
+          };
+
+          console.log('data',data);
+        //  return;
+
+          setIsLoading(true);
+          let result = await window?.electron?.editGuest(data);
+          setIsLoading(false);
+    
+          if (result?.success) {
+            const usersAfterEdit = await window?.electron?.getAllUsers({
+              type: 'allSuppliers'
+            });
+    
+            setUsers(usersAfterEdit?.users);
+    
+            // setSearchValue('');
+            // setShowEditModal(false);
+            // setFullName('');
+            // // setCardNumber('');
+            // setType(0);
+            // setMobile('');
+            // setAddress('');
+            // setUserForEdit(null);
+    
+            // setTypeOfSupply('');
+            // setAdvantages('');
+            // setDisAdvantages('');
+            // setTaxNumber('');
+    
+            // setIsEdit(false);
+    
+            console.log('result', result);
+          }
+     
+          
+        }}
+        className={`btn ${row?.status==true ? 'btn-success' : 'btn-danger'}`}
+        style={{width:'114px'}}
+         >{row?.status==true ? 'غير محظور' : 'محظور'}   <CiLock /> </button>
     }
   ];
   console.log('users', users);

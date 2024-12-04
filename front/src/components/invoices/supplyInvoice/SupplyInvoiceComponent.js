@@ -53,7 +53,9 @@ export default function SupplyInvoiceComponent() {
             setIsLoading(false);
             // console.log('result',result);
 
-            setSuppliers(result?.users);
+            let activeSuppliers=result?.users?.filter(el=>el?.status==true);
+
+            setSuppliers(activeSuppliers);
 
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {

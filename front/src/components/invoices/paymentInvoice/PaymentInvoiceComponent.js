@@ -50,7 +50,9 @@ export default function PaymentInvoiceComponent() {
             setIsLoading(false);
             // console.log('result',result);
 
-            setSuppliers(result?.users);
+            let activeAsuuplires=result?.users?.filter(el=>el?.status==true);
+            
+            setSuppliers(activeAsuuplires);
 
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {

@@ -162,9 +162,15 @@ ipcMain.handle('getAllUsers', async (event, data) => {
         { type: data.type }
       ];
     }
+
     let users = await User.find({
       $or: filter
-    }).lean();
+    })
+    .select('+status')
+    .lean();
+
+    console.log('users',users);
+
 
     users = users.map(doc => {
       return {
@@ -244,7 +250,7 @@ ipcMain.handle('editGuest', async (event, data) => {
       ...user,
       _id: user?._id.toString()
     }
-    new Notification({ title: 'تم تعديل المستخدم بنجاح' }).show();
+    new Notification({ title: 'تم التعديل بنجاح' }).show();
 
     return {
       success: true,
