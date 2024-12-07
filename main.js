@@ -556,7 +556,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       invoiceNumber
     } = data;
 
-    console.log("TYPE  : ", type)
+    const forSearch =new Date(supplyDate);
 
     const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
     if (invoiceCodeCheck) {
@@ -639,6 +639,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       registerDate,
       total_bill_price,
       supplyDate,
+      supplyDateForSearch : forSearch ,
       notes,
       quantity: 0,
     };
@@ -733,6 +734,8 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
 
     );
 
+    const forSearch =new Date(supplyDate);
+
     const finalObject = {
       type: "payment",
       //supply
@@ -741,6 +744,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       total_bill_price,
       invoicesData: selectedOptionArr,
       supplierID,
+      supplyDateForSearch : forSearch ,
       employeeID,
       registerDate,
       supplyDate,
@@ -891,6 +895,7 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
 
     );
    
+    const forSearch =new Date(supplyDate);
     const finalObject = {
       type: type,
       //supply
@@ -900,6 +905,7 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
       invoicesData2: selectedOptionArr2,
       supplierID,
       employeeID,
+      supplyDateForSearch : forSearch ,
       total_payment_price,
       total_suplly_price,
       registerDate,

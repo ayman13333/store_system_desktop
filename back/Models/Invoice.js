@@ -33,6 +33,10 @@ const InvoiceSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    supplyDateForSearch:{
+        type:Date,
+        required:true
+    },
     // بيانات الصرف
     invoicesData:{
         type:Array,
