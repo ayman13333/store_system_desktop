@@ -17,8 +17,9 @@ contextBridge.exposeInMainWorld('electron', {
   addSupplyInvoice:(data)=>ipcRenderer.invoke('addSupplyInvoice',data),
   addPaymentInvoice:(data)=>ipcRenderer.invoke('addPaymentInvoice',data),
   changeInvoice:(data)=>ipcRenderer.invoke('changeInvoice',data),
-  searchForReport:(data)=>ipcRenderer.invoke('searchForReport',data)
-
+  searchForReport:(data)=>ipcRenderer.invoke('searchForReport',data),
+  // صفحة الطباعة
+  searchForInvoiceByCode:(data)=>ipcRenderer.invoke('searchForInvoiceByCode',data),
 });
 
 

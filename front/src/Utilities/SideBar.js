@@ -2,7 +2,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { MdBedroomParent, MdLogout, MdModeEdit } from "react-icons/md";
 import { BsBackpack4Fill, BsFillFilePersonFill, BsFillPersonVcardFill, BsGlobeCentralSouthAsia } from "react-icons/bs";
-import { FaFileInvoice } from "react-icons/fa";
+import { FaFileInvoice, FaPrint } from "react-icons/fa";
 import { Accordion, Dropdown, DropdownButton, Nav } from 'react-bootstrap';
 import CustomDropDown from './CustomDropDown';
 import { HiDocumentReport } from "react-icons/hi";
@@ -89,6 +89,17 @@ export default function SideBar() {
                 options={reportsOptions}
               />
             </Nav.Item>
+
+            <NavLink className='link my-3' to={'/print'}>
+              <span style={{ display: "flex", gap: "10px" }}>
+                <div>
+                <FaPrint />
+                </div>
+                <div>
+                  صفحة الطباعة
+                </div>
+              </span>
+            </NavLink>
           </>
         }
 

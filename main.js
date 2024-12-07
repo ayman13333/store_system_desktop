@@ -959,14 +959,53 @@ ipcMain.handle('searchForReport', async (event, data) => {
     }
   } catch (error) {
     console.log('error', error);
-    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+    new Notification({ title: 'حدث خطأ حاول مرة اخري' }).show();
     return {
       success: false
     }
   }
 });
+// search for invoice by code
+ipcMain.handle('searchForInvoiceByCode',async(event, data)=>{
+  try {
+    const{code}=data;
+   
+    let foundInvoice=await Invoice.findOne({invoiceCode:code}).populate('supplierID employeeID').lean();
 
+    console.log('foundInvoice',foundInvoice);
+    if(foundInvoice==null){
+      new Notification({ title: 'لا توجد فاتورة بهذا الكود ادخل كود اخر' }).show();
+      return {
+        success:false
+      }
+    }
+    else{
+      foundInvoice={
+        ...foundInvoice,
+        _id:foundInvoice?._id?.toString(),
+        supplierID:{
+          ...foundInvoice?.supplierID,
+          _id:foundInvoice?.supplierID?._id.toString()
+        },
+        employeeID:{
+          ...foundInvoice?.employeeID,
+          _id:foundInvoice?.employeeID?._id.toString() 
+        }
+      }
 
+      return{
+        success:true,
+        foundInvoice
+      }
+    }
+  } catch (error) {
+    console.log('error', error);
+    new Notification({ title: 'حدث خطأ حاول مرة اخري' }).show();
+    return {
+      success: false
+    }
+  }
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
