@@ -171,7 +171,7 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
     }
 
 
-    console.log('selectedSupplier', selectedSupplier);
+   // console.log('selectedSupplier', selectedSupplier);
 
     return (
         <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
@@ -236,7 +236,6 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
                     onChange={(e) => setSupplyDate(e.target.value)}
                     required
                     type={type ? 'text' : 'date'}
-
                     className="form-control"
                     disabled={type ? true : false}
                 />

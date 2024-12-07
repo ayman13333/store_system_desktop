@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import SearchComponent from "./SearchComponent";
 import SupplyInvoiceComponent from "../invoices/supplyInvoice/SupplyInvoiceComponent";
+import PaymentInvoiceComponent from "../invoices/paymentInvoice/PaymentInvoiceComponent";
 
 export default function PrintInvoiceComponent() {
     const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +15,10 @@ export default function PrintInvoiceComponent() {
             <SearchComponent setFoundInvoice={setFoundInvoice} isLoading={isLoading} setIsLoading={setIsLoading} />
             {
                 foundInvoice?.type == 'supply' && <SupplyInvoiceComponent type={'print'} invoice={foundInvoice} />
+            }
+
+            {
+                foundInvoice?.type == 'payment' && <PaymentInvoiceComponent type={'print'} invoice={foundInvoice} />
             }
 
             {
