@@ -9,23 +9,24 @@ import ExpirationDatesModal from "./ExpirationDatesModal";
 import AddQuantityModal from "./AddQuantityModal";
 import { toast } from "react-toastify";
 import CalculateSum from "../../../Utilities/CalculateSum";
+import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
 
-export default function SupplyInvoiceComponent() {
+export default function SupplyInvoiceComponent({ type = null, invoice = null }) {
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
-    const [invoiceNumber, setInvoiceNumber] = useState('');
+    const [invoiceNumber, setInvoiceNumber] = useState(() => type == null ? '' : invoice?.serialNumber);
     // جهات التوريد
     const [suppliers, setSuppliers] = useState([]);
     // اسم جهة التوريد
-    const [selectedSupplier, setSelectedSupplier] = useState('0');
+    const [selectedSupplier, setSelectedSupplier] = useState(() => type == null ? '0' : invoice?.supplierID?._id);
     // تاريخ التوريد
-    const [supplyDate, setSupplyDate] = useState('');
+    const [supplyDate, setSupplyDate] = useState(() => type == null ? '' : new Date(invoice?.supplyDate));
     // الاصناف
     const [categories, setCategories] = useState([]);
     // كود الفاتورة
-    const [invoiceCode, setInvoiceCode] = useState('');
+    const [invoiceCode, setInvoiceCode] = useState(() => type == null ? '' : invoice?.invoiceCode);
     // State to store the selected option
-    const [selectedOptionArr, setSelectedOptionArr] = useState(null);
+    const [selectedOptionArr, setSelectedOptionArr] = useState(() => type == null ? null : invoice?.invoicesData);
     // تواريخ الصلاحية
     const [showExpirationDatesModal, setShowExpirationDatesModal] = useState(false);
     const [categoryToShow, setCategoryToShow] = useState(null);
@@ -37,9 +38,9 @@ export default function SupplyInvoiceComponent() {
     // const[sum,setSum]=useState(0);
 
 
-    const loggedUser=JSON.parse(localStorage.getItem('user'));
+    const loggedUser = JSON.parse(localStorage.getItem('user'));
 
-    console.log('loggedUser',loggedUser);
+    console.log('supplyDate', supplyDate);
 
     useEffect(() => {
         const get = async () => {
@@ -53,7 +54,7 @@ export default function SupplyInvoiceComponent() {
             setIsLoading(false);
             // console.log('result',result);
 
-            let activeSuppliers=result?.users?.filter(el=>el?.status==true);
+            let activeSuppliers = result?.users?.filter(el => el?.status == true);
 
             setSuppliers(activeSuppliers);
 
@@ -65,7 +66,7 @@ export default function SupplyInvoiceComponent() {
                     totalQuantity: 0,
                     expirationDatesArr: [],
                     unitPrice: 0,
-                    originalQuantity:el?.totalQuantity
+                    originalQuantity: el?.totalQuantity
                 }
             })
             setCategories(categoriesForSelect);
@@ -100,82 +101,85 @@ export default function SupplyInvoiceComponent() {
         setShowAddQuantityModal(true);
     }
 
-   // console.log('supplyDate',new Date(supplyDate)?.toString());
-    const addNewInvoice=async()=>{
+    // console.log('supplyDate',new Date(supplyDate)?.toString());
+    const addNewInvoice = async () => {
         try {
-            if(invoiceCode=='') return toast.error('من فضلك ادخل كود الفاتورة');
-            if(invoiceNumber=='') return toast.error('من فضلك ادخل رقم الفاتورة');
-            if(selectedSupplier=='0') return toast.error('من فضلك ادخل جهة التوريد');
-            if(supplyDate=='') return toast.error('من فضلك ادخل تاريخ التوريد');
+            if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
+            if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
+            if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة التوريد');
+            if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التوريد');
 
 
 
-            if(selectedOptionArr==null || selectedOptionArr.length==0) return toast.error(" من فضلك اختر قائمة الاصناف");
+            if (selectedOptionArr == null || selectedOptionArr.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف");
 
-            let hasError=false;
+            let hasError = false;
 
-            selectedOptionArr?.map(el=>{
-                if(el?.expirationDatesArr?.length==0){
-                    hasError=true;
-                    console.log("el?.expirationDatesArr",el?.expirationDatesArr);
-                   // return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
+            selectedOptionArr?.map(el => {
+                if (el?.expirationDatesArr?.length == 0) {
+                    hasError = true;
+                    console.log("el?.expirationDatesArr", el?.expirationDatesArr);
+                    // return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
                 }
             });
 
-            if(hasError==true) return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
+            if (hasError == true) return toast.error('من فضلك تأكد ان جميع الاصناف بها سعر وكميه و تاريخ صلاحيه');
 
-             const data={
-                type:'supply',
+            const data = {
+                type: 'supply',
                 selectedOptionArr,
                 invoiceCode,
-                supplierID:selectedSupplier,
-                employeeID:loggedUser?._id,
+                supplierID: selectedSupplier,
+                employeeID: loggedUser?._id,
                 notes,
-                registerDate:new Date().toString(),
-                supplyDate:new Date(supplyDate)?.toString(),
-                total_bill_price:CalculateSum({selectedOptionArr}),
+                registerDate: new Date().toString(),
+                supplyDate: new Date(supplyDate)?.toString(),
+                total_bill_price: CalculateSum({ selectedOptionArr }),
                 invoiceNumber
 
-             };
+            };
 
-             console.log('data',data);
+            console.log('data', data);
 
-          //   return;
+            //   return;
 
 
-             setIsLoading(true);
-             const result = await window?.electron?.addSupplyInvoice(data);
-             setIsLoading(false);
- 
-             if (result.success == true) {
-                 toast.success('تم اضافة الفاتورة بنجاح');
-                 setInvoiceNumber('');
-                 setSelectedSupplier('0');
+            setIsLoading(true);
+            const result = await window?.electron?.addSupplyInvoice(data);
+            setIsLoading(false);
+
+            if (result.success == true) {
+                toast.success('تم اضافة الفاتورة بنجاح');
+                setInvoiceNumber('');
+                setSelectedSupplier('0');
                 setSupplyDate('');
                 setInvoiceCode('');
                 setNotes('');
                 setSelectedOptionArr(null);
-             }
-             else {
-                 toast.error('فشل في عملية الاضافة');
-                 console.log('mmmmmmmmmmmmm');
-             }
-            
+            }
+            else {
+                toast.error('فشل في عملية الاضافة');
+                console.log('mmmmmmmmmmmmm');
+            }
+
 
         } catch (error) {
-            console.log('error',error);
+            console.log('error', error);
             setIsLoading(false);
             toast.error('فشل في عملية الاضافة');
         }
     }
 
 
+    console.log('selectedSupplier', selectedSupplier);
 
     return (
-        <div className='w-75 h-100' style={{
+        <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
             // overflowX:'hidden'
         }}>
-            <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
+          {
+            type == null && <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
+          } 
 
             <div className="form-group">
                 <label className="my-2"> نوع الفاتورة </label>
@@ -193,6 +197,7 @@ export default function SupplyInvoiceComponent() {
                     onChange={(e) => setInvoiceCode(e.target.value)}
                     type="text" className="form-control"
                     placeholder="كود الفاتورة"
+                    disabled={type ? true : false}
                 />
             </div>
 
@@ -202,51 +207,71 @@ export default function SupplyInvoiceComponent() {
                     value={invoiceNumber} setValue={setInvoiceNumber}
                     placeholder={'رقم  الفاتورة'}
                     required={true}
+                    disabled={type ? true : false}
                 />
             </div>
 
             <div className="form-group">
                 <label className="my-2"> اسم جهة التوريد </label>
+
                 <select
                     value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
-                    className="form-control">
-                    <option value={'0'}> من فضلك اختر جهة التوريد </option>
+                    className="form-control"
+                    disabled={type ? true : false}
+                >
+                    {type == null && <option value={'0'}> من فضلك اختر جهة التوريد </option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }
                 </select>
+
             </div>
 
             <div className="form-group">
                 <label className="my-2">  تاريخ التوريد </label>
                 <input
-                    value={supplyDate} onChange={(e) => setSupplyDate(e.target.value)}
+                    value={
+                        type ? FormatDateForHTML(supplyDate) : supplyDate
+                    }
+                    onChange={(e) => setSupplyDate(e.target.value)}
                     required
-                    type="date" className="form-control" placeholder="الوحدة"
+                    type={type ? 'text' : 'date'}
+
+                    className="form-control"
+                    disabled={type ? true : false}
                 />
             </div>
 
             <div className="form-group">
                 <label className="my-2">  تاريخ التسجيل </label>
                 <input
-                    value={FormatDate(new Date)}
+                    value={
+                        type ? FormatDate(new Date(invoice?.registerDate)) : FormatDate(new Date)
+                    }
                     disabled
-                    type="text" className="form-control" />
+                    type="text" className="form-control"
+                />
             </div>
 
             <div className="form-group">
                 <label className="my-2">   اسم الموظف </label>
                 <input
-                    value={loggedUser?.email}
+                    value={type ? invoice?.employeeID?.email : loggedUser?.email}
                     disabled
                     type="text" className="form-control" />
             </div>
 
             <div className='form-group'>
-                    <label className="my-2"> ملاحظات </label>
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="form-control" style={{ height: '100px' }}>
+                <label className="my-2"> ملاحظات </label>
+                <textarea
+                    value={type ? invoice?.notes : notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="form-control"
+                    style={{ height: '100px' }}
+                    disabled={type ? true : false}
+                >
 
-                    </textarea>
+                </textarea>
             </div>
 
             {
@@ -257,6 +282,7 @@ export default function SupplyInvoiceComponent() {
                         value={selectedOptionArr}
                         onChange={handleChange}
                         options={categories}
+                        isDisabled={type ? true : false}
                     />
                 </div>
             }
@@ -281,7 +307,7 @@ export default function SupplyInvoiceComponent() {
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
                                 <th className="text-center" scope="col"> الاجمالي </th>
-                                <th className="text-center mx-auto" scope="col">تحكم</th>
+                                {type == null && <th className="text-center mx-auto" scope="col">تحكم</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -291,24 +317,29 @@ export default function SupplyInvoiceComponent() {
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
                                         <td className="text-center" >
-                                            <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
-                                                اضغط هنا
-                                            </button>
+                                            {
+                                                 <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
+                                                    اضغط هنا
+                                                </button>
+                                            }
+
                                         </td>
                                         <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
                                         <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13">{ parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
-                                        <td className="text-center">
-                                            <div className='d-flex h-25 gap-2'>
-                                                {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
-                                                <button
-                                                    onClick={() => showQuantity(el)}
-                                                    className='btn btn-warning h-25 my-auto mx-auto small'
-                                                > <CiEdit height={'5px'} /> </button>
+                                        <td className="text-center p-13">{parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
+                                        {
+                                            type == null && <td className="text-center">
+                                                <div className='d-flex h-25 gap-2'>
+                                                    <button
+                                                        onClick={() => showQuantity(el)}
+                                                        className='btn btn-warning h-25 my-auto mx-auto small'
+                                                    > <CiEdit height={'5px'} /> </button>
 
-                                            </div>
-                                        </td>
+                                                </div>
+                                            </td>
+                                        }
+
                                     </tr>
                                 )
                             }
@@ -327,7 +358,7 @@ export default function SupplyInvoiceComponent() {
                                     categories={categories} setCategories={setCategories}
                                     setSelectedOptionArr={setSelectedOptionArr}
                                     type={'supply'}
-                                   
+
                                 />
                             }
 
@@ -338,16 +369,19 @@ export default function SupplyInvoiceComponent() {
 
             <div className='d-flex justify-content-between my-4'>
                 <div>
-                <button
-                    onClick={() => addNewInvoice()}
-                    disabled={isLoading}
-                    className='btn btn-success  my-auto'> اضافة  فاتورة </button>
+                    {
+                        type == null && <button
+                            onClick={() => addNewInvoice()}
+                            disabled={isLoading}
+                            className='btn btn-success  my-auto'> اضافة  فاتورة </button>
+                    }
+
                 </div>
 
                 <div className="total">
-                    <h3> 
-                        {`الاجمالي : ${CalculateSum({selectedOptionArr})} جنيه`}
-                             
+                    <h3>
+                        {`الاجمالي : ${CalculateSum({ selectedOptionArr })} جنيه`}
+
                     </h3>
                 </div>
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function SearchComponent() {
+export default function SearchComponent({setFoundInvoice,setIsLoading,isLoading}) {
     const [searchValue, setSearchValue] = useState('');
 
     const search= async()=>{
@@ -10,9 +10,13 @@ export default function SearchComponent() {
             const code=searchValue.trim();
             const data={code};
             // searchForInvoiceByCode
-            const {success,foundInvoice}=await window?.electron?.searchForInvoiceByCode(data); 
+            setIsLoading(true);
+            const {success,foundInvoice}=await window?.electron?.searchForInvoiceByCode(data);
+            setIsLoading(false);
+
             if(success==true){
-                console.log('invoice',foundInvoice);
+                // console.log('invoice',foundInvoice);
+                setFoundInvoice(foundInvoice);
             }
             else{
 
@@ -39,7 +43,7 @@ export default function SearchComponent() {
                         type="text" className="form-control" />
                 </div>
 
-                <button onClick={() => search()} className='btn btn-success'> بحث </button>
+                <button disabled={isLoading} onClick={() => search()} className='btn btn-success'> بحث </button>
 
                 {/* <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh  </button> */}
 
