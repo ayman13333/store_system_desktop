@@ -231,7 +231,9 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
             <div className="form-group">
                 <label className="my-2">  تاريخ التسجيل </label>
                 <input
-                    value={FormatDate(new Date)}
+                     value={
+                        type ? FormatDate(new Date(invoice?.registerDate)) : FormatDate(new Date)
+                    }
                     disabled
                     type="text" className="form-control" />
             </div>

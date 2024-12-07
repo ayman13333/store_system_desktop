@@ -8,23 +8,24 @@ import CustumNumberInput from '../../../Utilities/CustumNumberInput';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
 import CalculateSum from '../../../Utilities/CalculateSum';
+import FormatDateForHTML from '../../../Utilities/FormatDateForHTML';
 
 
-export default function ConvetInvoiceComponent() {
+export default function ConvetInvoiceComponent({ type = null, invoice = null }) {
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
-    const [invoiceNumber, setInvoiceNumber] = useState('');
+    const [invoiceNumber, setInvoiceNumber] = useState(() => type == null ? '' : invoice?.serialNumber);
     // جهات الصرف
     const [suppliers, setSuppliers] = useState([]);
     // اسم جهة الصرف
-    const [selectedSupplier, setSelectedSupplier] = useState('0');
+    const [selectedSupplier, setSelectedSupplier] = useState(() => type == null ? '0' : invoice?.supplierID?._id);
     // تاريخ الصرف
-    const [supplyDate, setSupplyDate] = useState('');
+    const [supplyDate, setSupplyDate] = useState(() => type == null ? '' : new Date(invoice?.supplyDate));
 
     // كود الفاتورة
-    const [invoiceCode, setInvoiceCode] = useState('');
+    const [invoiceCode, setInvoiceCode] = useState(() => type == null ? '' : invoice?.invoiceCode);
     // State to store the selected option
-    const [selectedOptionArr, setSelectedOptionArr] = useState(null);
+    const [selectedOptionArr, setSelectedOptionArr] = useState(() => type == null ? null : invoice?.invoicesData);
     // تواريخ الصلاحية
     const [showExpirationDatesModal, setShowExpirationDatesModal] = useState(false);
     const [categoryToShow, setCategoryToShow] = useState(null);
@@ -34,14 +35,14 @@ export default function ConvetInvoiceComponent() {
     const [showAddQuantityModalAfter, setShowAddQuantityModalAfter] = useState(false);
 
 
-    const [notes, setNotes] = useState('');
+    const [notes, setNotes] = useState(() => type == null ? '' : invoice?.notes);
 
     // المراد تحويلها الاصناف
     const [categoriesToConvert, setCategoriesToConvert] = useState([]);
 
     // بعد تحويلها الاصناف
     const [categoriesAfterConvert, setCategoriesAfterConvert] = useState([]);
-    const [selectedOptionArr2, setSelectedOptionArr2] = useState(null);
+    const [selectedOptionArr2, setSelectedOptionArr2] = useState(() => type == null ? null : invoice?.invoicesData2);
 
 
 
@@ -60,7 +61,7 @@ export default function ConvetInvoiceComponent() {
             setIsLoading(false);
             // console.log('result',result);
 
-            let activeAsuuplires=result?.users?.filter(el=>el?.status==true);
+            let activeAsuuplires = result?.users?.filter(el => el?.status == true);
 
             setSuppliers(activeAsuuplires);
 
@@ -134,29 +135,29 @@ export default function ConvetInvoiceComponent() {
             let totalQuantityBefore = 0;
             let totalQuantityAfter = 0;
 
-            let hasError1=false;
+            let hasError1 = false;
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
-                    hasError1=true;
-                   // 
+                    hasError1 = true;
+                    // 
                 }
 
                 totalQuantityBefore += el?.totalQuantity;
             });
 
-            if(hasError1==true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
+            if (hasError1 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
-            let hasError2=false;
+            let hasError2 = false;
             selectedOptionArr2?.map(el => {
                 if (el?.totalQuantity == '0') {
-                    hasError2=true;
+                    hasError2 = true;
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
                 }
 
                 totalQuantityAfter += el?.totalQuantity;
             });
 
-            if(hasError2==true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
+            if (hasError2 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
 
             console.log('totalQuantityBefore', totalQuantityBefore);
@@ -168,37 +169,37 @@ export default function ConvetInvoiceComponent() {
             }
 
 
-            const data={
-                type:'convert',
+            const data = {
+                type: 'convert',
                 selectedOptionArr,
                 invoiceCode,
-                supplierID:selectedSupplier,
-                employeeID:loggedUser?._id,
+                supplierID: selectedSupplier,
+                employeeID: loggedUser?._id,
                 notes,
-                registerDate:new Date().toString(),
-                supplyDate:new Date(supplyDate)?.toString(),
-                total_payment_price:CalculateSum({selectedOptionArr}),
-                total_suplly_price:CalculateSum({selectedOptionArr:selectedOptionArr2}),
+                registerDate: new Date().toString(),
+                supplyDate: new Date(supplyDate)?.toString(),
+                total_payment_price: CalculateSum({ selectedOptionArr }),
+                total_suplly_price: CalculateSum({ selectedOptionArr: selectedOptionArr2 }),
                 invoiceNumber,
                 selectedOptionArr2
-             };
+            };
 
-             setIsLoading(true);
-             const result = await window?.electron?.changeInvoice(data);
-             setIsLoading(false);
+            setIsLoading(true);
+            const result = await window?.electron?.changeInvoice(data);
+            setIsLoading(false);
 
-             console.log('data',data);
+            console.log('data', data);
             // changeInvoice
 
             if (result.success == true) {
                 toast.success('تم اضافة الفاتورة بنجاح');
                 setInvoiceNumber('');
                 setSelectedSupplier('0');
-               setSupplyDate('');
-               setInvoiceCode('');
-               setNotes('');
-               setSelectedOptionArr(null);
-               setSelectedOptionArr2(null);
+                setSupplyDate('');
+                setInvoiceCode('');
+                setNotes('');
+                setSelectedOptionArr(null);
+                setSelectedOptionArr2(null);
             }
             else {
                 toast.error('فشل في عملية الاضافة');
@@ -206,16 +207,16 @@ export default function ConvetInvoiceComponent() {
             }
 
         } catch (error) {
-            console.log('error',error);
+            console.log('error', error);
             setIsLoading(false);
             toast.error('فشل في عملية الاضافة');
         }
     }
 
-        console.log('selectedOptionArr2',selectedOptionArr2);
+    console.log('selectedOptionArr2', selectedOptionArr2);
 
     return (
-        <div className='w-75 h-100' style={{
+        <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
             // overflowX:'hidden'
         }}>
             <h1>  فاتورة التحويل   {isLoading && <Spinner />} </h1>
@@ -236,6 +237,7 @@ export default function ConvetInvoiceComponent() {
                     onChange={(e) => setInvoiceCode(e.target.value)}
                     type="text" className="form-control"
                     placeholder="كود الفاتورة"
+                    disabled={type ? true : false}
                 />
             </div>
 
@@ -245,15 +247,19 @@ export default function ConvetInvoiceComponent() {
                     value={invoiceNumber} setValue={setInvoiceNumber}
                     placeholder={'رقم  الفاتورة'}
                     required={true}
+                    disabled={type ? true : false}
                 />
             </div>
 
             <div className="form-group">
                 <label className="my-2"> اسم جهة التحويل </label>
                 <select
-                    value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
-                    className="form-control">
-                    <option value={'0'}> من فضلك اختر جهة التحويل </option>
+                    value={selectedSupplier} 
+                    onChange={(e) => setSelectedSupplier(e.target.value)}
+                    className="form-control"
+                    disabled={type ? true : false}
+                    >
+                    {type == null && <option value={'0'}> من فضلك اختر جهة التوريد </option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }
@@ -263,16 +269,22 @@ export default function ConvetInvoiceComponent() {
             <div className="form-group">
                 <label className="my-2">  تاريخ التحويل </label>
                 <input
-                    value={supplyDate} onChange={(e) => setSupplyDate(e.target.value)}
+                    value={
+                        type ? FormatDateForHTML(supplyDate) : supplyDate
+                    }
+                    onChange={(e) => setSupplyDate(e.target.value)}
                     required
-                    type="date" className="form-control" placeholder="الوحدة"
+                    type="date" className="form-control"
+                    disabled={type ? true : false}
                 />
             </div>
 
             <div className="form-group">
                 <label className="my-2">  تاريخ التسجيل </label>
                 <input
-                    value={FormatDate(new Date)}
+                    value={
+                        type ? FormatDate(new Date(invoice?.registerDate)) : FormatDate(new Date)
+                    }
                     disabled
                     type="text" className="form-control" />
             </div>
@@ -280,14 +292,20 @@ export default function ConvetInvoiceComponent() {
             <div className="form-group">
                 <label className="my-2">   اسم الموظف </label>
                 <input
-                    value={loggedUser?.email}
+                    value={type ? invoice?.employeeID?.email : loggedUser?.email}
                     disabled
                     type="text" className="form-control" />
             </div>
 
             <div className='form-group'>
                 <label className="my-2"> ملاحظات </label>
-                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="form-control" style={{ height: '100px' }}>
+                <textarea
+                    value={type ? invoice?.notes : notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="form-control"
+                    style={{ height: '100px' }}
+                    disabled={type ? true : false}
+                >
 
                 </textarea>
             </div>
@@ -313,6 +331,7 @@ export default function ConvetInvoiceComponent() {
                         value={selectedOptionArr}
                         onChange={handleChange}
                         options={categoriesToConvert}
+                        isDisabled={type ? true : false}
                     />
                 </div>
             }
@@ -337,7 +356,7 @@ export default function ConvetInvoiceComponent() {
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
                                 <th className="text-center" scope="col"> الاجمالي </th>
-                                <th className="text-center mx-auto" scope="col">تحكم</th>
+                                {type == null && <th className="text-center mx-auto" scope="col">تحكم</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -355,16 +374,17 @@ export default function ConvetInvoiceComponent() {
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
                                         <td className="text-center p-13">{parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
-                                        <td className="text-center">
-                                            <div className='d-flex h-25 gap-2'>
-                                                {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
-                                                <button
-                                                    onClick={() => showQuantity(el)}
-                                                    className='btn btn-warning h-25 my-auto mx-auto small'
-                                                > <CiEdit height={'5px'} /> </button>
+                                        {
+                                            type == null && <td className="text-center">
+                                                <div className='d-flex h-25 gap-2'>
+                                                    <button
+                                                        onClick={() => showQuantity(el)}
+                                                        className='btn btn-warning h-25 my-auto mx-auto small'
+                                                    > <CiEdit height={'5px'} /> </button>
 
-                                            </div>
-                                        </td>
+                                                </div>
+                                            </td>
+                                        }
                                     </tr>
                                 )
                             }
@@ -412,6 +432,7 @@ export default function ConvetInvoiceComponent() {
                         value={selectedOptionArr2}
                         onChange={handleChange2}
                         options={categoriesAfterConvert}
+                        isDisabled={type ? true : false}
                     />
                 </div>
             }
@@ -436,7 +457,7 @@ export default function ConvetInvoiceComponent() {
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
                                 <th className="text-center" scope="col"> الاجمالي </th>
-                                <th className="text-center mx-auto" scope="col">تحكم</th>
+                                {type == null && <th className="text-center mx-auto" scope="col">تحكم</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -453,17 +474,20 @@ export default function ConvetInvoiceComponent() {
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13">{ parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
-                                        <td className="text-center">
-                                            <div className='d-flex h-25 gap-2'>
-                                                {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
-                                                <button
-                                                    onClick={() => showQuantityAfter(el)}
-                                                    className='btn btn-warning h-25 my-auto mx-auto small'
-                                                > <CiEdit height={'5px'} /> </button>
+                                        <td className="text-center p-13">{parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
+                                        {
+                                            type == null && <td className="text-center">
+                                                <div className='d-flex h-25 gap-2'>
+                                                    {/* <button  className='btn btn-danger h-25 my-auto'> <FaTrashAlt height={'5px'} /> </button> */}
+                                                    <button
+                                                        onClick={() => showQuantityAfter(el)}
+                                                        className='btn btn-warning h-25 my-auto mx-auto small'
+                                                    > <CiEdit height={'5px'} /> </button>
 
-                                            </div>
-                                        </td>
+                                                </div>
+                                            </td>
+                                        }
+
                                     </tr>
                                 )
                             }
@@ -495,10 +519,12 @@ export default function ConvetInvoiceComponent() {
 
             <div className='d-flex justify-content-between'>
 
-                <button
-                    onClick={() => addNewInvoice()}
-                    disabled={isLoading}
-                    className='btn btn-success h-50 my-auto'> اضافة  فاتورة </button>
+                {
+                    type == null && <button
+                        onClick={() => addNewInvoice()}
+                        disabled={isLoading}
+                        className='btn btn-success  my-auto'> اضافة  فاتورة </button>
+                }
 
 
                 {/* <button
