@@ -931,6 +931,41 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
   }
 });
 
+// بحث التقارير
+ipcMain.handle('searchForReport', async (event, data) => {
+  try {
+    const { invoiceCode, supplierID, startDate, endDate } = data;
+
+    let filter = {};
+
+    if (supplierID) {
+      filter.supplierID = supplierID;
+    }
+    if (invoiceCode) {
+      filter.invoiceCode = invoiceCode;
+    }
+
+    if (startDate && endDate) {
+
+      filter.supplyDateForSearch = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+      };
+    }
+    const categoryObject = await Invoice.find(filter);
+    return {
+      success: true,
+      categoryObject
+    }
+  } catch (error) {
+    console.log('error', error);
+    new Notification({ title: 'فشل في عملية الاضافة' }).show();
+    return {
+      success: false
+    }
+  }
+});
+
 
 
 app.on('window-all-closed', () => {
