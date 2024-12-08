@@ -593,8 +593,10 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
             const targetDate = new Date(timestamp);
             targetDate.setUTCHours(0, 0, 0, 0);
             const result = categoryItemObject.find(item => {
+              console.log("Target : "  ,targetDate)
               const itemDate = new Date(item.date);
               itemDate.setUTCHours(0, 0, 0, 0);
+              console.log("Item : "  ,itemDate)
               return itemDate.getFullYear() === targetDate.getFullYear() &&
                 itemDate.getMonth() === targetDate.getMonth() && itemDate.getDate() === targetDate.getDate();
             });
