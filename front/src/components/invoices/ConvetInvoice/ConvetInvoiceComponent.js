@@ -254,11 +254,11 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
             <div className="form-group">
                 <label className="my-2"> اسم جهة التحويل </label>
                 <select
-                    value={selectedSupplier} 
+                    value={selectedSupplier}
                     onChange={(e) => setSelectedSupplier(e.target.value)}
                     className="form-control"
                     disabled={type ? true : false}
-                    >
+                >
                     {type == null && <option value={'0'}> من فضلك اختر جهة التوريد </option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
@@ -349,9 +349,12 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                             <tr>
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
-                                <th className="text-center" scope="col" style={{
-                                    whiteSpace: "nowrap"
-                                }}> تاريخ الصلاحية </th>
+                                {
+                                    type == null && <th className="text-center" scope="col" style={{
+                                        whiteSpace: "nowrap"
+                                    }}> تاريخ الصلاحية </th>
+                                }
+
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
@@ -365,11 +368,14 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                     <tr key={i}>
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
-                                        <td className="text-center" >
-                                            <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
-                                                اضغط هنا
-                                            </button>
-                                        </td>
+                                        {
+                                            type == null && <td className="text-center" >
+                                                <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
+                                                    اضغط هنا
+                                                </button>
+                                            </td>
+                                        }
+
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
@@ -450,9 +456,12 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                             <tr>
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
-                                <th className="text-center" scope="col" style={{
-                                    whiteSpace: "nowrap"
-                                }}> تاريخ الصلاحية </th>
+                                {
+                                    type == null && <th className="text-center" scope="col" style={{
+                                        whiteSpace: "nowrap"
+                                    }}> تاريخ الصلاحية </th>
+                                }
+
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
@@ -466,11 +475,14 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                     <tr key={i}>
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
-                                        <td className="text-center" >
-                                            <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
-                                                اضغط هنا
-                                            </button>
-                                        </td>
+                                        {
+                                            type == null && <td className="text-center" >
+                                                <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
+                                                    اضغط هنا
+                                                </button>
+                                            </td>
+                                        }
+
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>

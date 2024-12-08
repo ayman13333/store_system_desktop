@@ -71,6 +71,17 @@ export default function SideBar() {
               </span>
             </NavLink>
 
+            <NavLink className='link my-3' to={'/print'}>
+              <span style={{ display: "flex", gap: "10px" }}>
+                <div>
+                <FaPrint />
+                </div>
+                <div>
+                   طباعة فاتورة
+                </div>
+              </span>
+            </NavLink>
+
 
             <Nav.Item>
               <CustomDropDown
@@ -90,16 +101,7 @@ export default function SideBar() {
               />
             </Nav.Item>
 
-            <NavLink className='link my-3' to={'/print'}>
-              <span style={{ display: "flex", gap: "10px" }}>
-                <div>
-                <FaPrint />
-                </div>
-                <div>
-                  صفحة الطباعة
-                </div>
-              </span>
-            </NavLink>
+         
           </>
         }
 

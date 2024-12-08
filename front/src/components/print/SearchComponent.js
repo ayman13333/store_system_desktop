@@ -19,7 +19,7 @@ export default function SearchComponent({setFoundInvoice,setIsLoading,isLoading}
                 setFoundInvoice(foundInvoice);
             }
             else{
-
+                setFoundInvoice(null);
             }
         } catch (error) {
             console.log("error",error.message);
@@ -39,7 +39,7 @@ export default function SearchComponent({setFoundInvoice,setIsLoading,isLoading}
                               }
                         }}
                         onChange={(e) => setSearchValue(e.target.value)}
-                        placeholder='ابحث هنا'
+                        placeholder='البحث بكود الفاتورة'
                         type="text" className="form-control" />
                 </div>
 

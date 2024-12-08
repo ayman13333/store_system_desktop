@@ -171,15 +171,15 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
     }
 
 
-   // console.log('selectedSupplier', selectedSupplier);
+    // console.log('selectedSupplier', selectedSupplier);
 
     return (
         <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
             // overflowX:'hidden'
         }}>
-          {
-            type == null && <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
-          } 
+            {
+                type == null && <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
+            }
 
             <div className="form-group">
                 <label className="my-2"> نوع الفاتورة </label>
@@ -299,9 +299,12 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
                             <tr>
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
-                                <th className="text-center" scope="col" style={{
-                                    whiteSpace: "nowrap"
-                                }}> تاريخ الصلاحية </th>
+                                {
+                                    type==null&&<th className="text-center" scope="col" style={{
+                                        whiteSpace: "nowrap"
+                                    }}> تاريخ الصلاحية </th>
+                                }
+                                
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
@@ -315,14 +318,15 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
                                     <tr key={i}>
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
-                                        <td className="text-center" >
-                                            {
-                                                 <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
+                                        {
+                                            type == null && <td className="text-center" >
+
+                                                <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
                                                     اضغط هنا
                                                 </button>
-                                            }
+                                            </td>
+                                        }
 
-                                        </td>
                                         <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
                                         <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>

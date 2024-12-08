@@ -231,7 +231,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
             <div className="form-group">
                 <label className="my-2">  تاريخ التسجيل </label>
                 <input
-                     value={
+                    value={
                         type ? FormatDate(new Date(invoice?.registerDate)) : FormatDate(new Date)
                     }
                     disabled
@@ -285,9 +285,12 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                             <tr>
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
-                                <th className="text-center" scope="col" style={{
-                                    whiteSpace: "nowrap"
-                                }}> تاريخ الصلاحية </th>
+                                {
+                                    type == null && <th className="text-center" scope="col" style={{
+                                        whiteSpace: "nowrap"
+                                    }}> تاريخ الصلاحية </th>
+                                }
+
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
@@ -301,11 +304,14 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                                     <tr key={i}>
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
-                                        <td className="text-center" >
-                                            <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
-                                                اضغط هنا
-                                            </button>
-                                        </td>
+                                        {
+                                            type == null && <td className="text-center" >
+                                                <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
+                                                    اضغط هنا
+                                                </button>
+                                            </td>
+                                        }
+
                                         <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
                                         <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
