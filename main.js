@@ -11,7 +11,7 @@ const CategoryItem = require('./back/Models/CategoryItem');
 const Invoice = require('./back/Models/Invoice');
 // const { fiveDays } = require('./front/src/Constants');
 
-const fiveDays = 5;
+const fiveDays = 4;
 
 
 
@@ -580,16 +580,40 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
           el.expirationDatesArr.map(async (ele) => {
             newTotalQuantity += ele.quantity;
             const date2 = new Date(ele.date);
+            date2.setUTCHours(0, 0, 0, 0);
             let date = date2.setDate(date2.getDate() - fiveDays);
             const date3 = new Date(date); // Convert to Date object
             const dateString = date3.toString();
             console.log("DATE ======>  ", date.toString());
-            let newCategoryItem = new CategoryItem({
-              quantity: ele.quantity,
-              date: dateString,
-              categoryID: el._id,
+            /////////////////////////////////////////////////////////////////////////////////////
+
+            const categoryItemObject = await CategoryItem.find({ categoryID: el._id });
+            const dateE = new Date(ele.date);
+            let timestamp = dateE.setDate(dateE.getDate() - fiveDays);
+            const targetDate = new Date(timestamp);
+            targetDate.setUTCHours(0, 0, 0, 0);
+            const result = categoryItemObject.find(item => {
+              const itemDate = new Date(item.date);
+              itemDate.setUTCHours(0, 0, 0, 0);
+              return itemDate.getFullYear() === targetDate.getFullYear() &&
+                itemDate.getMonth() === targetDate.getMonth() && itemDate.getDate() === targetDate.getDate();
             });
-            await newCategoryItem.save();
+
+            if (result) {
+              console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
+              await CategoryItem.findByIdAndUpdate(result._id,
+                { quantity: result.quantity + ele.quantity }, { new: true });
+              return;
+            } else {
+              console.log("======== NOT EXIST ========");
+              /////////////////////////////////////////////////////////////////////////////////////           
+              let newCategoryItem = new CategoryItem({
+                quantity: ele.quantity,
+                date: dateString,
+                categoryID: el._id,
+              });
+              await newCategoryItem.save();
+            }
           })
         );
 
@@ -801,18 +825,47 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
           el.expirationDatesArr.map(async (ele) => {
             newTotalQuantity += ele.quantity;
             const date2 = new Date(ele.date);
+            date2.setUTCHours(0, 0, 0, 0);
             let date = date2.setDate(date2.getDate() - fiveDays);
             const date3 = new Date(date); // Convert to Date object
             const dateString = date3.toString();
             console.log("DATE ======>  ", date.toString());
-            let newCategoryItem = new CategoryItem({
-              quantity: ele.quantity,
-              date: dateString,
-              categoryID: el._id,
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+            const categoryItemObject = await CategoryItem.find({ categoryID: el._id });
+            const dateE = new Date(ele.date);
+            let timestamp = dateE.setDate(dateE.getDate() - fiveDays);
+            const targetDate = new Date(timestamp);
+            targetDate.setUTCHours(0, 0, 0, 0);
+            const result = categoryItemObject.find(item => {
+              const itemDate = new Date(item.date);
+              itemDate.setUTCHours(0, 0, 0, 0);
+              return itemDate.getFullYear() === targetDate.getFullYear() &&
+                itemDate.getMonth() === targetDate.getMonth() && itemDate.getDate() === targetDate.getDate();
             });
-            await newCategoryItem.save();
+
+            if (result) {
+              console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
+              await CategoryItem.findByIdAndUpdate(result._id,
+                { quantity: result.quantity + ele.quantity }, { new: true });
+              return;
+            } else {
+              console.log("======== NOT EXIST ========");
+              /////////////////////////////////////////////////////////////////////////////////////           
+              let newCategoryItem = new CategoryItem({
+                quantity: ele.quantity,
+                date: dateString,
+                categoryID: el._id,
+              });
+              await newCategoryItem.save();
+            }
           })
         );
+       
+
+
+
+
+
           const categoryItemObject = await CategoryItem.find({
             categoryID: el._id,
           });
@@ -952,7 +1005,7 @@ ipcMain.handle('searchForReport', async (event, data) => {
         $lte: new Date(endDate)
       };
     }
-    const categoryObject = await Invoice.find(filter);
+    const categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
     return {
       success: true,
       categoryObject
