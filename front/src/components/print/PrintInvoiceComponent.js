@@ -148,7 +148,7 @@ export default function PrintInvoiceComponent() {
               <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.supplierID?.fullName}</td>
               </tr>
               <tr>
-                <th style="padding: 8px; font-size: 24px; font-weight: 800;">تاريخ التحويل</th>
+                <th style="padding: 8px; font-size: 24px; font-weight: 800;">تاريخ الفاتورة</th>
                 <td style="padding: 8px; font-size: 24px; font-weight: 800;">${formatDate(foundInvoice?.supplyDate)}</td>
               </tr>
               <tr>
@@ -189,6 +189,7 @@ export default function PrintInvoiceComponent() {
         //   </div>
         // `);
       
+        
         // Table
         printWindow.document.write(`
 
