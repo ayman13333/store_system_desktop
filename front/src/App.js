@@ -19,7 +19,7 @@ import EntityTransactionReportPage from './Pages/reports/EntityTransactionReport
 import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage';
 import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactionsReportPage';
 import PrintInvoicePage from './Pages/print/PrintInvoicePage';
-import PrintPayentandSupplyInvoice from './components/print/PrintPayentandSupplyInvoice';
+// import PrintPayentandSupplyInvoice from './components/print/PrintPayentandSupplyInvoice';
 
 
 
@@ -71,7 +71,7 @@ function App() {
       {/* صفحة الطباعة */}
       <Route path='/print' element={<PrintInvoicePage />} />
       {/* طباعة فاتورة التوريد والصرف */}
-      <Route path='/printPayentandSupplyInvoice' element={<PrintPayentandSupplyInvoice />} />
+      {/* <Route path='/printPayentandSupplyInvoice' element={<PrintPayentandSupplyInvoice />} /> */}
 
       </Routes>
      </HashRouter>

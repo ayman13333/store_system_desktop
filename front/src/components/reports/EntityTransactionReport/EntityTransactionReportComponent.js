@@ -3,6 +3,8 @@ import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as 
 import DataTable from "react-data-table-component"
 import { FaEye } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import { Spinner } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -13,24 +15,36 @@ export default function EntityTransactionReportComponent() {
   const [endDate, setEndDate] = useState(''); // Track end date
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
   const [users, setUsers] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const [report, setReport] = useState([]); // Track first select value
 
+  const navigate = useNavigate();
   const getReport = async () => {
-    if(!selectedValue || !secondSelectValue){
-      return  toast.error('يجب اختيار الجهة');
-      }
-
-    const data = {
-      // invoiceCode: selectedValue ,
-      supplierID: secondSelectValue,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    const reports = await window?.electron?.searchForReport(data)
-    console.log('reports', reports);
+    try {
+      if(!secondSelectValue){
+        return  toast.error('يجب اختيار الجهة');
+        }
+  
+      const data = {
+        // invoiceCode: selectedValue ,
+        supplierID: secondSelectValue,
+        startDate: startDate,
+        endDate: endDate,
+      };
+     
+      setIsLoading(true)
+      const reports = await window?.electron?.searchForReport(data)
+      console.log('reports', reports);
+      setReport(reports);
+      
+    } catch (error) {
+      console.log("Error")
+      setIsLoading(false)
+    } finally{
+      setIsLoading(false)
+    }
     
-    setReport(reports);
   }
 
   console.log("report",report?.categoryObject)
@@ -88,6 +102,7 @@ export default function EntityTransactionReportComponent() {
         selectedValue === '3' ? options3 : [];
 
 
+        console.log("isLoading",isLoading);
 
   const numberColumnHeader = selectedValue === '2' ? "رقم اذن الصرف" : "رقم الفاتوره";
   const nameColumnHeader = selectedValue === '1' ? "اسم جهة التوريد" : selectedValue === '2' ? "اسم جهة الصرف" : "اسم جهة التحويل";
@@ -104,10 +119,10 @@ export default function EntityTransactionReportComponent() {
   const columns = [
     {
       name: 'كود الفاتوره',
-      width: '180px',
+      // width: '180px',
       sortable: true,
       cell: row => {
-        let codeStr = row.invoiceCode ;
+        let codeStr = row?.invoiceCode ;
         return (
           <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {codeStr}
@@ -117,7 +132,7 @@ export default function EntityTransactionReportComponent() {
     },
     {
       name: numberColumnHeader,
-      width: '180px',
+      // width: '180px',
       sortable: true,
       cell: row => {
         let numberStr =row?.serialNumber;
@@ -130,31 +145,42 @@ export default function EntityTransactionReportComponent() {
     },
     {
       name: 'نوع الفاتورة',
-      width: '180px',
-      selector: row => row.type,
-      sortable: true,
+      // width: '180px',
+      selector: row => 
+        row?.type == "payment" 
+          ? "صرف" 
+          : row?.type == "supply" 
+            ? "توريد" 
+            : row?.type == "convert" 
+              ? "تحويل" 
+              : "",
+            sortable: true,
     },
-    {
-      name: nameColumnHeader,
-      width: '200px',
-      selector: row => row.name,
-      sortable: true,
-    },
+
+
+    // {
+    //   name: nameColumnHeader,
+    //   // width: '200px',
+    //   selector: row => row?.supplierID?.fullName,
+    //   sortable: true,
+    // },
     {
       name: 'تاريخ الفاتورة',
-      width: '180px',
+      // width: '180px',
     selector: row => formatDate(row.supplyDate),
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
-      width: '180px',
+      // width: '180px',
       selector: row => formatDate(row.registerDate),
       sortable: true,
     },
     {
       name: 'استعراض',
-      cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} /></div>,
+      cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
+        navigate('/print',{state:row})
+      }} /></div>,
     },
   ];
 
@@ -196,11 +222,10 @@ export default function EntityTransactionReportComponent() {
     // Second variable: time with AM/PM
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
     hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
   
-    const timePart = `${hours}:${minutes}:${seconds} ${amPm}`;
+    const timePart = `${hours}:${minutes} ${amPm}`;
   
     return { datePart, timePart };
   };
@@ -213,12 +238,14 @@ export default function EntityTransactionReportComponent() {
     setSecondSelectValue(null);
     setStartDate('');
     setEndDate('');
-    setTableData([]);
+    setReport([]);
   };
 
 
+
+
   const printReport = () => {
-    if (report?.categoryObject.length === 0) {
+    if (report?.categoryObject?.length == 0 || report?.length == 0) {
       return toast.warning('لا يوجد بيانات للطباعة');
 
     }
@@ -242,26 +269,26 @@ export default function EntityTransactionReportComponent() {
     printWindow.document.write('</div>');
   
     // Print the table data with RTL column order
-    printWindow.document.write('<div><h2 style="text-align: center;">تقرير معاملات الجهة</h2></div>');
+    printWindow.document.write(`<div><h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800"> تقرير معامله جهة : ${report?.categoryObject[0]?.supplierID.fullName}  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="1" style="width:100%; border-collapse: collapse; direction: rtl;">');
+    printWindow.document.write('<table border="1" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
-    printWindow.document.write(`<thead><tr><th>كود الفاتوره</th><th>${numberColumnHeader}</th><th>نوع الفاتورة</th><th>${nameColumnHeader}</th><th>تاريخ الفاتورة</th><th>تاريخ التسجيل</th></tr></thead><tbody>`);
+    printWindow.document.write(`<thead><tr><th style ="padding:8px; font-size:24px; font-weight:800 " >كود الفاتوره</th><th style ="padding:8px; font-size:24px; font-weight:800 ">${numberColumnHeader}</th><th style ="padding:8px; font-size:24px; font-weight:800 ">نوع الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ التسجيل</th></tr></thead><tbody>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
-    tableData.forEach(row => {
+    report?.categoryObject.forEach(row => {
       printWindow.document.write(`
-        <tr>
-          <td>${row.invoiceCode}</td>
-          <td>${row.serialNumber}</td>
-          <td>${row.type}</td>
-          <td>${row.name}</td>
-          <td>${row.supplyDate}</td>
-          <td>${row.registerDate}</td>
+        <tr style="padding:5px">
+          <td style="padding:5px">${row?.invoiceCode}</td>
+          <td  style="padding:5px">${row?.serialNumber}</td>
+          <td  style="padding:5px">${row?.type}</td>
+          <td  style="padding:5px">${formatDate(row?.supplyDate)}</td>
+          <td  style="padding:5px">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
+
   
     printWindow.document.write('</tbody></table>');
     printWindow.document.write('</div>');
@@ -271,6 +298,7 @@ export default function EntityTransactionReportComponent() {
     printWindow.print();
   };
   
+
 
 
   return (
@@ -295,7 +323,7 @@ marginBottom:"20px"
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
       <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
-      <label style={{margin:"0 3px"}}> اختر الجهة </label>
+      <label style={{margin:"0 3px" }}> اختر الجهة </label>
         <ReactSelect
           options={Staticoptions}
           value={selectedValue}
@@ -340,7 +368,7 @@ marginBottom:"20px"
       </div>
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-        <button style={{ margin: "0 10px 0 0" }} onClick={getReport} className="btn btn-success">بحث</button>
+        <button style={{ margin: "0 10px 0 0" }} onClick={getReport} disabled={isLoading} className="btn btn-success"> {isLoading ? <Spinner /> : "بحث"}</button>
         <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">إلغاء البحث</button>
         <button style={{ margin: "0 10px 0 0" }} onClick={printReport} className="btn btn-primary">طباعة</button>
 
@@ -355,13 +383,16 @@ marginBottom:"20px"
 
       {/* Scrollable Table Container */}
       <div style={{ overflowX: 'auto', marginTop: '20px' }}>
-        <DataTable
-          columns={columns}
-          data={report?.categoryObject} // Display the filtered data
-          conditionalRowStyles={[]}
-          customStyles={customStyles}
-          pagination
-        />
+      {isLoading ? <Spinner /> :
+      <DataTable
+      columns={columns}
+      data={report?.categoryObject} // Display the filtered data
+      conditionalRowStyles={[]}
+      customStyles={customStyles}
+      pagination
+    />
+      }
+        
       </div>
 
 

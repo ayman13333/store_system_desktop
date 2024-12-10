@@ -62,11 +62,10 @@ export default function InventoryReportComponent() {
     // Second variable: time with AM/PM
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
     hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
   
-    const timePart = `${hours}:${minutes}:${seconds} ${amPm}`;
+    const timePart = `${hours}:${minutes} ${amPm}`;
   
     return { datePart, timePart };
   };
@@ -242,55 +241,118 @@ export default function InventoryReportComponent() {
 
   // Function to handle the print action
   const printReport = () => {
-    if (tableData.length === 0) {
+    if ( tableData.length == 0) {
       return toast.warning('لا يوجد بيانات للطباعة');
     }
   
     const printWindow = window.open('', '', 'height=800,width=1200');
-    printWindow.document.write('<html><head><title>تقرير الجرد</title><style>');
     
-    // Define the print media query and apply RTL styles
-    printWindow.document.write('@media print {');
-    printWindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; }');
-    printWindow.document.write('table { width: 100%; border-collapse: collapse; direction: rtl; }'); // Set table to RTL
-    printWindow.document.write('th, td { padding: 10px; text-align: right; border: 1px solid #ddd; }'); // Set text alignment to right for RTL
-    printWindow.document.write('@page { direction: rtl; }'); // Ensure the page itself is in RTL for printing
-    printWindow.document.write('}');
+    // Start writing the HTML content
+    printWindow.document.write('<html><head><title>تقرير الجرد</title><style>');
+  
+    // CSS for printing
+    printWindow.document.write(`
+      @media print {
+        body { 
+          font-family: Arial, sans-serif; 
+          font-size: 12px; 
+          direction: rtl; 
+        }
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          direction: rtl; 
+        }
+        th, td { 
+          padding: 10px; 
+          text-align: right; 
+          border: 1px solid #ddd; 
+        }
+        th { 
+          font-size: 16px; 
+          font-weight: bold; 
+          background-color: #f1f1f1; 
+        }
+        td { 
+          font-size: 14px; 
+        }
+        @page { 
+          margin: 20mm; 
+          direction: rtl; 
+        }
+      }
+    `);
+  
     printWindow.document.write('</style></head><body>');
   
-    // Print the title and date/time in flex layout
-    printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
-    printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
-    printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
-    printWindow.document.write('</div>');
-    
-    // Print the table data with RTL column order
-    printWindow.document.write('<div><h2 style="text-align: center;">تقرير الجرد</h2></div>');
-    printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="1" style="width:100%; border-collapse: collapse; direction: rtl;">');
-    
-    // Define the column headers in RTL order
-    printWindow.document.write('<thead><tr><th>الكود</th><th>الاسم</th><th>الوحدة</th><th>الكمية</th><th>سعر الوحدة</th><th>الاجمالي</th></tr></thead><tbody>');
-    
-    // Populate the rows with the reversed order of columns
+    // Header with time and date
+    printWindow.document.write(`
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
+        <div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>
+        <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
+      </div>
+    `);
+  
+    // Title
+    printWindow.document.write(`
+      <div>
+        <h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800">
+          تقرير الجرد المسعر
+        </h2>
+      </div>
+    `);
+  
+    // Table
+    printWindow.document.write(`
+      <div class="table-container">
+        <table border="1" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
+          <thead>
+            <tr>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكود</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاسم</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الوحدة</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكمية</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">سعر الوحدة</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاجمالي</th>
+            </tr>
+          </thead>
+          <tbody>
+    `);
+  
+    // Populate rows and calculate totals
+    let totalUnitPrice = 0;
+  
     tableData.forEach(row => {
+      const rowTotal = row.unitPrice * row.totalQuantity;
+      totalUnitPrice += rowTotal;
+  
       printWindow.document.write(`
         <tr>
-        <td>${row.code}</td>
-        <td>${row.name}</td>
-        <td>${row.unit}</td>
-        <td>${row.totalQuantity}</td>
-        <td>${row.unitPrice}</td>
-        <td>${row.unitPrice * row.totalQuantity}</td>
+          <td style="min-width: 200px; padding: 5px;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px;">${row.name}</td>
+          <td style="min-width: 200px; padding: 5px;">${row.unit}</td>
+          <td style="min-width: 200px; padding: 5px;">${row.totalQuantity}</td>
+          <td style="min-width: 200px; padding: 5px;">${row.unitPrice.toFixed(2)}</td>
+          <td style="min-width: 200px; padding: 5px;">${rowTotal.toFixed(2)}</td>
         </tr>
-        `);
-      });
-      
-      printWindow.document.write('</tbody></table>');
-      printWindow.document.write('<div style="display: flex; justify-content: center ; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
-      printWindow.document.write(`<div><h2 style="margin: 0;"> إجمالي سعر الأصناف بالمخزن : ${totalUnitPrice}</h2></div>`);
-    printWindow.document.write('</div>');
-    printWindow.document.write('</div>');
+      `);
+    });
+  
+    // Close table body
+    printWindow.document.write(`
+          </tbody>
+        </table>
+      </div>
+    `);
+  
+    // Footer with total price
+    printWindow.document.write(`
+      <div style="display: flex; justify-content: center; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-top: 20px;">
+        <div><h2 style="margin: 0;">إجمالي سعر الأصناف بالمخزن : ${totalUnitPrice.toFixed(2)} جنيه</h2></div>
+      </div>
+    `);
+  
+    // Close HTML
     printWindow.document.write('</body></html>');
   
     printWindow.document.close(); // Necessary for IE >= 10
@@ -314,7 +376,7 @@ display: "flex",
 <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
 <div><h4>الوقت : {timePart}</h4></div>
       </div>
-        <h1>تقرير الجرد</h1>
+        <h1>تقرير الجرد المسعر</h1>
   
         <br />
       {/* Select Inputs */}

@@ -20,7 +20,7 @@ const ReactSelect = ({
 
   return (
     <Select
-      value={options.find((option) => option.value == value)} // Matches selected value
+      value={options.find((option) => option.value == value) ? options.find((option) => option.value == value) : ''} // Matches selected value
       onChange={(selectedOption) => onChange(selectedOption?.value || '')}
       options={options}
       placeholder={placeholder}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 
@@ -9,10 +10,40 @@ export default function ItemTransactionReportComponent() {
   const [startDate, setStartDate] = useState(''); // Track start date
   const [endDate, setEndDate] = useState(''); // Track end date
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
+  const [report, setReport] = useState([]); // Track first select value
+  const [isLoading, setIsLoading] = useState(false);
 
-
-
+  const navigate = useNavigate();
   console.log("tableData",tableData)
+
+  const getReport = async () => {
+    try {
+      if(!selectedValue){
+        return  toast.error('يجب ادخال كود الصنف ');
+        }
+
+      const data = {
+        // invoiceCode: selectedValue ,
+        itemCode: selectedValue,
+        startDate: startDate,
+        endDate: endDate,
+      };
+     
+      setIsLoading(true)
+      const reports = await window?.electron?.searchForReport(data)
+      console.log('reports', reports);
+      setReport(reports);
+      
+    } catch (error) {
+      console.log("Error")
+      setIsLoading(false)
+    } finally{
+      setIsLoading(false)
+    }
+    
+  }
+
+  console.log("report",report?.categoryObject)
 
   // "supplier"
   // "consumer"
@@ -86,11 +117,10 @@ export default function ItemTransactionReportComponent() {
     // Second variable: time with AM/PM
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
     hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
   
-    const timePart = `${hours}:${minutes}:${seconds} ${amPm}`;
+    const timePart = `${hours}:${minutes} ${amPm}`;
   
     return { datePart, timePart };
   };
@@ -100,10 +130,10 @@ export default function ItemTransactionReportComponent() {
   const columns = [
     {
       name: 'كود الفاتوره',
-      minwidth:"180px",
+      // width: '180px',
       sortable: true,
       cell: row => {
-        let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
+        let codeStr = row?.invoiceCode ;
         return (
           <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {codeStr}
@@ -112,11 +142,11 @@ export default function ItemTransactionReportComponent() {
       }
     },
     {
-      name: "رقم الفاتورة",
-      minwidth:"180px",
+      name: numberColumnHeader,
+      // width: '180px',
       sortable: true,
       cell: row => {
-        let numberStr = row?.number?.length > 10 ? row.numberStr.substring(0, 10) + '...' : row?.number;
+        let numberStr =row?.serialNumber;
         return (
           <div style={{ textAlign: 'center', whiteSpace: 'normal', wordWrap: 'break-word', width: '100%' }}>
             {numberStr}
@@ -126,31 +156,40 @@ export default function ItemTransactionReportComponent() {
     },
     {
       name: 'نوع الفاتورة',
-      minwidth:"180px",
-      selector: row => row.type,
-      sortable: true,
+      // width: '180px',
+      selector: row => 
+        row?.type == "payment" 
+          ? "صرف" 
+          : row?.type == "supply" 
+            ? "توريد" 
+            : row?.type == "convert" 
+              ? "تحويل" 
+              : "",
+                    sortable: true,
     },
     {
-      name: "اسم الجهة",
-      minwidth:"180px",
-      selector: row => row.name,
+      name: nameColumnHeader,
+      // width: '200px',
+      selector: row => row?.supplierID?.fullName,
       sortable: true,
     },
     {
       name: 'تاريخ الفاتورة',
-      selector: row => row.invoiceDate,
-      minwidth:"180px",
+      // width: '180px',
+    selector: row => formatDate(row.supplyDate),
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
-      selector: row => row.registrationDate,
-      minwidth:"180px",
+      // width: '180px',
+      selector: row => formatDate(row.registerDate),
       sortable: true,
     },
     {
       name: 'استعراض',
-      cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} /></div>,
+      cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
+        navigate('/print',{state:row})
+      }} /></div>,
     },
   ];
 
@@ -178,69 +217,14 @@ export default function ItemTransactionReportComponent() {
   };
 
 
-  const search = () => {
-    if(!selectedValue){
-      return  toast.error('يجب ادخال كود الصنف ');
-      }
-    let filteredData = staticData;
-  
-    // Helper function to convert DD-MM-YYYY to Date object
-    const formatDateToObject = (dateString) => {
-      let formattedDate;
-    
-      // Check if the dateString is in YYYY-MM-DD format (standard format supported by JavaScript Date object)
-      const regex = /^\d{4}-\d{2}-\d{2}$/;
-      
-      if (regex.test(dateString)) {
-        // Directly parse YYYY-MM-DD format
-        formattedDate = new Date(dateString);
-      } else {
-        // Split by "-" for the DD-MM-YYYY format
-        const parts = dateString.split("-");
-        
-        if (parts.length === 3) {
-          // Handle DD-MM-YYYY format by reordering to YYYY-MM-DD for compatibility
-          const [day, month, year] = parts;
-          formattedDate = new Date(`${year}-${month}-${day}T00:00:00`); // Ensure time is set to midnight
-        } else {
-          console.error("Invalid date format:", dateString);
-          formattedDate = new Date(); // Return today's date if invalid
-        }
-      }
-    
-      // Check if the parsed date is valid
-      if (isNaN(formattedDate.getTime())) {
-        console.error("Invalid Date object:", dateString);
-        formattedDate = new Date(); // Return today's date if invalid
-      }
-    
-      return formattedDate;
-    };
-    
 
-    // Format the start and end dates correctly
-    const formattedStartDate = formatDateToObject(startDate);
-    const formattedEndDate = formatDateToObject(endDate);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
   
-    console.log("formattedStartDate", formattedStartDate);
-    console.log("formattedEndDate", formattedEndDate);
-  
-    // Filter data based on date range
-    if (startDate && endDate) {
-      filteredData = filteredData.filter(row => {
-        const invoiceDate = row.invoiceDate; // Get invoiceDate
-  
-        // Convert invoiceDate to Date object
-        const formattedInvoiceDate = formatDateToObject(invoiceDate);
-  
-        console.log("formattedInvoiceDate", formattedInvoiceDate);
-  
-        // Compare dates
-        return formattedInvoiceDate >= formattedStartDate && formattedInvoiceDate <= formattedEndDate;
-      });
-    }
-  
-    setTableData(filteredData);
+    return `${day}-${month}-${year}`;
   };
   
   
@@ -249,15 +233,15 @@ export default function ItemTransactionReportComponent() {
     setSelectedValue(null);
     setStartDate('');
     setEndDate('');
-    setTableData([]);
+    setReport([]);
   };
 
-
   const printReport = () => {
-    if (tableData.length === 0) {
+    if (report?.categoryObject?.length == 0 || report?.length == 0) {
       return toast.warning('لا يوجد بيانات للطباعة');
 
     }
+
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير معاملات الصنف</title><style>');
   
@@ -271,32 +255,33 @@ export default function ItemTransactionReportComponent() {
   
     printWindow.document.write('</style></head><body>');
   
-    // Print the table data with RTL column order
     printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
     printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
     printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
     printWindow.document.write('</div>');
   
-    printWindow.document.write('<div><h2 style="text-align: center;">تقرير معاملات الصنف</h2></div>');
+    // Print the table data with RTL column order
+    printWindow.document.write(`<div><h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800"> تقرير معاملات الصنف  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="1" style="width:100%; border-collapse: collapse; direction: rtl;">');
+    printWindow.document.write('<table border="1" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
-    printWindow.document.write(`<thead><tr><th>كود الفاتوره</th><th>رقم الفاتورة</th><th>نوع الفاتورة</th><th>اسم الجهة</th><th>تاريخ الفاتورة</th><th>تاريخ التسجيل</th></tr></thead><tbody>`);
+    printWindow.document.write(`<thead><tr><th style ="padding:8px; font-size:24px; font-weight:800 " >كود الفاتوره</th><th style ="padding:8px; font-size:24px; font-weight:800 ">${numberColumnHeader}</th><th style ="padding:8px; font-size:24px; font-weight:800 ">نوع الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">${nameColumnHeader}</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ التسجيل</th></tr></thead><tbody>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
-    tableData.forEach(row => {
+    report?.categoryObject.forEach(row => {
       printWindow.document.write(`
-        <tr>
-          <td>${row.code}</td>
-          <td>${row.number}</td>
-          <td>${row.type}</td>
-          <td>${row.name}</td>
-          <td>${row.invoiceDate}</td>
-          <td>${row.registrationDate}</td>
+        <tr style="padding:5px">
+          <td style="padding:5px">${row?.invoiceCode}</td>
+          <td  style="padding:5px">${row?.serialNumber}</td>
+          <td  style="padding:5px">${row?.type}</td>
+          <td  style="padding:5px">${row?.supplierID?.fullName}</td>
+          <td  style="padding:5px">${formatDate(row?.supplyDate)}</td>
+          <td  style="padding:5px">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
+
   
     printWindow.document.write('</tbody></table>');
     printWindow.document.write('</div>');
@@ -305,7 +290,6 @@ export default function ItemTransactionReportComponent() {
     printWindow.document.close(); // Necessary for IE >= 10
     printWindow.print();
   };
-  
 
 
   return (
@@ -366,7 +350,7 @@ marginBottom:"20px"
       </div>
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-        <button style={{ margin: "0 10px 0 0" }} onClick={search} className="btn btn-success">بحث</button>
+        <button style={{ margin: "0 10px 0 0" }} onClick={getReport} className="btn btn-success">بحث</button>
         <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">إلغاء البحث</button>
         <button style={{ margin: "0 10px 0 0" }} onClick={printReport} className="btn btn-primary">طباعة</button>
 
@@ -383,7 +367,7 @@ marginBottom:"20px"
       <div style={{ overflowX: 'auto', marginTop: '20px' }}>
         <DataTable
           columns={columns}
-          data={tableData} // Display the filtered data
+          data={report?.categoryObject} // Display the filtered data
           conditionalRowStyles={[]}
           customStyles={customStyles}
           pagination
