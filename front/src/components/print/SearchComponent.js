@@ -45,7 +45,7 @@ export default function SearchComponent({ setFoundInvoice, setIsLoading, isLoadi
 
                 <button disabled={isLoading} onClick={() => search()} className='btn btn-success'> بحث </button>
 
-                <button onClick={() => {window?.history?.back()}} className='btn btn-primary' > رجوع  </button>
+                
 
             </div>
         </div>

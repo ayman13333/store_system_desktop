@@ -336,24 +336,24 @@ export default function PrintInvoiceComponent() {
   const loggedUser = JSON.parse(localStorage.getItem('user'));
 
 
-  const deleteInvoiceFunction=async()=>{
+  const deleteInvoiceFunction = async () => {
     try {
-      let data={
-        invoiceCode:foundInvoice?.invoiceCode
+      let data = {
+        invoiceCode: foundInvoice?.invoiceCode
       }
       // deleteInvoice
       setIsLoading(true);
-      let result=await window?.electron?.deleteInvoice(data);
+      let result = await window?.electron?.deleteInvoice(data);
       setIsLoading(false);
 
-      if(result?.success){
+      if (result?.success) {
         setShowDeleteModal(false);
         setFoundInvoice(null);
-       return toast.success('تم حذف الفاتورة بنجاح');
+        return toast.success('تم حذف الفاتورة بنجاح');
       }
 
     } catch (error) {
-      console.log('error',error?.message);
+      console.log('error', error?.message);
       setIsLoading(false);
       return toast.error('فشل في عملية الحذف');
 
@@ -366,7 +366,16 @@ export default function PrintInvoiceComponent() {
   console.log('foundInvoice', foundInvoice);
   return (
     <div className='w-75 h-100'>
-      <h1> طباعة فاتورة   {isLoading && <Spinner />} </h1>
+      <div className="d-flex justify-content-between">
+        <h1> طباعة فاتورة   {isLoading && <Spinner />}  </h1>
+
+        <div>
+
+          <button style={{
+            marginTop:'10px'
+          }} onClick={() => { window?.history?.back() }} className='btn btn-primary' > رجوع  </button>
+        </div>
+      </div>
       {!location.state && <SearchComponent setFoundInvoice={setFoundInvoice} isLoading={isLoading} setIsLoading={setIsLoading} />
       }            {
         foundInvoice?.type == 'supply' && <div id="invoice"> <SupplyInvoiceComponent type={'print'} invoice={foundInvoice} /> </div>
@@ -399,11 +408,11 @@ export default function PrintInvoiceComponent() {
       }
 
       {
-        showDeleteModal && <ConfirmEditModal 
-        func={deleteInvoiceFunction}
-        show={showDeleteModal} 
-        setShow={setShowDeleteModal} 
-        type={'delete'} />
+        showDeleteModal && <ConfirmEditModal
+          func={deleteInvoiceFunction}
+          show={showDeleteModal}
+          setShow={setShowDeleteModal}
+          type={'delete'} />
       }
     </div>
   )
