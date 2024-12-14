@@ -206,8 +206,9 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                 <label className="my-2"> اسم جهة الصرف </label>
                 <select
                     value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
+                    disabled={type ? true : false}
                     className="form-control">
-                    {type == null && <option value={'0'}> من فضلك اختر جهة التوريد </option>}
+                    {type == null && <option value={'0'}> من فضلك اختر جهة الصرف </option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }
@@ -291,10 +292,14 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                                     }}> تاريخ الصلاحية </th>
                                 }
 
-                                <th className="text-center" scope="col"> سعر </th>
+                                {
+                                    loggedUser?.type == "admin" && <th className="text-center" scope="col"> سعر </th>
+                                }
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
-                                <th className="text-center" scope="col"> الاجمالي </th>
+                                {
+                                    loggedUser?.type == "admin" && <th className="text-center" scope="col"> الاجمالي </th>
+                                }
                                 {type == null && <th className="text-center mx-auto" scope="col">تحكم</th>}
                             </tr>
                         </thead>
@@ -311,11 +316,15 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                                                 </button>
                                             </td>
                                         }
+                                        {
+                                            loggedUser?.type == "admin" && <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
+                                        }
 
-                                        <td className="text-center p-13" >{parseFloat(el?.unitPrice).toFixed(2)}</td>
                                         <td className="text-center p-13" >{parseFloat(el?.totalQuantity).toFixed(2)}</td>
                                         <td className="text-center p-13" >{el?.unit}</td>
-                                        <td className="text-center p-13"> {parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
+                                        {
+                                            loggedUser?.type == "admin" && <td className="text-center p-13"> {parseFloat(Number(el?.unitPrice * el?.totalQuantity).toFixed(2))} </td>
+                                        }
                                         {
                                             type == null && <td className="text-center">
                                                 <div className='d-flex h-25 gap-2'>

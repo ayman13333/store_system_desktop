@@ -20,6 +20,8 @@ contextBridge.exposeInMainWorld('electron', {
   searchForReport:(data)=>ipcRenderer.invoke('searchForReport',data),
   // صفحة الطباعة
   searchForInvoiceByCode:(data)=>ipcRenderer.invoke('searchForInvoiceByCode',data),
+  // حذف فاتورة
+  deleteInvoice:(data)=>ipcRenderer.invoke('deleteInvoice',data)
 });
 
 

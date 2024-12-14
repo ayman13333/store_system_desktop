@@ -259,7 +259,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     className="form-control"
                     disabled={type ? true : false}
                 >
-                    {type == null && <option value={'0'}> من فضلك اختر جهة التوريد </option>}
+                    {type == null && <option value={'0'}> من فضلك اختر جهة التحويل </option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }

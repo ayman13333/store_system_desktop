@@ -1,6 +1,6 @@
 import { Button, Modal } from "react-bootstrap";
 
-export default function ConfirmEditModal({ show, setShow, func }) {
+export default function ConfirmEditModal({ show, setShow, func , type }) {
 
     const confirm = async () => {
          await func();
@@ -11,7 +11,13 @@ export default function ConfirmEditModal({ show, setShow, func }) {
         }}>
             <Modal.Header >
                 <Modal.Title>
-                    هل انت متأكد من التعديل ؟
+                    {
+                        type=="delete" ?
+                        "هل انت متأكد من الحذف ؟"
+                        :
+                        "هل انت متأكد من التعديل ؟"
+                    }
+                    
                 </Modal.Title>
             </Modal.Header>
 

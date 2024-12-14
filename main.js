@@ -37,6 +37,7 @@ async function createWindow() {
 
 
 
+
   // test
   mainWindow.webContents.openDevTools();
   mainWindow.loadURL('http://localhost:3000');
@@ -986,6 +987,24 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
   }
 });
 
+// حذف فاتورة
+ipcMain.handle('deleteInvoice',async(event, data)=>{
+  try {
+    let{invoiceCode}=data;
+
+    await Invoice.findOneAndDelete({invoiceCode});
+
+    return{
+      success:true
+    }
+
+  } catch (error) {
+    console.log('error',error.message);
+    return{
+      success:false
+    }
+  }
+});
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
@@ -1007,7 +1026,8 @@ ipcMain.handle('searchForReport', async (event, data) => {
         $lte: new Date(endDate)
       };
     }
-    const categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
+    let categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
+    
     return {
       success: true,
       categoryObject

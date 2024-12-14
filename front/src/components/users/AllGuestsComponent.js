@@ -77,6 +77,7 @@ export default function AllGuestsComponent() {
 
   const addOrEditUser = async () => {
 
+    if(fullName=='') return toast.error("من فضلك   ادخل الاسم رباعي"); 
     if (type == 0) return toast.error("من فضلك   اختر نوع التوريد");
     let data = {
       type
