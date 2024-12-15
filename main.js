@@ -114,7 +114,7 @@ ipcMain.handle('add-user', async (event, userData) => {
     console.log('userData:', userData);
 
     // للمورد
-    if(userData.type=='supplier'){
+    if (userData.type == 'supplier') {
       // اتأكد ان الرقم القومي مش موجود قبل كدة
       const foundUser = await User.findOne({ serialNumber: userData.serialNumber });
       if (foundUser !== null) {
@@ -179,10 +179,10 @@ ipcMain.handle('getAllUsers', async (event, data) => {
     let users = await User.find({
       $or: filter
     })
-    .select('+status')
-    .lean();
+      .select('+status')
+      .lean();
 
-    console.log('users',users);
+    console.log('users', users);
 
 
     users = users.map(doc => {
@@ -255,7 +255,7 @@ ipcMain.handle('editGuest', async (event, data) => {
     delete data['_id'];
 
     // للمورد
-    if(data.type=='supplier'){
+    if (data.type == 'supplier') {
       // اتأكد ان الرقم القومي مش موجود قبل كدة
       const foundUser = await User.findOne({
         $and: [
@@ -263,8 +263,8 @@ ipcMain.handle('editGuest', async (event, data) => {
           { _id: { $ne: id } }, // Exclude users with status 'inactive'
         ],
       }
-       );
-       
+      );
+
       if (foundUser !== null) {
         new Notification({ title: 'هذا الرقم القومي تم ادخاله من قبل' }).show();
         return;
@@ -275,7 +275,7 @@ ipcMain.handle('editGuest', async (event, data) => {
       new: true
     }).lean();
 
-    
+
 
     // console.log("user",user);
     user = {
@@ -441,7 +441,7 @@ ipcMain.handle('editCategory', async (event, data) => {
 
     if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
-    // const oldCategory=await Category.findById(_id);
+    const oldCategory=await Category.findById(_id);
 
     if (code !== lastCode) {
       // الاول شوف الكود ده دخل قبل كدة ولا لا
@@ -452,47 +452,68 @@ ipcMain.handle('editCategory', async (event, data) => {
       }
     }
 
+    console.log("EXPiration : ", expirationDatesArr)
 
-    const oldCategory = await Category.findById(_id);
-
-    console.log('oldCategory', oldCategory);
-
-    let oldCategoryItems = oldCategory?.expirationDatesArr;
-
-    //1) امسح كل ال category items بتوع الصنف 
-    const result = await CategoryItem.deleteMany({ _id: { $in: oldCategoryItems } });
-
-    console.log('result', result);
-    //2) save new category items
-
-    // 1) ضيف تواريخ الصلاحية في ال model
     let totalQuantity = 0;
-    let expirationDatesArrIDS = [];
 
     await Promise.all(
-      expirationDatesArr?.map(async (el) => {
-        // console.log("el",el);
-        totalQuantity += Number(el?.quantity);
-        let newCategoryItem = new CategoryItem({
-          date: el?.date,
-          quantity: el?.quantity,
-          categoryID: oldCategory?._id
-        });
-        await newCategoryItem.save();
+      expirationDatesArr.map(async (ele) => {
+        if (ele.createdAt) {
+          await CategoryItem.findByIdAndUpdate(ele._id,
+            { quantity: ele.quantity }, { new: true });
+          // console.log("--------------=")
+        } else {
+          console.log("--------------= new Expiration Date")
+          totalQuantity += Number(ele?.quantity);
+         
+          /////////////////////////////////////////////////////////////////////////////////////
 
-        newCategoryItem = newCategoryItem.toJSON();
+          const categoryItemObject = await CategoryItem.find({ categoryID: _id });
+          const dateE = new Date(ele.date);
+          let timestamp = dateE.setDate(dateE.getDate() + 1);
+          const targetDate = new Date(timestamp);
+          const result = categoryItemObject.find(item => {
+           
+            const item0 = new Date(`${item.date.slice(0,15)} 00:00:00 GMT+0000`);
+            let itemDate = new Date(Date.UTC(
+              item0.getUTCFullYear(),
+              item0.getUTCMonth(),
+              item0.getUTCDate(),
+              0, 0, 0, 0 // Set to midnight UTC
+          )); 
+            console.log("Item : ", itemDate)
+            console.log("tar : " , targetDate)
+            console.log("SAme Day : " , itemDate.getUTCDate() === targetDate.getUTCDate())
+            return itemDate.getFullYear() === targetDate.getFullYear() &&
+              itemDate.getMonth() === targetDate.getMonth() && itemDate.getUTCDate() === targetDate.getUTCDate();
+          });
 
 
-        expirationDatesArrIDS.push(newCategoryItem?._id);
+          if (result) {
+            console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
+            await CategoryItem.findByIdAndUpdate(result._id,
+              { quantity: Number(result.quantity) + Number(ele.quantity) }, { new: true });
+            return;
+          } else {
+            console.log("======== NOT EXIST ========");
+            /////////////////////////////////////////////////////////////////////////////////////           
+            let newCategoryItem = new CategoryItem({
+              quantity: ele.quantity,
+              date: targetDate,
+              categoryID: _id,
+            });
+            await newCategoryItem.save();
+          }
 
-        console.log('CategoryItem saved:', newCategoryItem);
+        }
+
+
       })
     );
-
-    console.log('expirationDatesArrIDS', expirationDatesArrIDS);
-    console.log('totalQuantity', totalQuantity);
-
-    //expirationDatesArrIDS= expirationDatesArrIDS.map(id => mongoose.Types.ObjectId(id));
+    let expiration_dates = [];
+    const categoryItemObject = await CategoryItem.find({ categoryID: _id, });
+    let finalTotalQuantity =0;
+    categoryItemObject.forEach((ele) => { finalTotalQuantity += ele.quantity;  expiration_dates.push(ele._id); });
 
     //2) ضيف الصنف
     let newCategoryObj = {
@@ -501,18 +522,13 @@ ipcMain.handle('editCategory', async (event, data) => {
       criticalValue,
       unitPrice,
       unit,
-      expirationDatesArr: expirationDatesArrIDS,
-      totalQuantity: quantity,
+      expirationDatesArr: expiration_dates,
+      totalQuantity: finalTotalQuantity,
       user,
       editDate
     }
 
-    console.log('newCategoryObj', newCategoryObj);
-
-    // let newCategory=new Category(newCategoryObj);
-
-    // await newCategory.save();
-
+  
     let newCategory = await Category.findByIdAndUpdate(
       oldCategory?._id,
       newCategoryObj,
@@ -521,7 +537,6 @@ ipcMain.handle('editCategory', async (event, data) => {
       }
     );
 
-    console.log('newCategory', newCategory);
 
     if (newCategory == null)
       return {
@@ -557,7 +572,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       invoiceNumber
     } = data;
 
-    const forSearch =new Date(supplyDate);
+    const forSearch = new Date(supplyDate);
 
     const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
     if (invoiceCodeCheck) {
@@ -568,7 +583,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     }
 
     console.log('bbbbbbbbbbbbbbbbb');
-    let serial_nmber = invoiceNumber; 
+    let serial_nmber = invoiceNumber;
 
 
     await Promise.all(
@@ -594,10 +609,10 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
             const targetDate = new Date(timestamp);
             targetDate.setUTCHours(0, 0, 0, 0);
             const result = categoryItemObject.find(item => {
-              console.log("Target : "  ,targetDate)
+              console.log("Target : ", targetDate)
               const itemDate = new Date(item.date);
               itemDate.setUTCHours(0, 0, 0, 0);
-              console.log("Item : "  ,itemDate)
+              console.log("Item : ", itemDate)
               return itemDate.getFullYear() === targetDate.getFullYear() &&
                 itemDate.getMonth() === targetDate.getMonth() && itemDate.getDate() === targetDate.getDate();
             });
@@ -666,7 +681,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
       registerDate,
       total_bill_price,
       supplyDate,
-      supplyDateForSearch : forSearch ,
+      supplyDateForSearch: forSearch,
       notes,
       quantity: 0,
     };
@@ -711,7 +726,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
     }
 
 
-    let serial_nmber = invoiceNumber; 
+    let serial_nmber = invoiceNumber;
 
     await Promise.all(
       selectedOptionArr?.map(async (el) => {
@@ -761,7 +776,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
 
     );
 
-    const forSearch =new Date(supplyDate);
+    const forSearch = new Date(supplyDate);
 
     const finalObject = {
       type: "payment",
@@ -771,7 +786,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       total_bill_price,
       invoicesData: selectedOptionArr,
       supplierID,
-      supplyDateForSearch : forSearch ,
+      supplyDateForSearch: forSearch,
       employeeID,
       registerDate,
       supplyDate,
@@ -791,7 +806,7 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
 });
 
 // فاتورة تحويل
-ipcMain.handle('changeInvoice',async(event, data)=>{
+ipcMain.handle('changeInvoice', async (event, data) => {
   try {
     const {
       invoiceCode,
@@ -815,7 +830,7 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
       new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
       return { success: false }
     }
-    let serial_nmber = invoiceNumber; 
+    let serial_nmber = invoiceNumber;
 
 
     await Promise.all(
@@ -833,7 +848,7 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
             const date3 = new Date(date); // Convert to Date object
             const dateString = date3.toString();
             console.log("DATE ======>  ", date.toString());
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
             const categoryItemObject = await CategoryItem.find({ categoryID: el._id });
             const dateE = new Date(ele.date);
             let timestamp = dateE.setDate(dateE.getDate() - fiveDays);
@@ -863,42 +878,42 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
             }
           })
         );
-       
 
 
 
 
 
-          const categoryItemObject = await CategoryItem.find({
-            categoryID: el._id,
-          });
 
-          let expiration_dates = [];
-          // Calculate totalQuantity from database items
-          categoryItemObject.forEach((ele) => {
-            totalQuantity += ele.quantity;
-            expiration_dates.push(ele._id);
-          });
+        const categoryItemObject = await CategoryItem.find({
+          categoryID: el._id,
+        });
 
-          console.log("Category  : ", category);
-          // Calculate finalUnitPrice
-          const finalUnitPrice =
-            (newTotalQuantity * el.unitPrice + (category.unitPrice * category.totalQuantity)) / (totalQuantity);
+        let expiration_dates = [];
+        // Calculate totalQuantity from database items
+        categoryItemObject.forEach((ele) => {
+          totalQuantity += ele.quantity;
+          expiration_dates.push(ele._id);
+        });
 
-          // Update the Category
-          const finalTotalQuantity = totalQuantity;
+        console.log("Category  : ", category);
+        // Calculate finalUnitPrice
+        const finalUnitPrice =
+          (newTotalQuantity * el.unitPrice + (category.unitPrice * category.totalQuantity)) / (totalQuantity);
 
-          console.log("totalQuantity : ", totalQuantity)
-          console.log("Expiration_Dates : ", expiration_dates)
-          console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice)
-          await Category.findByIdAndUpdate(el._id,
-            {
-              totalQuantity: finalTotalQuantity,
-              unitPrice: finalUnitPrice,
-              expirationDatesArr: expiration_dates
-            }, { new: true }
-          );
-        
+        // Update the Category
+        const finalTotalQuantity = totalQuantity;
+
+        console.log("totalQuantity : ", totalQuantity)
+        console.log("Expiration_Dates : ", expiration_dates)
+        console.log("finalTotalQuantity : ", finalTotalQuantity, "finalUnitPrice :  ", finalUnitPrice)
+        await Category.findByIdAndUpdate(el._id,
+          {
+            totalQuantity: finalTotalQuantity,
+            unitPrice: finalUnitPrice,
+            expirationDatesArr: expiration_dates
+          }, { new: true }
+        );
+
       })
     );
 
@@ -950,18 +965,17 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
       }),
 
     );
-   
-    const forSearch =new Date(supplyDate);
+
+    const forSearch = new Date(supplyDate);
     const finalObject = {
-      type: type,
-      //supply
+      type: type ?? "convert",
       serialNumber: serial_nmber,
       invoiceCode,
       invoicesData: selectedOptionArr,
       invoicesData2: selectedOptionArr2,
       supplierID,
       employeeID,
-      supplyDateForSearch : forSearch ,
+      supplyDateForSearch: forSearch,
       total_payment_price,
       total_suplly_price,
       registerDate,
@@ -988,32 +1002,38 @@ ipcMain.handle('changeInvoice',async(event, data)=>{
 });
 
 // حذف فاتورة
-ipcMain.handle('deleteInvoice',async(event, data)=>{
+ipcMain.handle('deleteInvoice', async (event, data) => {
   try {
-    let{invoiceCode}=data;
+    let { invoiceCode } = data;
 
-    await Invoice.findOneAndDelete({invoiceCode});
+    await Invoice.findOneAndDelete({ invoiceCode });
 
-    return{
-      success:true
+    return {
+      success: true
     }
 
   } catch (error) {
-    console.log('error',error.message);
-    return{
-      success:false
+    console.log('error', error.message);
+    return {
+      success: false
     }
   }
 });
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
-    const { invoiceCode, supplierID, startDate, endDate } = data;
+    const { invoiceCode, supplierID, startDate, endDate, itemCode, type } = data;
 
     let filter = {};
 
     if (supplierID) {
       filter.supplierID = supplierID;
+    }
+    if (itemCode) {
+      filter.serialNumber = itemCode;
+    }
+    if (type) {
+      filter.type = type;
     }
     if (invoiceCode) {
       filter.invoiceCode = invoiceCode;
@@ -1027,7 +1047,7 @@ ipcMain.handle('searchForReport', async (event, data) => {
       };
     }
     let categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
-    
+
     return {
       success: true,
       categoryObject
@@ -1041,35 +1061,35 @@ ipcMain.handle('searchForReport', async (event, data) => {
   }
 });
 // search for invoice by code
-ipcMain.handle('searchForInvoiceByCode',async(event, data)=>{
+ipcMain.handle('searchForInvoiceByCode', async (event, data) => {
   try {
-    const{code}=data;
-   
-    let foundInvoice=await Invoice.findOne({invoiceCode:code}).populate('supplierID employeeID').lean();
+    const { code } = data;
 
-    console.log('foundInvoice',foundInvoice);
-    if(foundInvoice==null){
+    let foundInvoice = await Invoice.findOne({ invoiceCode: code }).populate('supplierID employeeID').lean();
+
+    console.log('foundInvoice', foundInvoice);
+    if (foundInvoice == null) {
       new Notification({ title: 'لا توجد فاتورة بهذا الكود ادخل كود اخر' }).show();
       return {
-        success:false
+        success: false
       }
     }
-    else{
-      foundInvoice={
+    else {
+      foundInvoice = {
         ...foundInvoice,
-        _id:foundInvoice?._id?.toString(),
-        supplierID:{
+        _id: foundInvoice?._id?.toString(),
+        supplierID: {
           ...foundInvoice?.supplierID,
-          _id:foundInvoice?.supplierID?._id.toString()
+          _id: foundInvoice?.supplierID?._id.toString()
         },
-        employeeID:{
+        employeeID: {
           ...foundInvoice?.employeeID,
-          _id:foundInvoice?.employeeID?._id.toString() 
+          _id: foundInvoice?.employeeID?._id.toString()
         }
       }
 
-      return{
-        success:true,
+      return {
+        success: true,
         foundInvoice
       }
     }
