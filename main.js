@@ -527,9 +527,8 @@ ipcMain.handle('editCategory', async (event, data) => {
           const categoryItemObject = await CategoryItem.find({ categoryID: _id });
           const dateE = new Date(ele.date);
           let timestamp = dateE.setDate(dateE.getDate() + 1);
-          const targetDate = new Date(timestamp);
+          let targetDate = new Date(timestamp);
           const result = categoryItemObject.find(item => {
-           
             const item0 = new Date(`${item.date.slice(0,15)} 00:00:00 GMT+0000`);
             let itemDate = new Date(Date.UTC(
               item0.getUTCFullYear(),
@@ -552,6 +551,7 @@ ipcMain.handle('editCategory', async (event, data) => {
             return;
           } else {
             console.log("======== NOT EXIST ========");
+            console.log("Date For Category Item : " , targetDate);
             /////////////////////////////////////////////////////////////////////////////////////           
             let newCategoryItem = new CategoryItem({
               quantity: ele.quantity,
