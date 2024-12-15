@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../images/logo.jpeg";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 
 
-export default function Login() {
+export default function Login({setIsLogin}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const[isLoading,setIsLoading]=useState(false);
+
+    useEffect(()=>{
+        setIsLogin(false);
+    },[])
 
     const navigate=useNavigate();
 
@@ -36,8 +40,9 @@ export default function Login() {
 
             // if(result?.user.type=='accountant') navigate('/accountant/search');
             // else navigate('/allitems');
-
+            setIsLogin(true);
             navigate('/allitems');
+           // window.location.href='/allitems';
         }
 
         console.log("result",result);

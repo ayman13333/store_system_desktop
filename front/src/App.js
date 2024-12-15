@@ -19,17 +19,32 @@ import EntityTransactionReportPage from './Pages/reports/EntityTransactionReport
 import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage';
 import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactionsReportPage';
 import PrintInvoicePage from './Pages/print/PrintInvoicePage';
+import { useLocation } from "react-router-dom";
+import NavBar from './Utilities/NavBar';
+import { useState } from 'react';
+
 // import PrintPayentandSupplyInvoice from './components/print/PrintPayentandSupplyInvoice';
 
 
 
 
 function App() {
+  // const location = useLocation();
+  const[isLogin,setIsLogin]=useState(false);
+
+   console.log('location',window.location.href);
+    const loggedUser = JSON.parse(localStorage.getItem('user'));
+
+
+
   return (
     <div className="App">
+      {isLogin&& <NavBar />}  
+      {/* <NavBar /> */}
      <HashRouter>
       <Routes>
-      <Route index element={<Login />} />
+      
+      <Route index element={<Login setIsLogin={setIsLogin} />} />
       {/* الموظفين */}
       <Route path='/users' element={<AllUsersPage />} />
       {/* الجهات */}

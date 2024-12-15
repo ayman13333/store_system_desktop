@@ -11,6 +11,8 @@ const CategoryItem = require('./back/Models/CategoryItem');
 const Invoice = require('./back/Models/Invoice');
 // const { fiveDays } = require('./front/src/Constants');
 
+const cron = require("node-cron");
+
 const fiveDays = 5;
 
 
@@ -47,9 +49,24 @@ async function createWindow() {
   //  mainWindow.loadFile(startUrl);
 }
 
+
+// Schedule a cron job to run every minute
+const setupCronJob = () => {
+
+  //  every day 0 0 * * *
+  cron.schedule("* * * * *", () => {
+    console.log("Cron job executed: ", new Date().toLocaleString());
+
+   
+  });
+
+  console.log("Cron job scheduled.");
+};
+
 app.whenReady().then(async () => {
   await connectDB();
   createWindow();
+  setupCronJob();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
