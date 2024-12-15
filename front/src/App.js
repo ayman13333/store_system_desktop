@@ -38,7 +38,7 @@ function App() {
 
   return (
     <div className="App">
-      {isLogin&& <NavBar />}  
+      {(isLogin)&& <NavBar />}  
       {/* <NavBar /> */}
      <HashRouter>
       <Routes>

@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Badge, Button, ListGroup, Offcanvas } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
 
 export default function NavBar() {
     const [show, setShow] = useState(false);
-  const [notifications, setNotifications] = useState([
-    "You have a new message!",
-    "Your order has been shipped.",
-    "Don't forget to check your tasks for today.",
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
+  useEffect(()=>{
+    // getNotifications
+    const get=async()=>{
+        const result=await  window?.electron?.getNotifications();
+
+        if(result?.success) setNotifications(result?.notifications)
+    }
+
+    get();
+  },[]);
+
+  console.log('notifications',notifications);
     const handleButtonClick = () => {
         alert("Opening notifications...");
         // Reset notifications or handle them
@@ -33,7 +41,7 @@ export default function NavBar() {
           <FaBell size={'lg'}  />
         </div>
         <Badge text="white" style={{height:'20px',borderRadius:'13px'}}>
-         <div > {5} </div>
+         <div > {notifications?.length} </div>
       </Badge>
     {/* </Button> */}
 
@@ -48,7 +56,9 @@ export default function NavBar() {
               {/* List of Notifications */}
               <ListGroup>
                 {notifications.map((notification, index) => (
-                  <ListGroup.Item key={index}>{notification}</ListGroup.Item>
+                  <ListGroup.Item key={index} style={{fontWeight:'bold'}}>
+                    {notification?.title}
+                    </ListGroup.Item>
                 ))}
               </ListGroup>
               <Button

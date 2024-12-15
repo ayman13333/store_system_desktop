@@ -55,7 +55,7 @@ async function createWindow() {
 const setupCronJob = async() => {
 
   //  every day 0 0 * * *
-  cron.schedule("* * * * *",async () => {
+  cron.schedule("0 0 * * *",async () => {
     console.log("Cron job executed: ", new Date().toLocaleString());
 
     let categories=await Category.find().populate('expirationDatesArr');
@@ -77,17 +77,17 @@ const setupCronJob = async() => {
        
          let newNotification=new NotificationModel();
       if (yellowCount == category?.expirationDatesArr?.length){
-         newNotification.title=`منتهي الصلاحية ${category?.name} الصنف`;
+         newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
          await newNotification.save();
       } 
       else if(yellowCount>0){
-        newNotification.title=` به كميات منتهية الصلاحية ${category?.name} الصنف`;
+        newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
         await newNotification.save();
       }
 
 
       if(category.criticalValue >= category.totalQuantity){
-        newNotification.title=`اقل من الحد الحرج ${category?.name} كمية`;
+        newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
         await newNotification.save();
       }
 
@@ -105,7 +105,7 @@ const setupCronJob = async() => {
 app.whenReady().then(async () => {
   await connectDB();
   createWindow();
- // setupCronJob();
+  setupCronJob();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -1163,7 +1163,7 @@ ipcMain.handle('searchForInvoiceByCode', async (event, data) => {
 // get all notifications(today)
 ipcMain.handle('getNotifications',async(event, data)=>{
   try {
-    let notifications=await NotificationModel.find();
+    let notifications=await NotificationModel.find().lean();
 
     return{
       success:true,
