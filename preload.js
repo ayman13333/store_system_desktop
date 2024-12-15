@@ -21,7 +21,9 @@ contextBridge.exposeInMainWorld('electron', {
   // صفحة الطباعة
   searchForInvoiceByCode:(data)=>ipcRenderer.invoke('searchForInvoiceByCode',data),
   // حذف فاتورة
-  deleteInvoice:(data)=>ipcRenderer.invoke('deleteInvoice',data)
+  deleteInvoice:(data)=>ipcRenderer.invoke('deleteInvoice',data),
+  // الاشعارات   
+  getNotifications:(data)=>ipcRenderer.invoke('getNotifications',data),
 });
 
 

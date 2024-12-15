@@ -9,6 +9,7 @@ const User = require('./back/Models/User');
 const Category = require('./back/Models/Category');
 const CategoryItem = require('./back/Models/CategoryItem');
 const Invoice = require('./back/Models/Invoice');
+const NotificationModel=require('./back/Models/Notification');
 // const { fiveDays } = require('./front/src/Constants');
 
 const cron = require("node-cron");
@@ -51,22 +52,60 @@ async function createWindow() {
 
 
 // Schedule a cron job to run every minute
-const setupCronJob = () => {
+const setupCronJob = async() => {
 
   //  every day 0 0 * * *
-  cron.schedule("* * * * *", () => {
+  cron.schedule("* * * * *",async () => {
     console.log("Cron job executed: ", new Date().toLocaleString());
 
+    let categories=await Category.find().populate('expirationDatesArr');
+
+    await Promise.all(
+      categories?.map(async(category)=>{
+        let yellowCount = 0;
+
+        category?.expirationDatesArr?.map(async (el)=>{
+        const currentDate = new Date();
+        const itemDate = new Date(el?.date);
+
+        if (currentDate.getTime() > itemDate.getTime()) {
+          yellowCount++;
+        }
+
+        }
+      )
+       
+         let newNotification=new NotificationModel();
+      if (yellowCount == category?.expirationDatesArr?.length){
+         newNotification.title=`منتهي الصلاحية ${category?.name} الصنف`;
+         await newNotification.save();
+      } 
+      else if(yellowCount>0){
+        newNotification.title=` به كميات منتهية الصلاحية ${category?.name} الصنف`;
+        await newNotification.save();
+      }
+
+
+      if(category.criticalValue >= category.totalQuantity){
+        newNotification.title=`اقل من الحد الحرج ${category?.name} كمية`;
+        await newNotification.save();
+      }
+
+      })
+    );
+   // console.log('categories',categories);
    
   });
 
-  console.log("Cron job scheduled.");
+
+  await NotificationModel.deleteMany({});
+  console.log("Cron job scheduled. old Notifications Deleted !");
 };
 
 app.whenReady().then(async () => {
   await connectDB();
   createWindow();
-  setupCronJob();
+ // setupCronJob();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -1022,6 +1061,7 @@ ipcMain.handle('deleteInvoice',async(event, data)=>{
     }
   }
 });
+
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
@@ -1057,6 +1097,7 @@ ipcMain.handle('searchForReport', async (event, data) => {
     }
   }
 });
+
 // search for invoice by code
 ipcMain.handle('searchForInvoiceByCode',async(event, data)=>{
   try {
@@ -1095,6 +1136,23 @@ ipcMain.handle('searchForInvoiceByCode',async(event, data)=>{
     new Notification({ title: 'حدث خطأ حاول مرة اخري' }).show();
     return {
       success: false
+    }
+  }
+});
+
+// get all notifications(today)
+ipcMain.handle('getNotifications',async(event, data)=>{
+  try {
+    let notifications=await NotificationModel.find();
+
+    return{
+      success:true,
+      notifications
+    }
+  } catch (error) {
+    console.log('error',error.message);
+    return{
+      success:false
     }
   }
 });
