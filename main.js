@@ -537,10 +537,10 @@ ipcMain.handle('editCategory', async (event, data) => {
               0, 0, 0, 0 // Set to midnight UTC
           )); 
             console.log("Item : ", itemDate)
-            console.log("tar : " , targetDate)
-            console.log("SAme Day : " , itemDate.getUTCDate() === targetDate.getUTCDate())
+            console.log("tar : " , targetDate);
+            console.log("SAme Month : " , (itemDate.getUTCMonth() + 1) , (targetDate.getMonth()));
             return itemDate.getFullYear() === targetDate.getFullYear() &&
-              itemDate.getMonth() === targetDate.getMonth() && itemDate.getUTCDate() === targetDate.getUTCDate();
+              (itemDate.getUTCMonth() + 1) === (targetDate.getMonth()) && itemDate.getUTCDate() === targetDate.getUTCDate();
           });
 
 
@@ -551,11 +551,12 @@ ipcMain.handle('editCategory', async (event, data) => {
             return;
           } else {
             console.log("======== NOT EXIST ========");
-            console.log("Date For Category Item : " , targetDate);
+            console.log("Date For Category Item : " , targetDate );
+            targetDate.setUTCHours(0,0,0);
             /////////////////////////////////////////////////////////////////////////////////////           
             let newCategoryItem = new CategoryItem({
               quantity: ele.quantity,
-              date: targetDate,
+              date: new Date(`${targetDate.toString().slice(0,15)} 00:00:00 GMT+0000`),
               categoryID: _id,
             });
             await newCategoryItem.save();
