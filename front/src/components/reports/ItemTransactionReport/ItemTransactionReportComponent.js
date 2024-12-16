@@ -24,11 +24,11 @@ export default function ItemTransactionReportComponent() {
 
       const data = {
         // invoiceCode: selectedValue ,
-        itemCode: selectedValue,
+        itemCode: Number(selectedValue),
         startDate: startDate,
         endDate: endDate,
       };
-     
+     console.log("data",data)
       setIsLoading(true)
       const reports = await window?.electron?.searchForReport(data)
       console.log('reports', reports);
@@ -48,57 +48,6 @@ export default function ItemTransactionReportComponent() {
   // "supplier"
   // "consumer"
   // "transfer"
-
-  const staticData = [
-    {
-      code: 'A001',
-      number: "1",
-      type: "صرف",
-      name: 'جهة صرف 1',
-      invoiceDate: '20-11-2024',
-      registrationDate: "20-11-2024"
-    },
-    {
-      code: 'A002',
-      number: "2",
-      type: "تحصيل",
-      name: 'جهة تحصيل 1',
-      invoiceDate: '21-11-2024',
-      registrationDate: "21-11-2024"
-    },
-    {
-      code: 'A003',
-      number: "3",
-      type: "صرف",
-      name: 'جهة صرف 2',
-      invoiceDate: '22-11-2024',
-      registrationDate: "22-11-2024"
-    },
-    {
-      code: 'A004',
-      number: "4",
-      type: "تحصيل",
-      name: 'جهة تحصيل 2',
-      invoiceDate: '23-11-2024',
-      registrationDate: "23-11-2024"
-    },
-    {
-      code: 'A005',
-      number: "5",
-      type: "صرف",
-      name: 'جهة صرف 3',
-      invoiceDate: '24-11-2024',
-      registrationDate: "24-11-2024"
-    },
-    {
-      code: 'A006',
-      number: "6",
-      type: "تحصيل",
-      name: 'جهة تحصيل 3',
-      invoiceDate: '25-11-2024',
-      registrationDate: "25-11-2024"
-    }
-  ];
 
   const numberColumnHeader = selectedValue === '2' ? "رقم اذن الصرف" : "رقم الفاتوره";
   const nameColumnHeader = selectedValue === '1' ? "اسم جهة التوريد" : selectedValue === '2' ? "اسم جهة الصرف" : "اسم جهة التحويل";

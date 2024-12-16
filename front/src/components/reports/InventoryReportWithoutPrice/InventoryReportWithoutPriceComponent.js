@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
 import { toast } from 'react-toastify';
-
+import logo from "./logo.jpeg";
 
 export default function InventoryReportWithoutPriceComponent() {
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
@@ -63,6 +63,15 @@ export default function InventoryReportWithoutPriceComponent() {
 
   const columns = [
     {
+      name: 'م', // Row index column
+      minwidth: "50px",
+      cell: (row, index) => (
+        <div style={{ textAlign: 'center', width: '100%' , maxWidth:"50px" }}>
+          {index + 1} {/* Display index starting from 1 */}
+        </div>
+      ),
+    },
+    {
       name: 'الكود',
       minwidth:"180px",
       sortable: true,
@@ -76,7 +85,7 @@ export default function InventoryReportWithoutPriceComponent() {
       }
     },
     {
-      name: 'الاسم',
+      name: 'الصنف',
       minwidth:"180px",
       sortable: true,
       cell: row => {
@@ -111,6 +120,10 @@ export default function InventoryReportWithoutPriceComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderTop: '2px solid black', // Border for table cells
+        borderBottom: '2px solid black', // Border for table cells
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
       },
     },
     cells: {
@@ -122,8 +135,17 @@ export default function InventoryReportWithoutPriceComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
       },
     },
+    rows: {
+      style: {
+        '&:last-child': {
+          borderBottom: '2px solid black', // Border for the last row
+        }
+      }
+    }
   };
 
 
@@ -145,6 +167,12 @@ export default function InventoryReportWithoutPriceComponent() {
           font-family: Arial, sans-serif; 
           font-size: 12px; 
           direction: rtl; 
+          margin: 0;
+          padding: 0;
+        }
+        @page { 
+          size: A4; /* Set page size to A4 */
+          margin: 20mm; /* Optional margin for A4 */
         }
         table { 
           width: 100%; 
@@ -156,8 +184,17 @@ export default function InventoryReportWithoutPriceComponent() {
           text-align: right; 
           border: 1px solid #ddd; 
         }
-        @page { 
-          direction: rtl; 
+        th {
+          font-weight: bold; /* Make the table header bold */
+        }
+        td {
+          font-weight: normal;
+        }
+        table, th, td {
+          border: 5px solid black; /* Set the outer border to 5px */
+        }
+        @page {
+          direction: rtl;
         }
       }
     `);
@@ -171,12 +208,23 @@ export default function InventoryReportWithoutPriceComponent() {
         <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
       </div>
     `);
+
+    printWindow.document.write(`
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+        <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
+          <div>دار ضباط الحرب الكميائية</div>
+          <div>جاردينيا</div>
+        </div>
+      </div>
+    `);
+    
   
     // Title
     printWindow.document.write(`
       <div>
         <h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800">
-          تقرير الجرد
+          تقرير جرد مخزن النغذية والمشروبات
         </h2>
       </div>
     `);
@@ -184,26 +232,28 @@ export default function InventoryReportWithoutPriceComponent() {
     // Table
     printWindow.document.write(`
       <div class="table-container">
-        <table border="1" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
-          <thead>
+        <table border="5" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
+          <thead style="border-bottom: 5px solid black;">
             <tr>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكود</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاسم</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الوحدة</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكمية</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">م</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الكود</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الصنف</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الوحدة</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الكمية</th>
             </tr>
           </thead>
           <tbody>
     `);
   
     // Populate rows
-    tableData.forEach(row => {
+    tableData.forEach((row, index) => {
       printWindow.document.write(`
-        <tr>
-          <td style="min-width: 200px; padding: 5px;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.name}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.unit}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.totalQuantity}</td>
+        <tr style="border-bottom: 2px solid black;">
+          <td style="min-width: 50px;  padding: 5px;  border-right: 5px solid black;">${index+1}</td>
+          <td style="min-width: 100px; padding: 5px;  border-right: 5px solid black;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px;  border-right: 5px solid black;">${row.name}</td>
+          <td style="min-width: 100px; padding: 5px;  border-right: 5px solid black;">${row.unit}</td>
+          <td style="min-width: 100px; padding: 5px;  border-right: 5px solid black;">${row.totalQuantity}</td>
         </tr>
       `);
     });
@@ -220,6 +270,8 @@ export default function InventoryReportWithoutPriceComponent() {
     printWindow.document.close(); // Necessary for IE >= 10
     printWindow.print();
   };
+  
+  
   
   
 
@@ -239,7 +291,7 @@ marginBottom:"20px"
 <div><h4>الوقت : {timePart}</h4></div>
       </div>
 
-<h1>تقرير الجرد</h1>
+<h1> تقرير جرد مخزن النغذية والمشروبات</h1>
 
 <br />
       {/* Select Inputs */}

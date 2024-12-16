@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
 import { toast } from 'react-toastify';
-
+import logo from '../InventoryReportWithoutPrice/logo.jpeg'
 export default function InventoryReportComponent() {
-  const [selectedValue, setSelectedValue] = useState(null); // Track first select value
-  const [secondSelectValue, setSecondSelectValue] = useState(null); // Track second select value
-  const [tableData, setTableData] = useState([]); // Data to be displayed in the table
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [secondSelectValue, setSecondSelectValue] = useState(null); 
+  const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([])
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -16,23 +16,6 @@ export default function InventoryReportComponent() {
     }
   }, [selectedValue]);
 
-
-  // useEffect(() => {
-  //   const get = async () => {
-  //     const result = await window?.electron?.getAllUsers({
-  //       type: 'allSuppliers'
-  //     });
-      
-  //     console.log('result', result);
-
-  //     setUsers(result?.users);
-  //   }
-
-   
-  //   get();
-    
-  // }, []);
-  // console.log('users', users);
 
   const dynamicData = categories.map(category => ({
     code: category?.code,
@@ -52,96 +35,54 @@ export default function InventoryReportComponent() {
   const getCurrentDate = () => {
     const now = new Date();
   
-    // First variable: day, month, and year
     const datePart = {
-      day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
-      month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
+      day: String(now.getDate()).padStart(2, '0'), 
+      month: String(now.getMonth() + 1).padStart(2, '0'),
       year: now.getFullYear(),
     };
   
-    // Second variable: time with AM/PM
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
-    hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
-  
+    hours = hours % 12 || 12; 
     const timePart = `${hours}:${minutes} ${amPm}`;
   
     return { datePart, timePart };
   };
   
-  // Store the values in variables
   const { datePart, timePart } = getCurrentDate();
-  
-  // Usage examples
-  console.log(`التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}`); // e.g., "2024-11-24"
-  console.log(`الوفت: ${timePart}`); // e.g., "03:45:23 PM"
-  
-
 
   useEffect(() => {
     const get = async () => {
       const [result] = await Promise.all([
         window?.electron?.getAllCategories()
       ]);
-
-      // console.log('categories', categories);
-      console.log('result', result);
-
       setCategories(result?.categories);
-
-      setTableData(result?.categories);  // Set dynamic data to tableData
-
+      setTableData(result?.categories); 
     }
 
     get();
   }, []);
 
-  // console.log("categoriesUsers",categoriesUsers)
   console.log("categories",categories)
 
   // "supplier"
   // "consumer"
   // "transfer"
 
-  console.log("selectedValue",selectedValue)
-  console.log("secondSelectValue",secondSelectValue)
-  // const Staticoptions = [
-  //   { value: '1', label: 'اسم المورد' },
-  //   { value: '2', label: 'اسم جهة الصرف' },
-  //   { value: '3', label: 'اسم جهه التحويل' },
-  // ];
-
-  // const options1 = users.filter(user => user.type === "supplier").map(user => ({
-  //   value: user._id, 
-  //   label: user.fullName
-  // }));
-
-  // const options2 = users.filter(user => user.type === "consumer").map(user => ({
-  //   value: user._id, 
-  //   label: user.fullName
-  // }));
-
-  // const options3 = users.filter(user => user.type === "transfer").map(user => ({
-  //   value: user._id, 
-  //   label: user.fullName
-  // }));
-
-  // const dynamicOptions =
-  //   selectedValue === '1' ? options1 :
-  //   selectedValue === '2' ? options2 :
-  //   selectedValue === '3' ? options3 : [];
-
-  const staticData = [
-    { code: 'A001', name: 'منتج 1', unit: 'قطعة', totalQuantity: 100, unitPrice: 50 },
-    { code: 'A002', name: 'منتج 2', unit: 'علبة', totalQuantity: 200, unitPrice: 30 },
-    { code: 'A003', name: 'منتج 3', unit: 'كرتونة', totalQuantity: 50, unitPrice: 70 },
-  ];
-
   const columns = [
     {
+      name: 'م', 
+      minwidth: "50px",
+      cell: (row, index) => (
+        <div style={{ textAlign: 'center', width: '100%' , maxWidth:"50px" }}>
+          {index + 1} {/* Display index starting from 1 */}
+        </div>
+      ),
+    },
+    {
       name: 'الكود',
-      minwidth: '180px',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.code?.length > 10 ? row.code.substring(0, 10) + '...' : row.code;
@@ -153,7 +94,7 @@ export default function InventoryReportComponent() {
       }
     },
     {
-      name: 'الاسم',
+      name: 'الصنف',
       minwidth: '180px',
       sortable: true,
       cell: row => {
@@ -199,6 +140,11 @@ export default function InventoryReportComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderTop: '2px solid black', // Border for table cells
+        borderBottom: '2px solid black', // Border for table cells
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
+        width: "100%",
       },
     },
     cells: {
@@ -210,8 +156,18 @@ export default function InventoryReportComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
+        width: "100%",
       },
     },
+    rows: {
+      style: {
+        '&:last-child': {
+          borderBottom: '2px solid black', // Border for the last row
+        }
+      }
+    }
   };
 
   // const search = () => {
@@ -257,6 +213,12 @@ export default function InventoryReportComponent() {
           font-family: Arial, sans-serif; 
           font-size: 12px; 
           direction: rtl; 
+          margin: 0;
+          padding: 0;
+        }
+        @page { 
+          size: A4; /* Set page size to A4 */
+          margin: 20mm; /* Optional margin for A4 */
         }
         table { 
           width: 100%; 
@@ -268,17 +230,17 @@ export default function InventoryReportComponent() {
           text-align: right; 
           border: 1px solid #ddd; 
         }
-        th { 
-          font-size: 16px; 
-          font-weight: bold; 
-          background-color: #f1f1f1; 
+        th {
+          font-weight: bold; /* Make the table header bold */
         }
-        td { 
-          font-size: 14px; 
+        td {
+          font-weight: normal;
         }
-        @page { 
-          margin: 20mm; 
-          direction: rtl; 
+        table, th, td {
+          border: 5px solid black; /* Set the outer border to 5px */
+        }
+        @page {
+          direction: rtl;
         }
       }
     `);
@@ -292,12 +254,23 @@ export default function InventoryReportComponent() {
         <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
       </div>
     `);
+
+        printWindow.document.write(`
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+            <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+            <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
+              <div>دار ضباط الحرب الكميائية</div>
+              <div>جاردينيا</div>
+            </div>
+          </div>
+        `);
+        
   
     // Title
     printWindow.document.write(`
       <div>
         <h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800">
-          تقرير الجرد المسعر
+            تقرير جرد مخزن النغذية والمشروبات ( مسعر )
         </h2>
       </div>
     `);
@@ -305,15 +278,16 @@ export default function InventoryReportComponent() {
     // Table
     printWindow.document.write(`
       <div class="table-container">
-        <table border="1" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
-          <thead>
+        <table border="5" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
+          <thead style="border-bottom: 5px solid black;">
             <tr>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكود</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاسم</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الوحدة</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكمية</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">سعر الوحدة</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاجمالي</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">م</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الكود</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الصنف</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الوحدة</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الكمية</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">سعر الوحدة</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الاجمالي</th>
             </tr>
           </thead>
           <tbody>
@@ -322,18 +296,19 @@ export default function InventoryReportComponent() {
     // Populate rows and calculate totals
     let totalUnitPrice = 0;
   
-    tableData.forEach(row => {
+    tableData.forEach((row, index) => {
       const rowTotal = row.unitPrice * row.totalQuantity;
       totalUnitPrice += rowTotal;
   
       printWindow.document.write(`
-        <tr>
-          <td style="min-width: 200px; padding: 5px;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.name}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.unit}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.totalQuantity}</td>
-          <td style="min-width: 200px; padding: 5px;">${row.unitPrice.toFixed(2)}</td>
-          <td style="min-width: 200px; padding: 5px;">${rowTotal.toFixed(2)}</td>
+        <tr style="border-bottom: 2px solid black;">
+          <td style="min-width: 40px;  padding: 5px; border-right: 5px solid black;">${index+1}</td>
+          <td style="min-width: 60px;  padding: 5px; border-right: 5px solid black;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px; border-right: 5px solid black;">${row.name}</td>
+          <td style="min-width: 70px;  padding: 5px; border-right: 5px solid black;">${row.unit}</td>
+          <td style="min-width: 80px;  padding: 5px; border-right: 5px solid black;">${row.totalQuantity}</td>
+          <td style="min-width: 80px;  padding: 5px; border-right: 5px solid black;">${row.unitPrice.toFixed(2)}</td>
+          <td style="min-width: 100px; padding: 5px; border-right: 5px solid black;">${rowTotal.toFixed(2)}</td>
         </tr>
       `);
     });
@@ -376,7 +351,7 @@ display: "flex",
 <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
 <div><h4>الوقت : {timePart}</h4></div>
       </div>
-        <h1>تقرير الجرد المسعر</h1>
+        <h1>تقرير جرد مخزن النغذية والمشروبات ( مسعر )</h1>
   
         <br />
       {/* Select Inputs */}

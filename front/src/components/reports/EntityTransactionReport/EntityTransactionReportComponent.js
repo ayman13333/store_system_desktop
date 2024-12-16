@@ -5,8 +5,7 @@ import { FaEye } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-
-
+import logo from '../InventoryReportWithoutPrice/logo.jpeg'
 
 export default function EntityTransactionReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
@@ -75,9 +74,9 @@ export default function EntityTransactionReportComponent() {
   console.log("selectedValue", selectedValue)
   console.log("secondSelectValue", secondSelectValue)
   const Staticoptions = [
-    { value: '1', label: 'اسم المورد' },
-    { value: '2', label: 'اسم جهة الصرف' },
-    { value: '3', label: 'اسم جهه التحويل' },
+    { value: '1', label: 'جهة توريد' },
+    { value: '2', label: ' جهة صرف' },
+    { value: '3', label: ' جهه تحويل' },
   ];
 
   const options1 = users.filter(user => user.type === "supplier").map(user => ({
@@ -117,6 +116,15 @@ export default function EntityTransactionReportComponent() {
   };
 
   const columns = [
+    {
+      name: 'م', // Row index column
+      minwidth: "50px",
+      cell: (row, index) => (
+        <div style={{ textAlign: 'center', width: '100%' , maxWidth:"50px" }}>
+          {index + 1} {/* Display index starting from 1 */}
+        </div>
+      ),
+    },
     {
       name: 'كود الفاتوره',
       // width: '180px',
@@ -192,6 +200,10 @@ export default function EntityTransactionReportComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderTop: '2px solid black', // Border for table cells
+        borderBottom: '2px solid black', // Border for table cells
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
       },
     },
     cells: {
@@ -203,8 +215,17 @@ export default function EntityTransactionReportComponent() {
         alignItems:"center",
         justifyContent: 'center',
         textAlign: 'center',
+        borderRight: '2px solid black', // Border for table cells
+        borderLeft: '2px solid black',  // Border for table cells
       },
     },
+    rows: {
+      style: {
+        '&:last-child': {
+          borderBottom: '2px solid black', // Border for the last row
+        }
+      }
+    }
   };
 
 
@@ -253,13 +274,44 @@ export default function EntityTransactionReportComponent() {
     const printWindow = window.open('', '', 'height=800,width=1200');
     printWindow.document.write('<html><head><title>تقرير معاملات الجهة</title><style>');
   
-    // Define the print media query and apply RTL styles
-    printWindow.document.write('@media print {');
-    printWindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; }');
-    printWindow.document.write('table { width: 100%; border-collapse: collapse; direction: rtl; }'); // Set table to RTL
-    printWindow.document.write('th, td { padding: 10px; text-align: right; border: 1px solid #ddd; }'); // Set text alignment to right for RTL
-    printWindow.document.write('@page { direction: rtl; }'); // Ensure the page itself is in RTL for printing
-    printWindow.document.write('}');
+    // CSS for printing
+    printWindow.document.write(`
+      @media print {
+        body { 
+          font-family: Arial, sans-serif; 
+          font-size: 12px; 
+          direction: rtl; 
+          margin: 0;
+          padding: 0;
+        }
+        @page { 
+          size: A4; /* Set page size to A4 */
+          margin: 20mm; /* Optional margin for A4 */
+        }
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          direction: rtl; 
+        }
+        th, td { 
+          padding: 10px; 
+          text-align: right; 
+          border: 1px solid #ddd; 
+        }
+        th {
+          font-weight: bold; /* Make the table header bold */
+        }
+        td {
+          font-weight: normal;
+        }
+        table, th, td {
+          border: 5px solid black; /* Set the outer border to 5px */
+        }
+        @page {
+          direction: rtl;
+        }
+      }
+    `);
   
     printWindow.document.write('</style></head><body>');
   
@@ -267,24 +319,47 @@ export default function EntityTransactionReportComponent() {
     printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
     printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
     printWindow.document.write('</div>');
+
+
+        printWindow.document.write(`
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+                <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+                <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
+                  <div>دار ضباط الحرب الكميائية</div>
+                  <div>جاردينيا</div>
+                </div>
+              </div>
+            `);
+        
   
     // Print the table data with RTL column order
     printWindow.document.write(`<div><h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800"> تقرير معامله جهة : ${report?.categoryObject[0]?.supplierID.fullName}  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="1" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
+    printWindow.document.write('<table border="5" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
-    printWindow.document.write(`<thead><tr><th style ="padding:8px; font-size:24px; font-weight:800 " >كود الفاتوره</th><th style ="padding:8px; font-size:24px; font-weight:800 ">${numberColumnHeader}</th><th style ="padding:8px; font-size:24px; font-weight:800 ">نوع الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ الفاتورة</th><th style ="padding:8px; font-size:24px; font-weight:800 ">تاريخ التسجيل</th></tr></thead><tbody>`);
+    printWindow.document.write(`
+      <thead style="border-bottom: 5px solid black;">
+      <tr>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; " >م</th>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; " >كود الفاتوره</th>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">${numberColumnHeader}</th>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">نوع الفاتورة</th>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">تاريخ الفاتورة</th>
+      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">تاريخ التسجيل</th>
+      </tr>
+      </thead><tbody>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
-    report?.categoryObject.forEach(row => {
+    report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
-        <tr style="padding:5px">
-          <td style="padding:5px">${row?.invoiceCode}</td>
-          <td  style="padding:5px">${row?.serialNumber}</td>
-          <td  style="padding:5px">${row?.type}</td>
-          <td  style="padding:5px">${formatDate(row?.supplyDate)}</td>
-          <td  style="padding:5px">${formatDate(row?.registerDate)}</td>
+        <tr style="padding:5px; border-right: 2px solid black;">
+          <td style="padding:3px; border-right: 5px solid black;">${index+1}</td>
+          <td style="padding:3px; border-right: 5px solid black;">${row?.invoiceCode}</td>
+          <td style="padding:3px; border-right: 5px solid black;">${row?.serialNumber}</td>
+          <td style="padding:3px; border-right: 5px solid black;">${row?.type}</td>
+          <td style="padding:3px; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
+          <td style="padding:3px; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
