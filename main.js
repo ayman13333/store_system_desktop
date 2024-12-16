@@ -1088,14 +1088,31 @@ ipcMain.handle('searchForReport', async (event, data) => {
       filter.supplierID = supplierID;
     }
     if (itemCode) {
-      categoryObject = await Invoice.find({
-        $or: [
+      if (startDate && endDate){
+        categoryObject = await Invoice.find({
+          $and: 
+            [
+             { supplyDateForSearch: { $gte: new Date(startDate), $lte: new Date(endDate)  }},
+              {
+                 $or: [
+                   { invoicesData: { $elemMatch: { code: itemCode.toString() } } },
+                   { invoicesData2: { $elemMatch: { code: itemCode.toString() } } }
+                   ]
+              }
+            ]}).populate('supplierID employeeID').lean();
+            return {
+              success: true,
+              categoryObject
+            }
+           }
+           
+           categoryObject = await Invoice.find({
+               $or: [
           { invoicesData: { $elemMatch: { code: itemCode.toString() } } },
           { invoicesData2: { $elemMatch: { code: itemCode.toString() } } }
         ]
-        
-      }
-      ).populate('supplierID employeeID').lean();
+      }).populate('supplierID employeeID').lean();
+
       return {
         success: true,
         categoryObject
