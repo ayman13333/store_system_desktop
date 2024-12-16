@@ -87,6 +87,8 @@ export default function PrintInvoiceComponent() {
             @page { 
               margin: 20mm; 
               direction: rtl; 
+              size: A4; /* Set page size to A4 */
+
             }
           }
         `);

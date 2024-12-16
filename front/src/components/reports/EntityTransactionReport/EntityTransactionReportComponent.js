@@ -12,12 +12,10 @@ export default function EntityTransactionReportComponent() {
   const [secondSelectValue, setSecondSelectValue] = useState(null); // Track second select value
   const [startDate, setStartDate] = useState(''); // Track start date
   const [endDate, setEndDate] = useState(''); // Track end date
-  const [tableData, setTableData] = useState([]); // Data to be displayed in the table
   const [users, setUsers] = useState([])
   const [isLoading, setIsLoading] = useState(false);
 
-  const [report, setReport] = useState([]); // Track first select value
-
+  const [report, setReport] = useState([]);
   const navigate = useNavigate();
   const getReport = async () => {
     try {
@@ -48,7 +46,6 @@ export default function EntityTransactionReportComponent() {
 
   console.log("report",report?.categoryObject)
 
-
   useEffect(() => {
     const get = async () => {
       const result = await window?.electron?.getAllUsers({
@@ -59,14 +56,10 @@ export default function EntityTransactionReportComponent() {
 
       setUsers(result?.users);
     }
-
-
     get();
 
   }, []);
   console.log('users', users);
-
-
   // "supplier"
   // "consumer"
   // "transfer"
@@ -118,16 +111,16 @@ export default function EntityTransactionReportComponent() {
   const columns = [
     {
       name: 'م', // Row index column
-      minwidth: "50px",
+      minwidth: "30px",
       cell: (row, index) => (
-        <div style={{ textAlign: 'center', width: '100%' , maxWidth:"50px" }}>
+        <div style={{ textAlign: 'center', width: '100%' }}>
           {index + 1} {/* Display index starting from 1 */}
         </div>
       ),
     },
     {
       name: 'كود الفاتوره',
-      // width: '180px',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let codeStr = row?.invoiceCode ;
@@ -141,6 +134,7 @@ export default function EntityTransactionReportComponent() {
     {
       name: numberColumnHeader,
       // width: '180px',
+      minWidth: '180px',
       sortable: true,
       cell: row => {
         let numberStr =row?.serialNumber;
@@ -154,6 +148,7 @@ export default function EntityTransactionReportComponent() {
     {
       name: 'نوع الفاتورة',
       // width: '180px',
+      minWidth: '180px',
       selector: row => 
         row?.type == "payment" 
           ? "صرف" 
@@ -175,17 +170,21 @@ export default function EntityTransactionReportComponent() {
     {
       name: 'تاريخ الفاتورة',
       // width: '180px',
+      minWidth: '180px',
+
     selector: row => formatDate(row.supplyDate),
       sortable: true,
     },
     {
       name: 'تاريخ التسجيل',
       // width: '180px',
+      minWidth: '180px',
       selector: row => formatDate(row.registerDate),
       sortable: true,
     },
     {
       name: 'استعراض',
+      width:"120px",
       cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
         navigate('/print',{state:row})
       }} /></div>,
