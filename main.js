@@ -1081,14 +1081,25 @@ ipcMain.handle('deleteInvoice', async (event, data) => {
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
     const { invoiceCode, supplierID, startDate, endDate, itemCode, type } = data;
-
+    let categoryObject = [];
     let filter = {};
 
     if (supplierID) {
       filter.supplierID = supplierID;
     }
     if (itemCode) {
-      filter.serialNumber = itemCode;
+      categoryObject = await Invoice.find({
+        $or: [
+          { invoicesData: { $elemMatch: { code: itemCode.toString() } } },
+          { invoicesData2: { $elemMatch: { code: itemCode.toString() } } }
+        ]
+        
+      }
+      ).populate('supplierID employeeID').lean();
+      return {
+        success: true,
+        categoryObject
+      }
     }
     if (type) {
       filter.type = type;
@@ -1104,7 +1115,8 @@ ipcMain.handle('searchForReport', async (event, data) => {
         $lte: new Date(endDate)
       };
     }
-    let categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
+
+     categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
 
     return {
       success: true,
