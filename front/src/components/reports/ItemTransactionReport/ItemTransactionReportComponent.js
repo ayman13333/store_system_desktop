@@ -51,7 +51,7 @@ export default function ItemTransactionReportComponent() {
   // "transfer"
 
   const numberColumnHeader = selectedValue === '2' ? "رقم اذن الصرف" : "رقم الفاتوره";
-  const nameColumnHeader = selectedValue === '1' ? "اسم جهة التوريد" : selectedValue === '2' ? "اسم جهة الصرف" : "اسم جهة التحويل";
+  const nameColumnHeader = selectedValue === '1' ? " جهة التوريد" : selectedValue === '2' ? " جهة الصرف" : " جهة التحويل";
 
 
   const getCurrentDate = () => {
@@ -155,7 +155,7 @@ export default function ItemTransactionReportComponent() {
       },
       {
         name: 'استعراض',
-        width:"120px",
+        width:"130px",
         cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
           navigate('/print',{state:row})
         }} /></div>,
@@ -231,28 +231,32 @@ export default function ItemTransactionReportComponent() {
   const customStyles = {
     headCells: {
       style: {
-        fontWeight: 'bold',
-        fontSize: '18px',
-        alignItems:"center",
+        fontWeight: '900',
+        fontSize: '20px',
+        alignItems: "center",
         justifyContent: 'center',
         textAlign: 'center',
         borderTop: '2px solid black', // Border for table cells
         borderBottom: '2px solid black', // Border for table cells
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
+        width: "100%",
       },
     },
     cells: {
       style: {
-        whiteSpace: 'normal', 
+        whiteSpace: 'normal',
         fontSize: '16px',
-        overflow: 'visible', 
-        userSelect: 'text', 
-        alignItems:"center",
+        fontWeight: '700',
+        overflow: 'visible',
+        userSelect: 'text',
+        alignItems: "center",
         justifyContent: 'center',
         textAlign: 'center',
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
+        borderBottom: '1px solid black',
+        width: "100%",
       },
     },
     rows: {
@@ -333,25 +337,23 @@ export default function ItemTransactionReportComponent() {
   
     printWindow.document.write('</style></head><body>');
   
-    printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
-    printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
-    printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
-    printWindow.document.write('</div>');
-  
 
-       printWindow.document.write(`
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                    <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
-                    <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
-                      <div>دار ضباط الحرب الكميائية</div>
-                      <div>جاردينيا</div>
-                    </div>
-                  </div>
-                `);
+  
+    printWindow.document.write(`
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+        <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
+          <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
+          <div style=" font-weight: 900;">جاردينيا</div>
+        </div>
+      </div>
+    `);
          
 
     // Print the table data with RTL column order
-    printWindow.document.write(`<div><h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800"> تقرير معاملات الصنف  </h2></div>`);
+    printWindow.document.write(`<div>
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
+      تقرير معاملات الصنف  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
     printWindow.document.write('<table border="5" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
@@ -371,12 +373,19 @@ export default function ItemTransactionReportComponent() {
     report?.categoryObject.forEach(row => {
       printWindow.document.write(`
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td  style="padding:5px; border-right: 5px solid black;">${row?.invoiceCode}</td>
-          <td  style="padding:5px; border-right: 5px solid black;">${row?.serialNumber}</td>
-          <td  style="padding:5px; border-right: 5px solid black;">${row?.type}</td>
-          <td  style="padding:5px; border-right: 5px solid black;">${row?.supplierID?.fullName}</td>
-          <td  style="padding:5px; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
-          <td  style="padding:5px; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.invoiceCode}</td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.serialNumber}</td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">
+           ${
+              row?.type === "payment" ? "صرف" :
+              row?.type === "supply" ? "توريد" :
+              row?.type === "convert" ? "تحويل" :
+              ""
+            }
+          </td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.supplierID?.fullName}</td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
+          <td  style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
@@ -394,19 +403,7 @@ export default function ItemTransactionReportComponent() {
   return (
     <div className="h-100">
 
-      <div style={{
-display: "flex",
-justifyContent:"space-between",
-alignItems:"center",
-padding:"10px",
-background:"#f9f9f9",
-borderRadius:"8px",
-marginBottom:"20px"
 
-      }}>
-<div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
-<div><h4>الوقت : {timePart}</h4></div>
-      </div>
       <h1>تقرير معاملات الصنف</h1>
 
       <br />

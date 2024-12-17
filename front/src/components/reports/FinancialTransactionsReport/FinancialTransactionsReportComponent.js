@@ -72,7 +72,7 @@ export default function FinancialTransactionsReportComponent() {
 
 
   const numberColumnHeader = selectedValue == 'payment' ? "رقم اذن الصرف" : "رقم الفاتوره";
-  const nameColumnHeader = selectedValue == 'supply' ? "اسم جهة التوريد" : selectedValue == 'payment' ? "اسم جهة الصرف" : "اسم جهة التحويل";
+  const nameColumnHeader = selectedValue == 'supply' ? " جهة التوريد" : selectedValue == 'payment' ? " جهة الصرف" : " جهة التحويل";
   const totalInvoicesNames = selectedValue == 'supply' ? "إجمالي فواتير التوريد : " : selectedValue == 'payment' ? "إجمالي فواتير الصرف : " : "إجمالي فواتير التحويل : ";
 
   // const columns = [
@@ -234,49 +234,52 @@ export default function FinancialTransactionsReportComponent() {
       },
       {
         name: 'استعراض',
-        width:"120px",
+        width:"130px",
         cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
           navigate('/print',{state:row})
         }} /></div>,
       },
     ];
   
-  const customStyles = {
-    headCells: {
-      style: {
-        fontWeight: 'bold',
-        fontSize: '18px',
-        alignItems:"center",
-        justifyContent: 'center',
-        textAlign: 'center',
-        borderTop: '2px solid black', // Border for table cells
-        borderBottom: '2px solid black', // Border for table cells
-        borderRight: '2px solid black', // Border for table cells
-        borderLeft: '2px solid black',  // Border for table cells
+    const customStyles = {
+      headCells: {
+        style: {
+          fontWeight: '900',
+          fontSize: '20px',
+          alignItems: "center",
+          justifyContent: 'center',
+          textAlign: 'center',
+          borderTop: '2px solid black', // Border for table cells
+          borderBottom: '2px solid black', // Border for table cells
+          borderRight: '2px solid black', // Border for table cells
+          borderLeft: '2px solid black',  // Border for table cells
+          width: "100%",
+        },
       },
-    },
-    cells: {
-      style: {
-        whiteSpace: 'normal', 
-        fontSize: '16px',
-        overflow: 'visible', 
-        userSelect: 'text', 
-        alignItems:"center",
-        justifyContent: 'center',
-        textAlign: 'center',
-        borderRight: '2px solid black', // Border for table cells
-        borderLeft: '2px solid black',  // Border for table cells
+      cells: {
+        style: {
+          whiteSpace: 'normal',
+          fontSize: '16px',
+          fontWeight: '700',
+          overflow: 'visible',
+          userSelect: 'text',
+          alignItems: "center",
+          justifyContent: 'center',
+          textAlign: 'center',
+          borderRight: '2px solid black', // Border for table cells
+          borderLeft: '2px solid black',  // Border for table cells
+          borderBottom: '1px solid black',
+          width: "100%",
+        },
       },
-    },
-    rows: {
-      style: {
-        '&:last-child': {
-          borderBottom: '2px solid black', // Border for the last row
+      rows: {
+        style: {
+          '&:last-child': {
+            borderBottom: '2px solid black', // Border for the last row
+          }
         }
       }
-    }
-  };
-
+    };
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -307,6 +310,18 @@ export default function FinancialTransactionsReportComponent() {
   const totalInvoicesPrice = report?.categoryObject?.reduce((sum, tableData) => {
     // Ensure `total_bill_price` is treated as a number
     return sum + (Number(tableData?.total_bill_price) || 0);
+  }, 0) || 0; // Default to 0 if report or categoryObject is undefined
+  
+    // اجمالي فواتير التحويل للاصناف (الصرف)
+  const totalInvoicesPriceForConvert1 = report?.categoryObject?.reduce((sum, tableData) => {
+    // Ensure `total_bill_price` is treated as a number
+    return sum + (Number(tableData?.total_suplly_price) || 0);
+  }, 0) || 0; // Default to 0 if report or categoryObject is undefined
+  
+  // اجمالي فواتير التحويل للاصناف (التوريد)
+  const totalInvoicesPriceForConvert2 = report?.categoryObject?.reduce((sum, tableData) => {
+    // Ensure `total_bill_price` is treated as a number
+    return sum + (Number(tableData?.total_payment_price) || 0);
   }, 0) || 0; // Default to 0 if report or categoryObject is undefined
   
   // Format to 2 decimal places
@@ -374,23 +389,25 @@ export default function FinancialTransactionsReportComponent() {
   
     printWindow.document.write('</style></head><body>');
   
-    printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
-    printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
-    printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
-    printWindow.document.write('</div>');
+    // printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
+    // printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
+    // printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
+    // printWindow.document.write('</div>');
   
-      printWindow.document.write(`
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                    <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
-                    <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
-                      <div>دار ضباط الحرب الكميائية</div>
-                      <div>جاردينيا</div>
-                    </div>
-                  </div>
-                `);
+    printWindow.document.write(`
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+        <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
+          <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
+          <div style=" font-weight: 900;">جاردينيا</div>
+        </div>
+      </div>
+    `);
 
     // Print the table data with RTL column order
-    printWindow.document.write(`<div><h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800"> تقرير المعاملات المالية  </h2></div>`);
+    printWindow.document.write(`<div>
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
+      تقرير حصر الفواتير   </h2></div>`);
     printWindow.document.write('<div class="table-container">');
     printWindow.document.write('<table border="5" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
@@ -411,16 +428,86 @@ export default function FinancialTransactionsReportComponent() {
     report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td style="padding:5px; border-right: 5px solid black;">${index+1}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${row?.invoiceCode}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${row?.serialNumber}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${row?.type}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${row?.supplierID?.fullName}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
-          <td style="padding:5px; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index+1}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.invoiceCode}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.serialNumber}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">
+          ${
+            row?.type === "payment" ? "صرف" :
+            row?.type === "supply" ? "توريد" :
+            row?.type === "convert" ? "تحويل" :
+            ""
+          }
+          </td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.supplierID?.fullName}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
+    if (selectedValue != 'convert') {
+      printWindow.document.write(`
+        <tr style="
+          font-weight: bold;
+          padding: 5px;
+          border-top: 2px solid black;
+          text-align: center;
+        ">
+          <td colspan="7" style="
+            padding: 10px;
+            font-size: 28px;
+            font-weight: 900;
+            border-right: 5px solid black;
+          ">
+            <span>المجموع الكلي : </span>
+            <span>${formattedTotalInvoicesPrice}</span>
+            <span> جنية </span>
+          </td>
+        </tr>
+      `);
+    }
+    
+    if (selectedValue == 'convert') {
+      printWindow.document.write(`
+        <tr style="
+          font-weight: bold;
+          padding: 5px;
+          border-top: 2px solid black;
+          text-align: center;
+        ">
+          <td colspan="7" style="
+            padding: 10px;
+            font-size: 28px;
+            font-weight: 900;
+            border-right: 5px solid black;
+          ">
+            <span>اجمالي فواتير التحويل  ( التوريد ) :  </span>
+            <span>${totalInvoicesPriceForConvert2}</span>
+            <span> جنية </span>
+          </td>
+        </tr>
+      `);
+      printWindow.document.write(`
+        <tr style="
+          font-weight: bold;
+          padding: 5px;
+          border-top: 2px solid black;
+          text-align: center;
+        ">
+          <td colspan="7" style="
+            padding: 10px;
+            font-size: 28px;
+            font-weight: 900;
+            border-right: 5px solid black;
+          ">
+            <span>اجمالي فواتير التحويل  ( الصرف ) :  </span>
+            <span>${totalInvoicesPriceForConvert1}</span>
+            <span> جنية </span>
+          </td>
+        </tr>
+      `);
+    }
+    
 
   
     printWindow.document.write('</tbody></table>');
@@ -435,21 +522,8 @@ export default function FinancialTransactionsReportComponent() {
 
   return (
     <div className="h-100">
-     <div style={{
-display: "flex",
-justifyContent:"space-between",
-alignItems:"center",
-padding:"10px",
-background:"#f9f9f9",
-borderRadius:"8px",
-marginBottom:"20px"
 
-      }}>
-<div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
-<div><h4>الوقت : {timePart}</h4></div>
-      </div>
-
-      <h1>تقرير المعاملات المالية</h1>
+      <h1>تقرير حصر الفواتير </h1>
 
       <br />
       {/* Select Inputs */}
@@ -463,6 +537,7 @@ marginBottom:"20px"
           onChange={setSelectedValue}
           placeholder="اختر الجهة"
           width="350px"
+          setReport={setReport}
         />
 </div>
 <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
@@ -471,7 +546,9 @@ marginBottom:"20px"
           style={{ padding: "5px", border:"1px solid #c2c2c2" , borderRadius:"5px" }}
           type="date"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={(e) => {setStartDate(e.target.value)
+            setReport([])
+          }}
           placeholder="تاريخ البدايه"
         />
         </div>
@@ -513,7 +590,7 @@ marginBottom:"20px"
           pagination
         />
       </div>
-  {  report?.categoryObject?.length !=0 && report.length !=0 &&  <div style={{
+  {selectedValue != 'convert' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
   display: "flex",
   justifyContent: "flex-start",
   gap: "20px",
@@ -524,20 +601,71 @@ marginBottom:"20px"
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
 }}>
   <div style={{
-    color: "#bb0000",
-    fontWeight: "bold",
-    fontSize: "18px"
+    color: "#333",
+    fontWeight: "900",
+    fontSize: "22px"
   }}>
 {totalInvoicesNames}
   </div>
   <div style={{
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#bb0000"
+    fontSize: "22px",
+    fontWeight: "900",
+    color: "#333"
   }}>
     <span>{formattedTotalInvoicesPrice}</span>
     <span> </span>
     <span>جنيه </span>
+  </div>
+</div>}
+
+  {selectedValue == 'convert' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
+  display: "flex",
+  flexDirection:'column',
+  justifyContent: "flex-start",
+  gap: "20px",
+  alignItems: "center",
+  backgroundColor: "#f9f9f9",
+  padding: "10px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
+}}>
+  <div style={{display:'flex'}}>
+  <div style={{
+    color: "#333",
+    fontWeight: "900",
+    fontSize: "22px",
+    margin:"0 5px"
+  }}>
+اجمالي فواتير التحويل  ( التوريد ) :     
+  </div>
+  <div style={{
+    fontSize: "22px",
+    fontWeight: "900",
+    color: "#333"
+  }}>
+    <span> {totalInvoicesPriceForConvert2} </span>
+    <span> </span>
+    <span>جنيه </span>
+  </div>
+  </div>
+  <div style={{display:'flex'}}>
+  <div style={{
+    color: "#333",
+    fontWeight: "900",
+    fontSize: "22px",
+    margin:"0 5px"
+  }}>
+اجمالي فواتير التحويل  ( الصرف ) : 
+  </div>
+  <div style={{
+    fontSize: "22px",
+    fontWeight: "900",
+    color: "#333"
+  }}>
+    <span> {totalInvoicesPriceForConvert1} </span>
+    <span> </span>
+    <span>جنيه </span>
+  </div>
   </div>
 </div>}
 

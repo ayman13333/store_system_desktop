@@ -135,9 +135,9 @@ export default function InventoryReportComponent() {
   const customStyles = {
     headCells: {
       style: {
-        fontWeight: 'bold',
-        fontSize: '18px',
-        alignItems:"center",
+        fontWeight: '900',
+        fontSize: '20px',
+        alignItems: "center",
         justifyContent: 'center',
         textAlign: 'center',
         borderTop: '2px solid black', // Border for table cells
@@ -149,15 +149,17 @@ export default function InventoryReportComponent() {
     },
     cells: {
       style: {
-        whiteSpace: 'normal', 
+        whiteSpace: 'normal',
         fontSize: '16px',
-        overflow: 'visible', 
-        userSelect: 'text', 
-        alignItems:"center",
+        fontWeight: '700',
+        overflow: 'visible',
+        userSelect: 'text',
+        alignItems: "center",
         justifyContent: 'center',
         textAlign: 'center',
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
+        borderBottom: '1px solid black',
         width: "100%",
       },
     },
@@ -248,29 +250,28 @@ export default function InventoryReportComponent() {
     printWindow.document.write('</style></head><body>');
   
     // Header with time and date
-    printWindow.document.write(`
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
-        <div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>
-        <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
-      </div>
-    `);
+    // printWindow.document.write(`
+    //   <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
+    //     <div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>
+    //     <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
+    //   </div>
+    // `);
 
-        printWindow.document.write(`
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-            <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
-            <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: bold; margin-left: 20px; text-decoration: underline;">
-              <div>دار ضباط الحرب الكميائية</div>
-              <div>جاردينيا</div>
+          printWindow.document.write(`
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+              <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
+                <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
+                <div style=" font-weight: 900;">جاردينيا</div>
+              </div>
             </div>
-          </div>
-        `);
-        
+          `);
   
     // Title
     printWindow.document.write(`
       <div>
-        <h2 style="text-align: center; text-decoration: underline; font-size:28px; font-weight:800">
-            تقرير جرد مخزن النغذية والمشروبات ( مسعر )
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
+            تقرير جرد مخزن التغذية والمشروبات ( مسعر )
         </h2>
       </div>
     `);
@@ -302,13 +303,13 @@ export default function InventoryReportComponent() {
   
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
-          <td style="min-width: 40px;  padding: 5px; border-right: 5px solid black;">${index+1}</td>
-          <td style="min-width: 60px;  padding: 5px; border-right: 5px solid black;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px; border-right: 5px solid black;">${row.name}</td>
-          <td style="min-width: 70px;  padding: 5px; border-right: 5px solid black;">${row.unit}</td>
-          <td style="min-width: 80px;  padding: 5px; border-right: 5px solid black;">${row.totalQuantity}</td>
-          <td style="min-width: 80px;  padding: 5px; border-right: 5px solid black;">${row.unitPrice.toFixed(2)}</td>
-          <td style="min-width: 100px; padding: 5px; border-right: 5px solid black;">${rowTotal.toFixed(2)}</td>
+          <td style="min-width: 40px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index+1}</td>
+          <td style="min-width: 60px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.name}</td>
+          <td style="min-width: 70px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unit}</td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity}</td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unitPrice.toFixed(2)}</td>
+          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${rowTotal.toFixed(2)}</td>
         </tr>
       `);
     });
@@ -338,7 +339,7 @@ export default function InventoryReportComponent() {
 
   return (
     <div className="h-100">
-      <div style={{
+      {/* <div style={{
 display: "flex",
         justifyContent:"space-between",
         alignItems:"center",
@@ -350,8 +351,8 @@ display: "flex",
       }}>
 <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
 <div><h4>الوقت : {timePart}</h4></div>
-      </div>
-        <h1>تقرير جرد مخزن النغذية والمشروبات ( مسعر )</h1>
+      </div> */}
+        <h1>تقرير جرد مخزن التغذية والمشروبات ( مسعر )</h1>
   
         <br />
       {/* Select Inputs */}
@@ -402,16 +403,16 @@ display: "flex",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
 }}>
   <div style={{
-    color: "#bb0000",
-    fontWeight: "bold",
-    fontSize: "18px"
+    color: "#333",
+    fontWeight: "900",
+    fontSize: "22px"
   }}>
     إجمالي سعر الأصناف بالمخزن :
   </div>
   <div style={{
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#bb0000"
+    fontSize: "22px",
+    fontWeight: "900",
+    color: "#333"
   }}>
     <span>{totalUnitPrice}</span>
     <span> </span>

@@ -9,6 +9,7 @@ const ReactSelect = ({
   isClearable = true, 
   isSearchable = true, 
   isDisabled = false, 
+  setReport,
   width = '100%' // Default width
 }) => {
   const customStyles = {
@@ -21,7 +22,12 @@ const ReactSelect = ({
   return (
     <Select
       value={options.find((option) => option.value == value) ? options.find((option) => option.value == value) : ''} // Matches selected value
-      onChange={(selectedOption) => onChange(selectedOption?.value || '')}
+      onChange={(selectedOption) =>{ 
+        if(setReport){
+          setReport([])
+        }
+       return onChange(selectedOption?.value || '')
+      }}
       options={options}
       placeholder={placeholder}
       isClearable={isClearable} // Allows clearing the selection
