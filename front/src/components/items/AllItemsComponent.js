@@ -114,13 +114,13 @@ export default function AllItemsComponent() {
           if (isYellow) color = yellow;
         }
         return (
-          <div style={{ backgroundColor: color, width: '100%' }} >
+          <div style={{  width: '100%' }} >
             <button
               onClick={() => {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className={`btn ${row.criticalValue >= row.totalQuantity ?'btn-info' : 'btn-secondary'} py-1`}  style={{
+              className={`btn ${(isYellow==true && isRed==false) ?'btn-danger' : 'btn-secondary'} py-1`}  style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
               }} > <TbHandClick height={'5px'} />  </button>
@@ -143,7 +143,7 @@ export default function AllItemsComponent() {
     // },
     {
       name: 'تعديل',
-      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-warning'} btn  py-1`} onClick={() => {
+      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-dark'} btn  py-1`} onClick={() => {
         //  console.log('row',row);
         navigate('/allitems/edit', {
           state: row
@@ -217,9 +217,14 @@ export default function AllItemsComponent() {
 
         if ((yellowCount != row?.expirationDatesArr?.length) && yellowCount > 0) return true
 
+        if(row.criticalValue >= row.totalQuantity){
+          return true 
+        }
+        // row.criticalValue === row.totalQuantity ?  true : false;
+
       },
       style: {
-        backgroundColor: yellow,
+        backgroundColor:  yellow,
          fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
