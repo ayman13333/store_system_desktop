@@ -54,92 +54,95 @@ async function createWindow() {
 // Schedule a cron job to run every minute
 const setupCronJob = async() => {
 
-  //  every day 0 0 * * *
-  cron.schedule("* * * * *",async () => {
-    console.log("Cron job executed: ", new Date().toLocaleString());
+  // //  every day 0 0 * * *
+  // cron.schedule("* * * * *",async () => {
+  //   console.log("Cron job executed: ", new Date().toLocaleString());
 
-    let categories=await Category.find().populate('expirationDatesArr');
+     
 
-    await Promise.all(
-      categories?.map(async(category)=>{
-        let yellowCount = 0;
+  //   await Promise.all(
+  //     categories?.map(async(category)=>{
+  //       let yellowCount = 0;
 
-        category?.expirationDatesArr?.map(async (el)=>{
-        const currentDate = new Date();
-        const itemDate = new Date(el?.date);
+  //       category?.expirationDatesArr?.map(async (el)=>{
+  //       const currentDate = new Date();
+  //       const itemDate = new Date(el?.date);
 
-        if (currentDate.getTime() > itemDate.getTime()) {
-          yellowCount++;
-        }
+  //       if (currentDate.getTime() > itemDate.getTime()) {
+  //         yellowCount++;
+  //       }
 
-        }
-      )
+  //       }
+  //     )
        
-         let newNotification=new NotificationModel();
-      if (yellowCount == category?.expirationDatesArr?.length){
-         newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
-         await newNotification.save();
-      } 
-      else if(yellowCount>0){
-        newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
-        await newNotification.save();
-      }
+  //        let newNotification=new NotificationModel();
+  //     if (yellowCount == category?.expirationDatesArr?.length){
+  //        newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
+  //        await newNotification.save();
+  //     } 
+  //     else if(yellowCount>0){
+  //       newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
+  //       await newNotification.save();
+  //     }
 
 
-      if(category.criticalValue >= category.totalQuantity){
-        newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
-        await newNotification.save();
-      }
+  //     if(category.criticalValue >= category.totalQuantity){
+  //       newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
+  //       await newNotification.save();
+  //     }
 
-      })
-    );
-   // console.log('categories',categories);
+  //     })
+  //   );
+  //  // console.log('categories',categories);
    
-  });
+  // });
 
 
   await NotificationModel.deleteMany({});
+
+  let categories=await Category.find().populate('expirationDatesArr');
   
-   await Promise.all(
-      categories?.map(async(category)=>{
-        let yellowCount = 0;
+  await Promise.all(
+    categories?.map(async(category)=>{
+      let yellowCount = 0;
 
-        category?.expirationDatesArr?.map(async (el)=>{
-        const currentDate = new Date();
-        const itemDate = new Date(el?.date);
+      category?.expirationDatesArr?.map(async (el)=>{
+      const currentDate = new Date();
+      const itemDate = new Date(el?.date);
 
-        if (currentDate.getTime() > itemDate.getTime()) {
-          yellowCount++;
-        }
-
-        }
-      )
-       
-         let newNotification=new NotificationModel();
-      if (yellowCount == category?.expirationDatesArr?.length){
-         newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
-         await newNotification.save();
-      } 
-      else if(yellowCount>0){
-        newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
-        await newNotification.save();
+      if (currentDate.getTime() > itemDate.getTime()) {
+        yellowCount++;
       }
 
-
-      if(category.criticalValue >= category.totalQuantity){
-        newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
-        await newNotification.save();
       }
+    )
+     
+       let newNotification=new NotificationModel();
+    if (yellowCount == category?.expirationDatesArr?.length){
+       newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
+       await newNotification.save();
+    } 
+    else if(yellowCount>0){
+      newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
+      await newNotification.save();
+    }
 
-      })
-    );
+
+    if(category.criticalValue >= category.totalQuantity){
+      newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
+      await newNotification.save();
+    }
+
+    })
+  );
+
   console.log("Cron job scheduled. old Notifications Deleted !");
 };
 
 app.whenReady().then(async () => {
   await connectDB();
   createWindow();
-  setupCronJob();
+ await setupCronJob();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
