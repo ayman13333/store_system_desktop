@@ -453,7 +453,7 @@ export default function AllGuestsComponent() {
           <button onClick={() => search()} className='btn btn-success'> بحث </button>
         </div>
 
-        <button onClick={() => cancelFilter()} className='btn btn-danger' > الغاء الفلتر <BsBackspaceFill /> </button>
+        <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh <BsBackspaceFill /> </button>
       </div>
 
       {

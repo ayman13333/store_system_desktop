@@ -45,15 +45,15 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
 
     return (
         <div className="d-flex justify-content-between my-4">
-            <div className="form-group d-flex gap-3">
+            {/* <div className="form-group d-flex gap-3">
                 <label className="my-2 w-50">  تاريخ اليوم </label>
                 <input
                     value={FormatDate(new Date)}
                     disabled
                     type="text" className="form-control" />
-            </div>
+            </div> */}
 
-            <div className='d-flex gap-2'>
+            <div className='d-flex gap-2 my-3'>
                 <div className="d-flex gap-2">
                     <select
                         value={searchType}

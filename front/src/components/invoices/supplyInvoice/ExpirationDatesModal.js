@@ -24,7 +24,7 @@ export default function ExpirationDatesModal({ show, setShow , category , setCat
                     <table className="table mt-3">
                         <thead>
                             <tr>
-                                <th >تاريخ الصلاحية</th>
+                                <th >تاريخ انتهاء الصلاحية</th>
                                 <th className="text-center" >الكمية</th>
                             </tr>
                         </thead>

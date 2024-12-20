@@ -61,13 +61,13 @@ export default function NavBar() {
                     </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button
+              {/* <Button
                 variant="danger"
                 className="mt-3"
                 onClick={handleClearNotifications}
               >
                 مسح الاشعارات
-              </Button>
+              </Button> */}
             </>
           ) : (
             <p>No new notifications!</p>

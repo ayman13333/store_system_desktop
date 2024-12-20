@@ -55,7 +55,7 @@ async function createWindow() {
 const setupCronJob = async() => {
 
   //  every day 0 0 * * *
-  cron.schedule("0 0 * * *",async () => {
+  cron.schedule("* * * * *",async () => {
     console.log("Cron job executed: ", new Date().toLocaleString());
 
     let categories=await Category.find().populate('expirationDatesArr');
@@ -99,6 +99,40 @@ const setupCronJob = async() => {
 
 
   await NotificationModel.deleteMany({});
+  
+   await Promise.all(
+      categories?.map(async(category)=>{
+        let yellowCount = 0;
+
+        category?.expirationDatesArr?.map(async (el)=>{
+        const currentDate = new Date();
+        const itemDate = new Date(el?.date);
+
+        if (currentDate.getTime() > itemDate.getTime()) {
+          yellowCount++;
+        }
+
+        }
+      )
+       
+         let newNotification=new NotificationModel();
+      if (yellowCount == category?.expirationDatesArr?.length){
+         newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
+         await newNotification.save();
+      } 
+      else if(yellowCount>0){
+        newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
+        await newNotification.save();
+      }
+
+
+      if(category.criticalValue >= category.totalQuantity){
+        newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
+        await newNotification.save();
+      }
+
+      })
+    );
   console.log("Cron job scheduled. old Notifications Deleted !");
 };
 

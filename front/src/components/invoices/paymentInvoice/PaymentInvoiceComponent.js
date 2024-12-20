@@ -289,7 +289,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                                 {
                                     type == null && <th className="text-center" scope="col" style={{
                                         whiteSpace: "nowrap"
-                                    }}> تاريخ الصلاحية </th>
+                                    }}> تاريخ انتهاء الصلاحية </th>
                                 }
 
                                 {
