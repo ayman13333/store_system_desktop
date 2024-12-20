@@ -442,6 +442,7 @@ export default function AllGuestsComponent() {
           setIsEdit(false);
         }} className='btn btn-success' > اضافة <BsPlus /> </button>
 
+
         <div className="d-flex gap-2">
           <input
             value={searchValue}
