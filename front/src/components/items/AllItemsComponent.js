@@ -143,7 +143,7 @@ export default function AllItemsComponent() {
     // },
     {
       name: 'تعديل',
-      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-dark'} btn  py-1`} onClick={() => {
+      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-secondary'} btn  py-1`} onClick={() => {
         //  console.log('row',row);
         navigate('/allitems/edit', {
           state: row
@@ -170,6 +170,35 @@ export default function AllItemsComponent() {
         textAlign: 'center',
 
       },
+    },
+     {
+      when: row => {
+        const currentDate = new Date();
+        let isYellow = false;
+        let isRed = false;
+        let yellowCount = 0;
+
+        row?.expirationDatesArr?.map(el => {
+          const itemDate = new Date(el?.date);
+          if (currentDate.getTime() > itemDate.getTime()) {
+            isYellow = true;
+            yellowCount++;
+          }
+        });
+
+        if (yellowCount == row?.expirationDatesArr?.length) {
+          return true;
+          //  isRed=true;
+
+        }
+
+      },
+      style: {
+        backgroundColor: red,
+         fontWeight: 'bold',
+         fontSize: 'large',
+        textAlign: 'center',
+      }
     },
     {
       when: row => {
