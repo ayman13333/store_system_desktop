@@ -98,3 +98,7 @@ table td {
 .total{
   color: #bb0000
 }
+
+.notification:hover{
+  background: #c9dfff;
+}

@@ -127,11 +127,11 @@ export default function ExpirationDateModal({ show, setShow ,expirationDatesArr,
             <Modal.Body>
 
                 <div className="form-group">
-                    <label className="my-2"> تاريخ الصلاحية </label>
+                    <label className="my-2"> تاريخ انتهاء الصلاحية </label>
                     <input
                          value={newExpirationDate} onChange={(e) => setNewExpirationDate(e.target.value)}
                         required
-                        type="date" className="form-control" placeholder=" تاريخ الصلاحية"
+                        type="date" className="form-control" 
                     // onKeyPress={onKeyEnter}
 
                     />

@@ -352,7 +352,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                 {
                                     type == null && <th className="text-center" scope="col" style={{
                                         whiteSpace: "nowrap"
-                                    }}> تاريخ الصلاحية </th>
+                                    }}> تاريخ انتهاء الصلاحية </th>
                                 }
 
                                 <th className="text-center" scope="col"> سعر </th>
@@ -459,7 +459,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                 {
                                     type == null && <th className="text-center" scope="col" style={{
                                         whiteSpace: "nowrap"
-                                    }}> تاريخ الصلاحية </th>
+                                    }}> تاريخ انتهاء الصلاحية </th>
                                 }
 
                                 <th className="text-center" scope="col"> سعر </th>

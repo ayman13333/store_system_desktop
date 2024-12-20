@@ -21,6 +21,26 @@ export default function AllItemsComponent() {
   const [showExpirationDatesModal, setShowExpirationDatesModal] = useState(false);
   const [categoryToShow, setCategoryToShow] = useState(null);
 
+  const getCurrentDate = () => {
+    const now = new Date();
+
+    const datePart = {
+      day: String(now.getDate()).padStart(2, '0'),
+      month: String(now.getMonth() + 1).padStart(2, '0'),
+      year: now.getFullYear(),
+    };
+
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
+    hours = hours % 12 || 12;
+    const timePart = `${hours}:${minutes} ${amPm}`;
+
+    return { datePart, timePart };
+  };
+
+  const { datePart, timePart } = getCurrentDate();
+
 
   useEffect(() => {
     const get = async () => {
@@ -42,7 +62,7 @@ export default function AllItemsComponent() {
 
   const loggedUser = JSON.parse(localStorage.getItem('user'));
 
-  console.log('loggedUser',loggedUser);
+  console.log('loggedUser', loggedUser);
   // if (str.length > maxLength) {
   //   return str.substring(0, maxLength) + '...';
   // }
@@ -51,39 +71,43 @@ export default function AllItemsComponent() {
     {
       name: 'الكود',
       sortable: true,
-      cell: row =>{
+      cell: row => {
         let codeStr;
 
-          if(row?.code?.length >10){
-              codeStr=row.code.substring(0, 10) + '...';
-          }
-          else codeStr=row.code;
-
-        return(
-          <div style={{  textAlign: 'start',whiteSpace:'nowrap',textOverflow: 'ellipsis',
-            width:'100%'
-           }}>
-            {codeStr}
-          </div>
-        )
-      } 
-    },
-    { name: 'الاسم',
-      cell: row =>{
-        let codeStr;
-
-        if(row?.name?.length >7){
-            codeStr=row?.name.substring(0, 10) + '...';
+        if (row?.code?.length > 10) {
+          codeStr = row.code.substring(0, 10) + '...';
         }
-        else codeStr=row?.name;
-        return(
+        else codeStr = row.code;
+
+        return (
           <div style={{
-           textAlign: 'start',whiteSpace:'nowrap',width:'100%' }}>
+            textAlign: 'start', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
+            width: '100%'
+          }}>
             {codeStr}
           </div>
         )
-      } , 
-      sortable: true },
+      }
+    },
+    {
+      name: 'الاسم',
+      cell: row => {
+        let codeStr;
+
+        if (row?.name?.length > 7) {
+          codeStr = row?.name.substring(0, 10) + '...';
+        }
+        else codeStr = row?.name;
+        return (
+          <div style={{
+            textAlign: 'start', whiteSpace: 'nowrap', width: '100%'
+          }}>
+            {codeStr}
+          </div>
+        )
+      },
+      sortable: true
+    },
     {
       name: 'الحد الحرج',
       selector: row => row.criticalValue,
@@ -114,13 +138,13 @@ export default function AllItemsComponent() {
           if (isYellow) color = yellow;
         }
         return (
-          <div style={{  width: '100%' }} >
+          <div style={{ width: '100%' }} >
             <button
               onClick={() => {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className={`btn ${(isYellow==true && isRed==false) ?'btn-danger' : 'btn-secondary'} py-1`}  style={{
+              className={`btn ${(isYellow == true && isRed == false) ? 'btn-danger' : 'btn-secondary'} py-1`} style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
               }} > <TbHandClick height={'5px'} />  </button>
@@ -143,7 +167,7 @@ export default function AllItemsComponent() {
     // },
     {
       name: 'تعديل',
-      cell: (row) => <button className={`${row?.user?._id ?'btn-primary' : 'btn-secondary'} btn  py-1`} onClick={() => {
+      cell: (row) => <button className={`${row?.user?._id ? 'btn-primary' : 'btn-secondary'} btn  py-1`} onClick={() => {
         //  console.log('row',row);
         navigate('/allitems/edit', {
           state: row
@@ -157,21 +181,21 @@ export default function AllItemsComponent() {
 
   ];
 
-  if(loggedUser?.type=="storekeeper"){
-    columns=columns?.filter(el=>el?.name!='تعديل' && el?.name!='الحد الحرج' && el?.name!='سعر الوحدة' && el?.name!='الاجمالي' );
+  if (loggedUser?.type == "storekeeper") {
+    columns = columns?.filter(el => el?.name != 'تعديل' && el?.name != 'الحد الحرج' && el?.name != 'سعر الوحدة' && el?.name != 'الاجمالي');
   }
 
   const conditionalRowStyles = [
     {
       when: row => true, // Apply to all rows
       style: {
-         fontWeight: 'bold',
+        fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
 
       },
     },
-     {
+    {
       when: row => {
         const currentDate = new Date();
         let isYellow = false;
@@ -195,8 +219,8 @@ export default function AllItemsComponent() {
       },
       style: {
         backgroundColor: red,
-         fontWeight: 'bold',
-         fontSize: 'large',
+        fontWeight: 'bold',
+        fontSize: 'large',
         textAlign: 'center',
       }
     },
@@ -224,8 +248,8 @@ export default function AllItemsComponent() {
       },
       style: {
         backgroundColor: red,
-         fontWeight: 'bold',
-         fontSize: 'large',
+        fontWeight: 'bold',
+        fontSize: 'large',
         textAlign: 'center',
       }
     },
@@ -246,15 +270,15 @@ export default function AllItemsComponent() {
 
         if ((yellowCount != row?.expirationDatesArr?.length) && yellowCount > 0) return true
 
-        if(row.criticalValue >= row.totalQuantity){
-          return true 
+        if (row.criticalValue >= row.totalQuantity) {
+          return true
         }
         // row.criticalValue === row.totalQuantity ?  true : false;
 
       },
       style: {
-        backgroundColor:  yellow,
-         fontWeight: 'bold',
+        backgroundColor: yellow,
+        fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
       }
@@ -276,13 +300,53 @@ export default function AllItemsComponent() {
   ];
 
   // Header styling to make header text bold
+  // const customStyles = {
+  //   headCells: {
+  //     style: {
+  //       fontWeight: 'bold',
+  //       fontSize: 'larger',
+  //       // textAlign: 'start'
+  //     },
+  //   }
+  // };
+
   const customStyles = {
     headCells: {
       style: {
-        fontWeight: 'bold',
-        fontSize: 'larger',
-        // textAlign: 'start'
+        fontWeight: '900',
+        fontSize: '20px',
+        alignItems: "center",
+        justifyContent: 'center',
+        textAlign: 'center',
+        borderTop: '1px solid black', // Border for table cells
+        borderBottom: '1px solid black', // Border for table cells
+        borderRight: '1px solid black', // Border for table cells
+        borderLeft: '1px solid black',  // Border for table cells
+        width: "100%",
       },
+    },
+    cells: {
+      style: {
+        whiteSpace: 'normal',
+        fontSize: '16px',
+        fontWeight: '700',
+        overflow: 'visible',
+        userSelect: 'text',
+        alignItems: "center",
+        justifyContent: 'center',
+        textAlign: 'center',
+        borderRight: '1px solid black', // Border for table cells
+        borderLeft: '1px solid black',  // Border for table cells
+        borderBottom: '1px solid black',
+        width: "100%",
+      },
+    },
+    rows: {
+      style: {
+        '&:last-child': {
+          borderBottom: '2px solid black', // Border for the last row
+        }
+      }
     }
   };
 
@@ -298,20 +362,35 @@ export default function AllItemsComponent() {
   //   ],
   // };
 
-    console.log('categories',categories);
-    
+  console.log('categories', categories);
+
   return (
     <div className='w-100 h-100' >
-      <h1> ادارة الاصناف   {isLoading && <Spinner />} </h1>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px",
+        background: "#f9f9f9",
+        borderRadius: "8px",
+        marginBottom: "20px"
+
+      }}>
+        <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
+        <div><h4>الوقت : {timePart}</h4></div>
+      </div>
+      <h1>  مخزن الاغذية والمشروبات   {isLoading && <Spinner />} </h1>
       {
-        loggedUser?.type!="storekeeper" &&<button className='btn btn-success my-2' onClick={() => {
+        loggedUser?.type != "storekeeper" && <button className='btn btn-success my-2' onClick={() => {
           navigate('/allitems/add');
         }} > اضافة <BsPlus /> </button>
       }
-      
+
 
       <AlarmComponent />
       <SearchItemsComponent setIsLoading={setIsLoading} setCategories={setCategories} originalCategories={originalCategories} />
+
+     
 
       {
         !isLoading && <DataTable

@@ -44,7 +44,7 @@ export default function SideBar() {
 
 
         <NavLink className='link my-2' to={'/allitems'}>
-          <span> <BsBackpack4Fill />  ادارة الاصناف  </span>
+          <span> <BsBackpack4Fill />    مخزن الاغذية و المشروبات  </span>
         </NavLink>
 
         {

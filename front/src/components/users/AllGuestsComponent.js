@@ -442,6 +442,7 @@ export default function AllGuestsComponent() {
           setIsEdit(false);
         }} className='btn btn-success' > اضافة <BsPlus /> </button>
 
+
         <div className="d-flex gap-2">
           <input
             value={searchValue}
@@ -453,7 +454,7 @@ export default function AllGuestsComponent() {
           <button onClick={() => search()} className='btn btn-success'> بحث </button>
         </div>
 
-        <button onClick={() => cancelFilter()} className='btn btn-danger' > الغاء الفلتر <BsBackspaceFill /> </button>
+        <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh <BsBackspaceFill /> </button>
       </div>
 
       {

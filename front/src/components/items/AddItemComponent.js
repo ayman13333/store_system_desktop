@@ -343,14 +343,14 @@ export default function AddItemComponent() {
             <div className="form-group my-3">
 
                 <div className='d-flex justify-content-between'>
-                    <h6 className="my-3">  تاريخ الصلاحية </h6>
+                    <h6 className="my-3">  تاريخ انتهاء الصلاحية </h6>
                     <button
                         onClick={() => {
                             setRowToEdit(null);
                             setShowExpirationDateModal(true);
 
                         }}
-                        className='btn btn-success h-50 my-auto'> اضافة تاريخ صلاحية </button>
+                        className='btn btn-success h-50 my-auto'> اضافة تاريخ انتهاء الصلاحية </button>
                 </div>
 
 
@@ -359,7 +359,7 @@ export default function AddItemComponent() {
                     <table className="table mt-3">
                         <thead>
                             <tr>
-                                <th scope="col">تاريخ الصلاحية</th>
+                                <th scope="col">تاريخ انتهاء الصلاحية</th>
                                 <th scope="col">الكمية</th>
                                 <th scope="col">تحكم</th>
                             </tr>

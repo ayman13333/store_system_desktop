@@ -56,18 +56,18 @@ export default function NavBar() {
               {/* List of Notifications */}
               <ListGroup>
                 {notifications.map((notification, index) => (
-                  <ListGroup.Item key={index} style={{fontWeight:'bold'}}>
+                  <ListGroup.Item className='notification' key={index} style={{fontWeight:'bold',cursor:'pointer'}}>
                     {notification?.title}
                     </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button
+              {/* <Button
                 variant="danger"
                 className="mt-3"
                 onClick={handleClearNotifications}
               >
                 مسح الاشعارات
-              </Button>
+              </Button> */}
             </>
           ) : (
             <p>No new notifications!</p>
