@@ -81,7 +81,7 @@ export default function AllItemsComponent() {
 
         return (
           <div style={{
-            textAlign: 'start', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
+            textAlign: 'center', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
             width: '100%'
           }}>
             {codeStr}
@@ -100,7 +100,7 @@ export default function AllItemsComponent() {
         else codeStr = row?.name;
         return (
           <div style={{
-            textAlign: 'start', whiteSpace: 'nowrap', width: '100%'
+            textAlign: 'center', whiteSpace: 'nowrap', width: '100%'
           }}>
             {codeStr}
           </div>
@@ -115,7 +115,7 @@ export default function AllItemsComponent() {
     },
     { name: 'الوحدة', selector: row => row.unit, sortable: true },
     {
-      name: ' الصلاحية',
+      name: 'الصلاحية',
       cell: (row) => {
         const currentDate = new Date();
         let isYellow = false;
@@ -271,7 +271,7 @@ export default function AllItemsComponent() {
   //     style: {
   //       fontWeight: 'bold',
   //       fontSize: 'larger',
-  //       // textAlign: 'start'
+  //       // textAlign: 'center'
   //     },
   //   }
   // };

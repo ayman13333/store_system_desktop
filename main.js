@@ -549,6 +549,12 @@ ipcMain.handle('editCategory', async (event, data) => {
 
     let totalQuantity = 0;
 
+   // const oldExpirations=await CategoryItem.find
+
+  //  const oldExpirations = await CategoryItem.deleteMany({
+  //   categoryID:oldCategory?._id
+  //  });
+
     await Promise.all(
       expirationDatesArr.map(async (ele) => {
         if (ele.createdAt) {

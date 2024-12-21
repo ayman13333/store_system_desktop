@@ -4,7 +4,7 @@ export default function AlarmComponent() {
     let alarms=[
         {value:red,text:' صنف منتهي الصلاحية ' },
         {value:yellow,text:'الكمية اقل من او تساوي الحد الحرج'},    
-        {value:ligthBlue,text:'تم التعديل عليه من قبل الموظف'}
+        {value:ligthBlue,text:'صنف تم التعديل عليه'}
     ]
     return (
         <div className="d-flex gap-5 my-4">
