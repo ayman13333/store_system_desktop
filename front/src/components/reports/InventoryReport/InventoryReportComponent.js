@@ -28,7 +28,7 @@ export default function InventoryReportComponent() {
   // Calculate the sum of all unitPrice
   const totalUnitPrice = parseFloat(categories.reduce((sum, category) => {
     return sum + ((category?.unitPrice * category?.totalQuantity) || 0);
-  }, 0).toFixed(3));
+  }, 0).toFixed(2));
 
   console.log("dynamicData",dynamicData)
 
@@ -121,13 +121,13 @@ export default function InventoryReportComponent() {
     {
       name: 'سعر الوحدة',
       minwidth: '180px',
-      selector: row => row.unitPrice,
+      selector: row => row.unitPrice.toFixed(2),
       sortable: true,
     },
     {
       name: 'الاجمالي',
       minwidth: '180px',
-      selector: row => row.unitPrice * row.totalQuantity,
+      selector: (row) => (row.unitPrice * row.totalQuantity).toFixed(2),
       sortable: true,
     },
   ];
@@ -171,31 +171,6 @@ export default function InventoryReportComponent() {
       }
     }
   };
-
-  // const search = () => {
-    // if (selectedValue === '1' && secondSelectValue) {
-      // Filter categories based on selectedValue and secondSelectValue
-      // const filteredCategories = categories.filter(category => category?.user?._id === secondSelectValue);
-      // const dynamicData = categories.map(category => ({
-      //   code: category?.code,
-      //   name: category?.name,
-      //   unit: category?.unit,
-      //   totalQuantity: category?.totalQuantity,
-      //   unitPrice: category?.unitPrice,
-      // }));
-    // } else {
-      // setTableData([]); // Reset tableData if no match
-    // }
-  // };
-
-
-  
-  // const cancelSearch = () => {
-  //   setSelectedValue(null);
-  //   setSecondSelectValue(null);
-  //   setTableData([]);
-  // };
-
 
   // Function to handle the print action
   const printReport = () => {
@@ -249,13 +224,6 @@ export default function InventoryReportComponent() {
   
     printWindow.document.write('</style></head><body>');
   
-    // Header with time and date
-    // printWindow.document.write(`
-    //   <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
-    //     <div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>
-    //     <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
-    //   </div>
-    // `);
 
           printWindow.document.write(`
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
@@ -267,6 +235,12 @@ export default function InventoryReportComponent() {
             </div>
           `);
   
+          printWindow.document.write(`
+            <main style="  margin: 10px; 
+            padding: 20px;
+            border: 5px solid black;
+            box-sizing: border-box; ">
+   `);
     // Title
     printWindow.document.write(`
       <div>
@@ -279,16 +253,16 @@ export default function InventoryReportComponent() {
     // Table
     printWindow.document.write(`
       <div class="table-container">
-        <table border="5" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
+        <table border="5" style="width:100%;  table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center;">
           <thead style="border-bottom: 5px solid black;">
             <tr>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">م</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الكود</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الصنف</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الوحدة</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الكمية</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">سعر الوحدة</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black;">الاجمالي</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 5%; ">م</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكود</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 30%;">الصنف</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الوحدة</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكمية</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 15%;">سعر الوحدة</th>
+              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 15%;">الاجمالي</th>
             </tr>
           </thead>
           <tbody>
@@ -303,19 +277,20 @@ export default function InventoryReportComponent() {
   
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
-          <td style="min-width: 40px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index+1}</td>
-          <td style="min-width: 60px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.name}</td>
-          <td style="min-width: 70px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unit}</td>
-          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity}</td>
-          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unitPrice.toFixed(2)}</td>
-          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${rowTotal.toFixed(2)}</td>
+          <td style="min-width: 40px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index+1}</td>
+          <td style="min-width: 60px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
+          <td style="min-width: 70px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unitPrice.toFixed(2)}</td>
+          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${rowTotal.toFixed(2)}</td>
         </tr>
       `);
     });
   
     // Close table body
     printWindow.document.write(`
+          </main>
           </tbody>
         </table>
       </div>

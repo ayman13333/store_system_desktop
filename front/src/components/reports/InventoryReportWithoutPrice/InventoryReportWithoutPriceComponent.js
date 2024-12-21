@@ -6,40 +6,32 @@ import logo from "./logo.jpeg";
 
 export default function InventoryReportWithoutPriceComponent() {
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
-  const [categories, setCategories] = useState([]);
 
 
-  const dynamicData = categories.map(category => ({
-    code: category?.code,
-    name: category?.name,
-    unit: category?.unit,
-    totalQuantity: category?.totalQuantity,
-  }));
 
-
-  const getCurrentDate = () => {
-    const now = new Date();
+  // const getCurrentDate = () => {
+  //   const now = new Date();
   
-    // First variable: day, month, and year
-    const datePart = {
-      day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
-      month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
-      year: now.getFullYear(),
-    };
+  //   // First variable: day, month, and year
+  //   const datePart = {
+  //     day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
+  //     month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
+  //     year: now.getFullYear(),
+  //   };
   
-    // Second variable: time with AM/PM
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
-    hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
+  //   // Second variable: time with AM/PM
+  //   let hours = now.getHours();
+  //   const minutes = String(now.getMinutes()).padStart(2, '0');
+  //   const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
+  //   hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
   
-    const timePart = `${hours}:${minutes} ${amPm}`;
+  //   const timePart = `${hours}:${minutes} ${amPm}`;
   
-    return { datePart, timePart };
-  };
+  //   return { datePart, timePart };
+  // };
   
   // Store the values in variables
-  const { datePart, timePart } = getCurrentDate();
+  // const { datePart, timePart } = getCurrentDate();
 
 
   useEffect(() => {
@@ -51,7 +43,6 @@ export default function InventoryReportWithoutPriceComponent() {
       // console.log('categories', categories);
       console.log('result', result);
 
-      setCategories(result?.categories);
 
       setTableData(result?.categories);  // Set dynamic data to tableData
 
@@ -212,6 +203,12 @@ export default function InventoryReportWithoutPriceComponent() {
     //     <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
     //   </div>
     // `);
+    printWindow.document.write(`
+      <main style="  margin: 10px; 
+      padding: 20px;
+      border: 5px solid black;
+      box-sizing: border-box; ">
+`);
 
     printWindow.document.write(`
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
@@ -236,14 +233,14 @@ export default function InventoryReportWithoutPriceComponent() {
     // Table
     printWindow.document.write(`
       <div class="table-container">
-        <table border="5" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
+        <table border="5" style="width:100%;  table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center;">
           <thead style="border-bottom: 5px solid black;">
             <tr>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">م</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الكود</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الصنف</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الوحدة</th>
-              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black;">الكمية</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black; width: 5%;">م</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black; width: 15%;">الكود</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black; width: 40%;">الصنف</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black; width: 20%;">الوحدة</th>
+              <th style="padding: 8px; font-size: 24px; font-weight: 800;  border-right: 5px solid black; width: 20%;">الكمية</th>
             </tr>
           </thead>
           <tbody>
@@ -253,11 +250,11 @@ export default function InventoryReportWithoutPriceComponent() {
     tableData.forEach((row, index) => {
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
-          <td style="min-width: 50px;  padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black;">${index+1}</td>
-          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.name}</td>
-          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unit}</td>
-          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity}</td>
+          <td style="min-width: 50px;  padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black; word-wrap: break-word;">${index+1}</td>
+          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
+          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
+          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
+          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600;  border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
         </tr>
       `);
     });
@@ -269,7 +266,7 @@ export default function InventoryReportWithoutPriceComponent() {
       </div>
     `);
   
-    printWindow.document.write('</body></html>');
+    printWindow.document.write('</main></body></html>');
   
     printWindow.document.close(); // Necessary for IE >= 10
     printWindow.print();

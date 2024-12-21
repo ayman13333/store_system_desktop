@@ -183,7 +183,7 @@ export default function FinancialTransactionsReportComponent() {
       {
         name: numberColumnHeader,
         // width: '180px',
-        minWidth: '180px',
+        minWidth: '200px',
         sortable: true,
         cell: row => {
           let numberStr =row?.serialNumber;
@@ -220,7 +220,7 @@ export default function FinancialTransactionsReportComponent() {
       {
         name: 'تاريخ الفاتورة',
         // width: '180px',
-        minWidth: '180px',
+        minWidth: '190px',
   
       selector: row => formatDate(row.supplyDate),
         sortable: true,
@@ -228,7 +228,7 @@ export default function FinancialTransactionsReportComponent() {
       {
         name: 'تاريخ التسجيل',
         // width: '180px',
-        minWidth: '180px',
+        minWidth: '200px',
         selector: row => formatDate(row.registerDate),
         sortable: true,
       },
@@ -395,6 +395,13 @@ export default function FinancialTransactionsReportComponent() {
     // printWindow.document.write('</div>');
   
     printWindow.document.write(`
+      <main style="  margin: 10px; 
+      padding: 20px;
+      border: 5px solid black;
+      box-sizing: border-box; ">
+`);
+
+    printWindow.document.write(`
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
         <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
         <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
@@ -409,29 +416,29 @@ export default function FinancialTransactionsReportComponent() {
         <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
       تقرير حصر الفواتير   </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="5" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
+    printWindow.document.write('<table border="5" style="width:100%; table-layout: fixed; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
     printWindow.document.write(`
       <thead style="border-bottom: 5px solid black;">
       <tr>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; " >م</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; " >كود الفاتوره</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; ">${numberColumnHeader}</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; ">نوع الفاتورة</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; ">${nameColumnHeader}</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; ">تاريخ الفاتورة</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; ">تاريخ التسجيل</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:8%;" >م</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;" >كود الفاتوره</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">${numberColumnHeader}</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">نوع الفاتورة</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:17%;">${nameColumnHeader}</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">تاريخ الفاتورة</th>
+      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">تاريخ التسجيل</th>
       </tr></thead><tbody>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
     report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index+1}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.invoiceCode}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.serialNumber}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index+1}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.invoiceCode}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.serialNumber}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">
           ${
             row?.type === "payment" ? "صرف" :
             row?.type === "supply" ? "توريد" :
@@ -439,9 +446,9 @@ export default function FinancialTransactionsReportComponent() {
             ""
           }
           </td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.supplierID?.fullName}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.supplierID?.fullName}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.supplyDate)}</td>
+          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
@@ -510,7 +517,7 @@ export default function FinancialTransactionsReportComponent() {
     
 
   
-    printWindow.document.write('</tbody></table>');
+    printWindow.document.write('</main></tbody></table>');
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
   

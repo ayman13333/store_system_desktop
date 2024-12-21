@@ -166,79 +166,6 @@ export default function PrintInvoiceComponent() {
         </div>
       `);
     }
-
-
-
-
-
-    // printWindow.document.write(`
-    //         <div>
-    //         <div class="table-container">
-    //           <table border="1" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
-
-    //               <tr>
-    //                 <th style="padding: 8px; font-size: 24px; font-weight: 800;">كود الفاتورة</th>
-    //                 <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.invoiceCode}</td>
-    //               </tr>
-    //               <tr>
-    //               <th style="padding: 8px; font-size: 24px; font-weight: 800;">رقم الفاتورة</th>
-    //               <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.serialNumber}</td>
-    //               </tr>
-    //               <tr>
-    //                 <th style="padding: 8px; font-size: 24px; font-weight: 800;">  ${foundInvoice?.type === "supply"
-    //     ? " اسم جهة التوريد"
-    //     : foundInvoice?.type === "payment"
-    //       ? "اسم جهة الصرف"
-    //       : foundInvoice?.type === "convert"
-    //         ? "اسم جهة التحويل"
-    //         : ""
-    //   }</th>
-    //           <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.supplierID?.fullName}</td>
-    //           </tr>
-    //           <tr>
-    //             <th style="padding: 8px; font-size: 24px; font-weight: 800;">تاريخ الفاتورة</th>
-    //             <td style="padding: 8px; font-size: 24px; font-weight: 800;">${formatDate(foundInvoice?.supplyDate)}</td>
-    //           </tr>
-    //           <tr>
-    //             <th style="padding: 8px; font-size: 24px; font-weight: 800;">تاريخ التسجيل</th>
-    //             <td style="padding: 8px; font-size: 24px; font-weight: 800;">${formatDate(foundInvoice?.registerDate)}</td>
-    //           </tr>
-    //           <tr>
-    //             <th style="padding: 8px; font-size: 24px; font-weight: 800;">اسم الموظف</th>
-    //             <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.employeeID?.email}</td>
-    //           </tr>
-    //           <tr>
-    //             <th style="padding: 8px; font-size: 24px; font-weight: 800;">ملاحظات </th>
-    //             <td style="padding: 8px; font-size: 24px; font-weight: 800;">${foundInvoice?.notes}</td>
-    //           </tr>
-
-    //             <tbody>
-    //             </div>
-
-
-    //       `);
-
-
-
-    // printWindow.document.write(`
-    //   <div >
-    //     <h2 style="text-align: center;  font-size:20px; font-weight:700">
-    //     ${
-    //         foundInvoice?.type === "supply"
-    //           ? "قائمة الاصناف"
-    //           : foundInvoice?.type === "payment"
-    //           ? "قائمة الاصناف"
-    //           : foundInvoice?.type === "convert"
-    //           ? "قائمة الاصناف قبل تحويلها"
-    //           : ""
-    //       }
-
-    //     </h2>
-    //   </div>
-    // `);
-
-
-
     // Table
     if (foundInvoice?.type === "supply") {
       printWindow.document.write(`
@@ -293,13 +220,13 @@ export default function PrintInvoiceComponent() {
       if (foundInvoice?.type === "supply") {
         printWindow.document.write(`
           <tr style="padding:5px; border-right: 2px solid black;">
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${index + 1}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.code}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.name}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.unit}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.unitPrice}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.unitPrice * row.totalQuantity }</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unitPrice}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unitPrice * row.totalQuantity }</td>
                 </tr>
                 
               
@@ -309,11 +236,11 @@ export default function PrintInvoiceComponent() {
       if (foundInvoice?.type === "payment") {
         printWindow.document.write(`
           <tr style="padding:5px; border-right: 2px solid black;">
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${index + 1}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.code}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.name}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.unit}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
+                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
 
                 </tr>
                 
@@ -649,13 +576,13 @@ export default function PrintInvoiceComponent() {
       }
       printWindow.document.write(`
           <tr style="padding:5px; border-right: 2px solid black;">
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index + 1}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.name ? row.name : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unit ? row.unit : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity ? row.totalQuantity : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.name2 ? row.name2 : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.unit2 ? row.unit2 : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row.totalQuantity2 ? row.totalQuantity2 : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name ? row.name : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit ? row.unit : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity ? row.totalQuantity : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name2 ? row.name2 : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit2 ? row.unit2 : ""}</td>
+                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity2 ? row.totalQuantity2 : ""}</td>
 
                 </tr>
                 
