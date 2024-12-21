@@ -261,29 +261,28 @@ export default function EntityTransactionReportComponent() {
   };
 
 
-  const getCurrentDate = () => {
-    const now = new Date();
+  // const getCurrentDate = () => {
+  //   const now = new Date();
 
-    // First variable: day, month, and year
-    const datePart = {
-      day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
-      month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
-      year: now.getFullYear(),
-    };
+  //   // First variable: day, month, and year
+  //   const datePart = {
+  //     day: String(now.getDate()).padStart(2, '0'), // Add leading zero if needed
+  //     month: String(now.getMonth() + 1).padStart(2, '0'), // Months are zero-based
+  //     year: now.getFullYear(),
+  //   };
 
-    // Second variable: time with AM/PM
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
-    hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
+  //   // Second variable: time with AM/PM
+  //   let hours = now.getHours();
+  //   const minutes = String(now.getMinutes()).padStart(2, '0');
+  //   const amPm = hours >= 12 ? 'مساءََ' : 'صباحاََ';
+  //   hours = hours % 12 || 12; // Convert to 12-hour format and handle midnight (0)
 
-    const timePart = `${hours}:${minutes} ${amPm}`;
+  //   const timePart = `${hours}:${minutes} ${amPm}`;
 
-    return { datePart, timePart };
-  };
+  //   return { datePart, timePart };
+  // };
 
-  // Store the values in variables
-  const { datePart, timePart } = getCurrentDate();
+  // const { datePart, timePart } = getCurrentDate();
 
   const cancelSearch = () => {
     setSelectedValue(null);
@@ -345,11 +344,12 @@ export default function EntityTransactionReportComponent() {
     `);
 
     printWindow.document.write('</style></head><body>');
-
-    // printWindow.document.write('<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">');
-    // printWindow.document.write(`<div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>`);
-    // printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
-    // printWindow.document.write('</div>');
+    printWindow.document.write(`
+      <main style="  margin: 10px; 
+      padding: 20px;
+      border: 5px solid black;
+      box-sizing: border-box; ">
+`);
 
 
     printWindow.document.write(`
@@ -370,29 +370,30 @@ export default function EntityTransactionReportComponent() {
        <span>تقرير معامله جهة : </span>
        <span> ${report?.categoryObject[0]?.supplierID.fullName} </span>  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="5" style="width:100%; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
+    printWindow.document.write('<table border="5" style="width:100%;  table-layout: fixed; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
 
     // Define the column headers in RTL order (adjust the headers as per your table structure)
     printWindow.document.write(`
       <thead style="border-bottom: 5px solid black;">
-      <tr>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; " >م</th>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; " >كود الفاتوره</th>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">${numberColumnHeader}</th>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">نوع الفاتورة</th>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">تاريخ الفاتورة</th>
-      <th style ="padding:5px; font-size:24px; font-weight:800; border-right: 5px solid black; ">تاريخ التسجيل</th>
-      </tr>
+   <tr>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%; word-wrap: break-word;">م</th>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">كود الفاتوره</th>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">${numberColumnHeader}</th>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">نوع الفاتورة</th>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">تاريخ الفاتورة</th>
+  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">تاريخ التسجيل</th>
+</tr>
+
       </thead><tbody>`);
 
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
     report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${index + 1}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.invoiceCode}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${row?.serialNumber}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.invoiceCode}</td>
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.serialNumber}</td>
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">
             ${
               row?.type === "payment" ? "صرف" :
               row?.type === "supply" ? "توريد" :
@@ -400,8 +401,8 @@ export default function EntityTransactionReportComponent() {
               ""
             }
           </td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.supplyDate)}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black;">${formatDate(row?.registerDate)}</td>
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.supplyDate)}</td>
+          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.registerDate)}</td>
         </tr>
       `);
     });
@@ -468,7 +469,7 @@ export default function EntityTransactionReportComponent() {
         </tr>
       `);
     }
-    printWindow.document.write('</tbody></table>');
+    printWindow.document.write('</main></tbody></table>');
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
 
