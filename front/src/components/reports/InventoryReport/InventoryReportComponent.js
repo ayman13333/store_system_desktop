@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactSelect from '../../../Utilities/ReactSelect'; // Adjust the path as needed
 import DataTable from "react-data-table-component";
 import { toast } from 'react-toastify';
-import logo from '../InventoryReportWithoutPrice/logo.jpeg'
+import logo from '../InventoryReportWithoutPrice/logo.jpg'
 export default function InventoryReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null);
   const [secondSelectValue, setSecondSelectValue] = useState(null); 
@@ -227,7 +227,7 @@ export default function InventoryReportComponent() {
 
           printWindow.document.write(`
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-              <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+              <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
                 <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
                 <div style=" font-weight: 900;">جاردينيا</div>

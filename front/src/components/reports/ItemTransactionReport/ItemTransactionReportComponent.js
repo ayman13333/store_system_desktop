@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import logo from '../InventoryReportWithoutPrice/logo.jpeg'
+import logo from '../InventoryReportWithoutPrice/logo.jpg'
 
 
 export default function ItemTransactionReportComponent() {
@@ -273,15 +273,13 @@ export default function ItemTransactionReportComponent() {
     printWindow.document.write('</style></head><body>');
   
     printWindow.document.write(`
-      <main style="  margin: 10px; 
-      padding: 20px;
-      border: 5px solid black;
-      box-sizing: border-box; ">
+         <main style="margin: 10px; padding: 20px; border: 5px solid black; box-sizing: border-box; ">
+
 `);
   
     printWindow.document.write(`
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-        <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+        <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
         <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
           <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
           <div style=" font-weight: 900;">جاردينيا</div>
@@ -387,7 +385,7 @@ export default function ItemTransactionReportComponent() {
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
         <button style={{ margin: "0 10px 0 0" }} onClick={getReport} className="btn btn-success">بحث</button>
-        <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">إلغاء البحث</button>
+        <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">Refrash</button>
         <button style={{ margin: "0 10px 0 0" }} onClick={printReport} className="btn btn-primary">طباعة</button>
 
       </div>

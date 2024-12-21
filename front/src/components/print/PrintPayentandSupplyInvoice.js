@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
  import './invoice.css'; // Import the CSS file
- import logo from "../../images/logo.jpeg";
+ import logo from "../../images/logo.jpg";
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormatDate from '../../Utilities/FormatDate';
 
