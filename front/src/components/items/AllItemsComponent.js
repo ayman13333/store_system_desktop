@@ -195,6 +195,7 @@ export default function AllItemsComponent() {
 
       },
     },
+   
     {
       when: row => {
         const currentDate = new Date();
@@ -239,40 +240,12 @@ export default function AllItemsComponent() {
           }
         });
 
-        if (yellowCount == row?.expirationDatesArr?.length) {
-          return true;
-          //  isRed=true;
 
-        }
-
-      },
-      style: {
-        backgroundColor: red,
-        fontWeight: 'bold',
-        fontSize: 'large',
-        textAlign: 'center',
-      }
-    },
-    {
-      when: row => {
-        const currentDate = new Date();
-        let isYellow = false;
-        let isRed = false;
-        let yellowCount = 0;
-
-        row?.expirationDatesArr?.map(el => {
-          const itemDate = new Date(el?.date);
-          if (currentDate.getTime() > itemDate.getTime()) {
-            isYellow = true;
-            yellowCount++;
-          }
-        });
-
-        if ((yellowCount != row?.expirationDatesArr?.length) && yellowCount > 0) return true
-
-        if (row.criticalValue >= row.totalQuantity) {
+        if ((row.criticalValue >= row.totalQuantity) || row?.expirationDatesArr?.length==0) {
           return true
         }
+
+
         // row.criticalValue === row.totalQuantity ?  true : false;
 
       },
@@ -286,14 +259,7 @@ export default function AllItemsComponent() {
 
 
 
-    // {
-    //   when: row => row.criticalValue === row.totalQuantity ,
-    //   style: {
-    //     backgroundColor: orange, // Light blue for Admin
-    //     fontWeight: 'bold',
-    //     fontSize:'large'
-    //   },
-    // },
+   
 
 
 
