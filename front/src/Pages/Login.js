@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logo from "../images/logo.jpeg";
+import logo from "../images/logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 
@@ -56,7 +56,9 @@ export default function Login({setIsLogin}) {
             alignItems: 'center',
             flexDirection: 'column'
         }}>
-            <img src={logo} alt="" />
+
+
+            <img src={logo} alt="" style={{height:"300px"}} />
             <form
             className="w-100 d-flex justify-content-center flex-column"
              onSubmit={(e)=>{

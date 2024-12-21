@@ -8,7 +8,7 @@ import ConvetInvoiceComponent from "../invoices/ConvetInvoice/ConvetInvoiceCompo
 import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmEditModal from "../items/ConfirmEditModal";
 import { toast } from "react-toastify";
-import logo from '../reports/InventoryReportWithoutPrice/logo.jpeg'
+import logo from '../reports/InventoryReportWithoutPrice/logo.jpg'
 
 
 export default function PrintInvoiceComponent() {
@@ -108,12 +108,13 @@ export default function PrintInvoiceComponent() {
     printWindow.document.write(`
               <main style="  margin: 10px; 
               padding: 20px;
+              height:100vh;
               border: 5px solid black;
               box-sizing: border-box; ">
      `);
       printWindow.document.write(`
               <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+                <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
                 <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: 900; margin-left: 20px; text-decoration: underline; text-underline-offset: 7px;">
                   <div>دار ضباط الحرب الكيميائية</div>
                   <div>جاردينيا</div>
@@ -315,7 +316,7 @@ export default function PrintInvoiceComponent() {
           <div>التوقيع .......................</div>
         </div>
          <div>التوقيع .......................</div>
-          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; margin-top: 5px;">
           <div>أمين عهدة المخزن</div>
           <div>رئيس القسم المختص</div>
           <div>مراقب العهدة</div>
@@ -327,7 +328,7 @@ export default function PrintInvoiceComponent() {
     if (foundInvoice?.type === "payment") {
     printWindow.document.write(`
       <div style="font-size:28px; font-weight:900; direction: rtl; margin:0 10px 0 0;">           
-        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
@@ -339,7 +340,7 @@ export default function PrintInvoiceComponent() {
           <div  style="display: flex; justify-content:center; width:25%;">رئيس قسم المشتروات</div>
           <div  style="display: flex; justify-content:center; width:25%;"> مدير الأغذية و المشروبات</div>
         </div>
-              <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+              <div style="display: flex; justify-content: space-between; margin-top: 10px;">
           <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
           <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
           <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
@@ -500,15 +501,12 @@ export default function PrintInvoiceComponent() {
     //     `);
 
     printWindow.document.write(`
-      <main style="  margin: 10px; 
-      padding: 20px;
-      border: 5px solid black;
-      box-sizing: border-box; ">
+      <main style="margin: 10px; padding: 20px; border: 5px solid black; box-sizing: border-box; ">
 `);
 
     printWindow.document.write(`
               <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                <img src=${logo} alt="Logo" style="max-width: 70px; height: 70px;">
+                <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
                 <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
                   <div>دار ضباط الحرب الكيميائية</div>
                   <div>جاردينيا</div>
@@ -630,7 +628,7 @@ export default function PrintInvoiceComponent() {
 
 
     printWindow.document.write(`
-          <div style="display: flex; justify-content: space-between; direction: rtl; margin:50px 0 0 0 ">
+          <div style="display: flex; justify-content: space-between; direction: rtl; margin:10px 0 0 0 ">
         
             <!-- First column: أمين العهدة -->
             <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
@@ -641,7 +639,7 @@ export default function PrintInvoiceComponent() {
             <!-- Second column: مراقب الجودة -->
             <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
               <span>التوقيع /</span>
-              <span>مراقب الجودة</span>
+              <span>مراقب العهدة</span>
             </div>
         
             <!-- Third column: رئيس القسم المختص -->
