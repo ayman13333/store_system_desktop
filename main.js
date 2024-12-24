@@ -419,11 +419,11 @@ ipcMain.handle('getAllCategories', async (event, data) => {
     });
 
     // Sort expirationDatesArr in descending order by createdAt
-    // categories = categories.map(category => {
+    categories = categories.map(category => {
 
-    //   category.expirationDatesArr.sort((a, b) => new Date(b.date) - new Date(a.date)); // Descending
-    //   return category;
-    // });
+      category.expirationDatesArr.sort((a, b) => new Date(a.date) - new Date(b.date)); // Descending
+      return category;
+    });
 
     // console.log('categories',categories);
 

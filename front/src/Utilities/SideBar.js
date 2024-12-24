@@ -56,7 +56,7 @@ export default function SideBar() {
         </NavLink>
 
         {
-          loggedUser?.type != "storekeeper" && <>
+          loggedUser?.type != "storekeeper" ? <>
 
             {
               loggedUser?.type == "admin" && <NavLink className='link my-3' to={'/users'}>
@@ -114,6 +114,17 @@ export default function SideBar() {
             </Nav.Item>
 
 
+          </>
+          :
+          <>
+           <Nav.Item>
+              <CustomDropDown
+                title={'التقارير'}
+                id={'reports'}
+                iconTitle={<HiDocumentReport style={{ margin: 'auto' }} />}
+                options={reportsOptions}
+              />
+            </Nav.Item>
           </>
         }
 

@@ -2,7 +2,7 @@ import { Button, Modal } from "react-bootstrap";
 import FormatDate from "../../../Utilities/FormatDate";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
 
-export default function ExpirationDatesModal({ show, setShow , category , setCategory,type='' }) {
+export default function Expiration2({ show, setShow , category , setCategory,type='' }) {
 
     console.log('type',type);
     

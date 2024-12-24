@@ -396,9 +396,10 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                             }
 
                             {
-                                showExpirationDatesModal && <ExpirationDatesModal
+                                showExpirationDatesModal && showAddQuantityModalBefore && <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
+                                    type={'pill'}
                                 />
                             }
 
