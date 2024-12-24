@@ -102,3 +102,8 @@ table td {
 .notification:hover{
   background: #c9dfff;
 }
+
+.customBlack{
+  background-color: #C4BFBE !important;
+  color: black !important;
+}
