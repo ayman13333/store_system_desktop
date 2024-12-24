@@ -59,7 +59,7 @@ export default function SideBar() {
           loggedUser?.type != "storekeeper" && <>
 
             {
-              loggedUser?.type != "admin" && <NavLink className='link my-3' to={'/users'}>
+              loggedUser?.type == "admin" && <NavLink className='link my-3' to={'/users'}>
                 <span style={{ display: "flex", gap: "10px" }}>
                   <div>
                     <BsGlobeCentralSouthAsia />

@@ -394,7 +394,7 @@ ipcMain.handle('getAllCategories', async (event, data) => {
   try {
     let categories = await Category.find()
       .populate('expirationDatesArr user')
-      .sort({ createdAt: -1 })
+      // .sort({ createdAt: -1 })
       .lean();
 
     // convert objectid to string
@@ -419,11 +419,11 @@ ipcMain.handle('getAllCategories', async (event, data) => {
     });
 
     // Sort expirationDatesArr in descending order by createdAt
-    categories = categories.map(category => {
+    // categories = categories.map(category => {
 
-      category.expirationDatesArr.sort((a, b) => new Date(b.date) - new Date(a.date)); // Descending
-      return category;
-    });
+    //   category.expirationDatesArr.sort((a, b) => new Date(b.date) - new Date(a.date)); // Descending
+    //   return category;
+    // });
 
     // console.log('categories',categories);
 

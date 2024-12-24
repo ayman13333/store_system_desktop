@@ -270,11 +270,11 @@ export default function AddItemComponent() {
             </div>
 
             <div className="form-group">
-                <label className="my-2"> الاسم </label>
+                <label className="my-2"> الصنف </label>
                 <input
                     value={name} onChange={(e) => setName(e.target.value)}
                     required
-                    type="text" className="form-control" placeholder=" الاسم"
+                    type="text" className="form-control" placeholder=" الصنف"
                 />
             </div>
 
