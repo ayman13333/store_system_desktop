@@ -450,6 +450,14 @@ ipcMain.handle('addCategory', async (event, data) => {
     if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
     // الاول شوف الكود ده دخل قبل كدة ولا لا
+    const lastSerialNumber = await Category.findOne({}).sort({ createdAt: -1 });
+    let serialNumber=0;
+    if(lastSerialNumber?.serialNumber){
+      serialNumber = lastSerialNumber.serialNumber += 1;
+    }else{
+      serialNumber = 1;
+    }
+
     const foundCode = await Category.findOne({ code });
     if (foundCode !== null) {
       new Notification({ title: 'هذا الكود موجود بالفعل' }).show();
@@ -465,6 +473,7 @@ ipcMain.handle('addCategory', async (event, data) => {
       criticalValue,
       unitPrice,
       unit,
+      serialNumber,
       //  expirationDatesArr: expirationDatesArrIDS,
       totalQuantity: quantity
     }

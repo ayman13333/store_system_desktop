@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // الاصناف
 const categoriesSchema = new mongoose.Schema({
+    serialNumber:{
+        type:Number,
+        required:true
+    },
     code: {
         type: String,
         unique: true,
