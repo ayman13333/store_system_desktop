@@ -1,5 +1,5 @@
 export const yellow='#ede028';
-export const red='#BA1313';
+export const red='#DC3B3D';
 export const orange='#0dcaf0';
 export const ligthBlue="#0d6efd";
 

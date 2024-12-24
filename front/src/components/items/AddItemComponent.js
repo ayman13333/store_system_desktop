@@ -283,6 +283,7 @@ export default function AddItemComponent() {
                 <CustumNumberInput
                     value={criticalValue} setValue={setCriticalValue}
                     placeholder={'الحد الحرج'}
+                    type={'float'}
                     required={true}
                 />
             </div>

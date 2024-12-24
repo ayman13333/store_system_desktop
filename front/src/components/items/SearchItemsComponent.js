@@ -78,7 +78,7 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
 
                 <button onClick={() => search()} className='btn btn-success'> بحث </button>
 
-                <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh  </button>
+                <button onClick={() => cancelFilter()} className='btn btn-danger customRed' > refresh  </button>
 
             </div>
 
