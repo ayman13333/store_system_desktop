@@ -67,6 +67,8 @@ export default function AllItemsComponent() {
   //   return str.substring(0, maxLength) + '...';
   // }
 
+  //  A0908B
+
   let columns = [
     {
       name: 'الكود',
@@ -144,7 +146,7 @@ export default function AllItemsComponent() {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className={`btn ${(isYellow == true && isRed == false) ? 'btn-danger' : 'btn-secondary'} py-1`} style={{
+              className={`btn ${(isYellow == true && isRed == false) ? 'btn-danger' : 'btn-secondary customBlack'} py-1`} style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
               }} > <TbHandClick height={'5px'} />  </button>
@@ -167,7 +169,7 @@ export default function AllItemsComponent() {
     // },
     {
       name: 'تعديل',
-      cell: (row) => <button className={`${row?.user?._id ? 'btn-primary' : 'btn-secondary'} btn  py-1`} onClick={() => {
+      cell: (row) => <button className={`${row?.user?._id ? 'btn-primary' : 'btn-secondary customBlack'} btn  py-1`} onClick={() => {
         //  console.log('row',row);
         navigate('/allitems/edit', {
           state: row
@@ -176,7 +178,7 @@ export default function AllItemsComponent() {
         style={{
           whiteSpace: 'nowrap'
         }}
-      > تعديل  <CiEdit /> </button>
+      >   <CiEdit /> </button>
     }
 
   ];
@@ -289,6 +291,8 @@ export default function AllItemsComponent() {
         borderRight: '1px solid black', // Border for table cells
         borderLeft: '1px solid black',  // Border for table cells
         width: "100%",
+        backgroundColor:'#C4BFBE',
+        // whiteSpace:'no-wrap'
       },
     },
     cells: {
