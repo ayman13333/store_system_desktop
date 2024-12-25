@@ -145,6 +145,7 @@ export default function InventoryReportComponent() {
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
         width: "100%",
+        backgroundColor:'#C4BFBE',
       },
     },
     cells: {
@@ -245,7 +246,7 @@ export default function InventoryReportComponent() {
     printWindow.document.write(`
       <div>
         <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
-            تقرير جرد مخزن التغذية والمشروبات ( مسعر )
+            تقرير جرد مخزن الأغذية و المشروبات ( مسعر )
         </h2>
       </div>
     `);
@@ -327,7 +328,7 @@ display: "flex",
 <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
 <div><h4>الوقت : {timePart}</h4></div>
       </div> */}
-        <h1>تقرير جرد مخزن التغذية والمشروبات ( مسعر )</h1>
+        <h1>تقرير جرد مخزن الأغذية و المشروبات ( مسعر )</h1>
   
         <br />
       {/* Select Inputs */}

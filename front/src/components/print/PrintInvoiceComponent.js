@@ -112,15 +112,18 @@ export default function PrintInvoiceComponent() {
     //           border: 5px solid black;
     //           box-sizing: border-box; ">
     //  `);
-      printWindow.document.write(`
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                
-                <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;">
-                  <div>دار ضباط الحرب الكيميائية</div>
-                  <div>جاردينيا</div>
-                </div>
-
-                <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
+    printWindow.document.write(`
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+              ">
+              <div>دار ضباط الحرب الكيميائية</div>
+              <div>جاردينيا</div>
+              </div>
+              
+              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+                ">
+                <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+              </div>
               </div>
             `);
 
@@ -150,21 +153,21 @@ export default function PrintInvoiceComponent() {
     }
     if (foundInvoice?.type === "payment") {
       printWindow.document.write(`
-        <div style="text-underline-offset: 7px;">
+        <div style="text-underline-offset: 7px; margin:20px 0 0 0 ">
           <!-- First line: Invoice code and date -->
-          <div style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; text-decoration: underline; margin-bottom:5px; font-family: Arial, cairo;">
-            <span >فاتورة صرف اصناف من مخزن الأغذية و المشروبات رقم ( ${foundInvoice?.serialNumber} )</span>
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; font-family: cairo;">
+            <span >فاتورة صرف اصناف من مخزن الأغذية و المشروبات رقم </span> <span style="font-weight: 500;"> ( ${foundInvoice?.serialNumber} )</span>
           </div>
-          <div style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; text-decoration: underline; font-family: Arial, cairo;">
-            <span > إلي قسم </span> <span style="color:#fff">..</span> <span>( ${foundInvoice?.supplierID?.fullName} )</span ><span style="color:#fff">..</span>
-            <span > بتاريخ </span> <span style="color:#fff">..</span> <span>${formatDate(foundInvoice?.supplyDate)}</span>
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; direction: rtl;  font-family: cairo;">
+            <span > إلي قسم </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">( ${foundInvoice?.supplierID?.fullName} )</span ><span style="color:#fff">..</span>
+            <span > بتاريخ </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">${formatDate(foundInvoice?.supplyDate)}</span>
           </div>
           
           
           <!-- Second line: Supplier name -->
-          <div style="display: flex; margin-bottom:10px; text-decoration: underline;   text-decoration-thickness: 10px;  justify-content: center; align-items: center; font-weight: bold; font-size: 28px; direction: rtl;  font-family: Arial, cairo;">
-            <span> كود الفاتورة  </span> <span style="color:#fff">..</span><span> ( ${foundInvoice?.invoiceCode} ) </span> <span style="color:#fff">..</span>
-            <span> تاريخ التسجيل</span> <span style="color:#fff">..</span><span> ${formatDate(foundInvoice?.registerDate)} </span>
+          <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px;font-family: cairo; margin:0 0 10px 0">
+            <span style="font-weight: 500;"> كود الفاتورة  </span> <span style="color:#fff">..</span><span style="font-weight: 500;"> ( ${foundInvoice?.invoiceCode} ) </span> <span style="color:#fff">..</span>
+            <span style="font-weight: 500;"> تاريخ التسجيل</span> <span style="color:#fff">..</span><span style="font-weight: 500;"> ${formatDate(foundInvoice?.registerDate)} </span>
           </div>
         </div>
       `);
@@ -216,26 +219,37 @@ export default function PrintInvoiceComponent() {
 
 
 
-        // Table
-        if (foundInvoice?.type === "payment") {
-          printWindow.document.write(`
+    // Table
+    if (foundInvoice?.type === "payment") {
+      printWindow.document.write(`
     
-                  <table border="5" style="width:100%; table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center;">
+              <table border="5" style="width:100%; table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center; margin-top:30px">
                             <div class="table-container">
                    <div >
                 </div>
       
             <thead style="border-bottom: 5px solid black;">
                       <tr>
-      <th style="padding: 8px; font-size: 14px; font-weight: 700; border-right: 5px solid black; width: 5%;">م</th>
-      <th style="padding: 8px; font-size: 14px; font-weight: 700; border-right: 5px solid black; width: 20%;">الكود</th>
-      <th style="padding: 8px; font-size: 14px; font-weight: 700; border-right: 5px solid black; width: 30%;">الصنف</th>
-      <th style="padding: 8px; font-size: 14px; font-weight: 700; border-right: 5px solid black; width: 15%;">الوحدة</th>
-      <th style="padding: 8px; font-size: 14px; font-weight: 700; border-right: 5px solid black; width: 15%;">الكمية</th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 5%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">
+                م </div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">
+                      الكود </div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 30%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">
+
+      الصنف </div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 15%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">
+                      الوحدة </div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 15%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">
+                      الكمية </div></th>
                       </tr>
                     </thead>
                     `);
-        }
+    }
     // Populate rows and calculate totals
     let totalUnitPrice = 0;
 
@@ -244,7 +258,7 @@ export default function PrintInvoiceComponent() {
       totalUnitPrice += rowTotal;
       if (foundInvoice?.type === "supply") {
         let totalPrice = row.unitPrice * row.totalQuantity;
-       
+
 
 
 
@@ -280,7 +294,7 @@ export default function PrintInvoiceComponent() {
                 ${row.unitPrice.toFixed(2)}</div></td>
                 <td style="min-width: 200px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
                           <div style=" display:flex; justify-content: center; align-items: center;   ">
-                ${totalPrice.toFixed(2) }
+                ${totalPrice.toFixed(2)}
                 </div></td>
                 </tr>
                 
@@ -290,12 +304,23 @@ export default function PrintInvoiceComponent() {
       }
       if (foundInvoice?.type === "payment") {
         printWindow.document.write(`
+   <tbody style="border-bottom: 2px solid black;">
           <tr style="padding:5px; border-right: 2px solid black;">
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
-                <td style="min-width: 200px; padding: 5px; font-size:20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
+<td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   ">${index + 1}</div>
+                          </td>
+<td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   ">${row.code}</div>
+                          </td>
+<td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   ">${row.name}</div>
+                          </td>
+<td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   ">${row.unit}</div>
+                          </td>
+<td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   ">${row.totalQuantity}</div>
+                          </td>
 
                 </tr>
                 
@@ -309,12 +334,15 @@ export default function PrintInvoiceComponent() {
     if (foundInvoice?.type == 'payment') {
       printWindow.document.write(`
 
-          <tr style="font-weight: 900; padding: 5px; border-top: 2px solid black; text-align: center;">
-          <td colspan="2" style="padding: 5px; border-right: 5px solid black; font-size: 28px;">
+          <tr style="font-weight: 900; padding: 5px; border-top: 2px solid black; ">
+          <td colspan="2" style="padding: 5px; border-right: 5px solid black; font-size: 16px;">
+          <div style=" display:flex; justify-content: center; align-items: center;   ">
           ملاحظات
+          </div>
           </td>
-          <td colspan="3" style="padding: 5px; border-right: 5px solid black; font-size: 28px;">
-          ${foundInvoice?.notes}
+          <td colspan="3" style="padding: 5px; border-right: 5px solid black; font-size: 14px;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${foundInvoice?.notes}
+          </div>
           </td>
 
         </tr>
@@ -373,7 +401,7 @@ export default function PrintInvoiceComponent() {
     //     `);
 
     if (foundInvoice?.type === "supply") {
-    printWindow.document.write(`
+      printWindow.document.write(`
       <div style="font-size:18px; font-weight:900; direction: rtl; margin:20px 10px 0 0;">           
         <div>نشهد بأن الأصناف عالية وردت تمام واضيفت علي عهدة المخزن وهذه شهادة منا بذلك،،،</div>
         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
@@ -393,92 +421,29 @@ export default function PrintInvoiceComponent() {
     `);
     }
     if (foundInvoice?.type === "payment") {
-    printWindow.document.write(`
-      <div style="font-size:28px; font-weight:900; direction: rtl; margin:0 10px 0 0;">           
+      printWindow.document.write(`
+      <div style="font-size:18px; font-weight:700; direction: rtl; margin:0 10px 0 0;">           
         <div style="display: flex; justify-content: space-between; margin-top: 10px;">
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
         </div>
-          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size:16px;">
           <div  style="display: flex; justify-content:center; width:25%;" >أمين العهدة</div>
           <div  style="display: flex; justify-content:center; width:25%;" >المستلم</div>
           <div  style="display: flex; justify-content:center; width:25%;">رئيس قسم المشتروات</div>
           <div  style="display: flex; justify-content:center; width:25%;"> مدير الأغذية و المشروبات</div>
         </div>
               <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-          <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
-          <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
-          <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
-          <div  style="display: flex; justify-content:center; width:25%;" >.......................</div>
+          <div  style="display: flex; justify-content:center; width:25%; font-size:10px" >................................</div>
+          <div  style="display: flex; justify-content:center; width:25%; font-size:10px" >................................</div>
+          <div  style="display: flex; justify-content:center; width:25%; font-size:10px" >................................</div>
+          <div  style="display: flex; justify-content:center; width:25%; font-size:10px" >................................</div>
         </div>
       </div>
     `);
     }
-    
-
-    // if (foundInvoice?.invoicesData2.length > 0) {
-    //   printWindow.document.write(`
-    //             <div>
-    //         <h2 style="text-align: center;  font-size:20px; font-weight:700">
-    //                 قائمة الاصناف بعد تحويلها
-    //               </h2>
-    //             </div>
-    //           `);
-
-    //   // Table
-    //   printWindow.document.write(`
-    //             <div class="table-container">
-    //               <table border="1" style="width:100%; border-collapse: collapse; direction: rtl; text-align: center;">
-    //                 <thead>
-    //                   <tr>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكود</th>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاسم</th>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">الوحدة</th>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">الكمية</th>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">سعر الوحدة</th>
-    //                     <th style="padding: 8px; font-size: 24px; font-weight: 800;">الاجمالي</th>
-    //                   </tr>
-    //                 </thead>
-    //                 <tbody>
-    //           `);
-
-    //   // Populate rows and calculate totals
-    //   let totalUnitPrice = 0;
-
-    //   foundInvoice?.invoicesData2.forEach(row => {
-    //     const rowTotal = row.unitPrice * row.totalQuantity;
-    //     totalUnitPrice += rowTotal;
-
-    //     printWindow.document.write(`
-    //               <tr>
-    //                 <td style="min-width: 200px; padding: 5px;">${row.code}</td>
-    //                 <td style="min-width: 200px; padding: 5px;">${row.name}</td>
-    //                 <td style="min-width: 200px; padding: 5px;">${row.unit}</td>
-    //                 <td style="min-width: 200px; padding: 5px;">${row.totalQuantity}</td>
-    //                 <td style="min-width: 200px; padding: 5px;">${row.unitPrice.toFixed(2)}</td>
-    //                 <td style="min-width: 200px; padding: 5px;">${rowTotal.toFixed(2)}</td>
-    //               </tr>
-    //             `);
-    //   });
-
-    //   // Close table body
-    //   printWindow.document.write(`
-    //         </tbody>
-    //       </table>
-    //     </div>
-    //   `);
-
-    //   // Footer with total price
-    //   printWindow.document.write(`
-    //     <div style="display: flex; justify-content: center; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-top: 20px;">
-    //       <div><h2 style="margin: 0;">إجمالي سعر الأصناف  بعد تحويلها : ${totalUnitPrice.toFixed(2)} جنيه</h2></div>
-    //     </div>
-    //   `);
-
-    // }
-    // Close HTML
     printWindow.document.write('</body></html>');
 
     printWindow.document.close(); // Necessary for IE >= 10
@@ -523,76 +488,70 @@ export default function PrintInvoiceComponent() {
 
     // CSS for printing
     printWindow.document.write(`
-          @media print {
-            body { 
-              font-family: Arial, sans-serif; 
-              font-size: 12px; 
-              direction: rtl; 
-            }
-            table { 
-              width: 100%; 
-              border-collapse: collapse; 
-              direction: rtl; 
-            }
-            th, td { 
-              padding: 10px; 
-              text-align: right; 
-              border: 1px solid #ddd; 
-            }
-            th { 
-              font-size: 18px; 
-              font-weight: bold; 
-              background-color: #f1f1f1; 
-              }
-              td { 
-                font-size: 16px; 
-                font-weight: 500; 
-            }
-            @page { 
-              margin: 20mm; 
-              direction: rtl; 
-          size: A4 portrait; /* Set page size to A4 and rotate to landscape */
-
-            }
+      @media print {
+        body { 
+          font-family: Arial, sans-serif; 
+          font-size: 12px; 
+          direction: rtl; 
+        }
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          direction: rtl; 
+        }
+        th, td { 
+          padding: 10px; 
+          text-align: right; 
+          border: 1px solid #ddd; 
+        }
+        th { 
+          font-size: 18px; 
+          font-weight: bold; 
+          background-color: #f1f1f1; 
           }
-        `);
+          td { 
+            font-size: 16px; 
+            font-weight: 500; 
+        }
+        @page { 
+          margin: 5mm; 
+          direction: rtl; 
+      size: A4 portrait ; 
+
+        }
+      }
+    `);
 
     printWindow.document.write('</style></head><body>');
 
-    // Header with time and date
-    // printWindow.document.write(`
-    //       <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
-    //         <div><h2 style="margin: 0;">الوقت: ${timePart}</h2></div>
-    //         <div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>
-    //       </div>
-    //     `);
 
     printWindow.document.write(`
-      <main style="margin: 10px; padding: 20px; border: 5px solid black; box-sizing: border-box; ">
-`);
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+      <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+      ">
+      <div>دار ضباط الحرب الكيميائية</div>
+      <div>جاردينيا</div>
+      </div>
+      
+      <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+        ">
+        <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+      </div>
+      </div>
+    `);
 
-    printWindow.document.write(`
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
-                <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 24px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
-                  <div>دار ضباط الحرب الكيميائية</div>
-                  <div>جاردينيا</div>
-                </div>
-              </div>
-            `);
 
 
     if (foundInvoice?.type === "convert") {
       printWindow.document.write(`
-        <div>
-
-          <div style=" margin:10px 0; display: flex; justify-content: center; align-items: center; font-weight:900;  text-underline-offset: 7px; font-size:32px; direction: rtl; text-decoration: underline; font-family: Arial, cairo;">
-            <span > فاتورة تحويل رقم </span> <span style="color:#fff">..</span> <span>( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
-            <span > بتاريخ </span> <span style="color:#fff">..</span> <span>${formatDate(foundInvoice?.supplyDate)}</span>
+        <div style="text-underline-offset: 7px; margin:20px 0 0 0 ">
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; font-family: cairo;">
+            <span > فاتورة تحويل رقم </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
+            <span > بتاريخ </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">${formatDate(foundInvoice?.supplyDate)}</span>
           </div>
-          <div style=" margin:0 0 20px 20px; display: flex; justify-content: center; align-items: center; font-weight:900;  text-underline-offset: 7px; font-size:32px; direction: rtl; text-decoration: underline; font-family: Arial, cairo;">
-            <span > كود فاتورة  </span> <span style="color:#fff">..</span> <span>( ${foundInvoice?.invoiceCode} )</span ><span style="color:#fff">..</span>
-            <span >  بتاريخ تسجيل </span> <span style="color:#fff">..</span> <span>${formatDate(foundInvoice?.registerDate)}</span>
+          <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px;font-family: cairo; margin:0 0 10px 0">
+            <span style="font-weight: 500;"> كود فاتورة  </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.invoiceCode} )</span ><span style="color:#fff">..</span>
+            <span style="font-weight: 500;">  بتاريخ تسجيل </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">${formatDate(foundInvoice?.registerDate)}</span>
           </div>
           
         </div>
@@ -607,23 +566,29 @@ export default function PrintInvoiceComponent() {
   
   
   
-              <table border="5" style="width:100%; table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center;">
+              <table border="5" style="width:100%; table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center; margin-top:30px">
                         <div class="table-container">
                <div >
             </div>
   
         <thead style="border-bottom: 5px solid black;">
                   <tr>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 5%;">م</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 20%;">الصنف قبل التحويل</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الوحدة</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكمية</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 20%;">الصنف بعد التحويل</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;"> الوحدة</th>
-                    <th style="padding: 8px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكمية</th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">م </div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">الصنف قبل التحويل</div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">الوحدة</div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">الكمية</div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   ">الصنف بعد التحويل</div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   "> الوحدة</div></th>
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+                <div style=" display:flex; justify-content: center; align-items: center;   "> الكمية</div></th>
                   </tr>
                 </thead>
-                <tbody>
           `);
 
     // Populate rows and calculate totals
@@ -640,14 +605,22 @@ export default function PrintInvoiceComponent() {
         totalUnitPrice2 += rowTotal2;
       }
       printWindow.document.write(`
-          <tr style="padding:5px; border-right: 2px solid black;">
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name ? row.name : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit ? row.unit : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity ? row.totalQuantity : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name2 ? row.name2 : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit2 ? row.unit2 : ""}</td>
-                <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity2 ? row.totalQuantity2 : ""}</td>
+<tbody style="border-bottom: 2px solid black;">
+<tr style="padding:5px; border-right: 2px solid black;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${index + 1}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.name ? row.name : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.unit ? row.unit : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.totalQuantity ? row.totalQuantity2 : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.name2 ? row.name2 : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.unit2 ? row.unit2 : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.totalQuantity2 ? row.totalQuantity2 : ""}</div></td>
 
                 </tr>
                 
@@ -659,11 +632,15 @@ export default function PrintInvoiceComponent() {
     });
     printWindow.document.write(`
 
-          <tr style="font-weight: 900; padding: 5px; border-top: 2px solid black; text-align: center;">
-          <td colspan="2" style="padding: 5px; border-right: 5px solid black; font-size: 18px;">
+            <tr style="font-weight: 900; padding: 5px; border-top: 2px solid black; ">
+          <td colspan="2" style="padding: 5px; border-right: 5px solid black; font-size: 16px;">
+          <div style=" display:flex; justify-content: center; align-items: center;   ">
           ملاحظات
+          </div>
           </td>
-          <td colspan="5" style="padding: 5px; border-right: 5px solid black; font-size: 16px;">
+          <td colspan="5" style="padding: 5px; border-right: 5px solid black; font-size: 14px;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${foundInvoice?.notes}
+          </div>
           </td>
 
         </tr>
@@ -673,7 +650,6 @@ export default function PrintInvoiceComponent() {
 
     // Close table body
     printWindow.document.write(`
-      </main>
               </tbody>
             </table>
           </div>
@@ -695,22 +671,22 @@ export default function PrintInvoiceComponent() {
 
 
     printWindow.document.write(`
-          <div style="display: flex; justify-content: space-between; direction: rtl; margin:10px 0 0 0 ">
+          <div style="display: flex; justify-content: space-between; direction: rtl; margin:20px 0 0 0 ;">
         
             <!-- First column: أمين العهدة -->
-            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
+            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; margin: 10px;">
               <span>التوقيع /</span>
               <span>أمين العهدة</span>
             </div>
         
             <!-- Second column: مراقب الجودة -->
-            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
+            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; margin: 10px;">
               <span>التوقيع /</span>
               <span>مراقب العهدة</span>
             </div>
         
             <!-- Third column: رئيس القسم المختص -->
-            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
+            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; margin: 10px;">
               <span>التوقيع /</span>
               <span>رئيس القسم المختص</span>
             </div>
@@ -719,7 +695,7 @@ export default function PrintInvoiceComponent() {
             <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
              <div>
              <span> يعتمد، </span>
-             <span style="color:#ffffff">.............</span>
+             <span style="color:#ffffff ">.............</span>
              </div>
              <div>
              <span>مديـر الــدار</span>
