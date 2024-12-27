@@ -42,6 +42,7 @@ export default function SideBar() {
   }
   else {
     reportsOptions.push(
+      { value: ' تقرير جرد مسعر', to: '/inventoryReport' },
       { value: ' تقرير معاملات الجهة', to: '/EntityTransactionReport' },
       { value: ' تقرير معاملات الصنف', to: '/ItemTransactionReport' },
       { value: 'تقرير حصر الفواتير ', to: '/FinancialTransactionsReport' },
