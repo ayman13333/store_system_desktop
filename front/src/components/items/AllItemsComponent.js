@@ -79,8 +79,8 @@ export default function AllItemsComponent() {
       cell: row => {
         let codeStr;
 
-        if (row?.code?.length > 18) {
-          codeStr = row.code.substring(0, 18) + '...';
+        if (row?.code?.length > 10) {
+          codeStr = row.code.substring(0, 10) + '...';
         }
         else codeStr = row.code;
 
@@ -99,8 +99,8 @@ export default function AllItemsComponent() {
       cell: row => {
         let codeStr;
 
-        if (row?.name?.length > 18) {
-          codeStr = row?.name.substring(0, 18) + '...';
+        if (row?.name?.length > 10) {
+          codeStr = row?.name.substring(0, 10) + '...';
         }
         else codeStr = row?.name;
         return (
@@ -115,10 +115,10 @@ export default function AllItemsComponent() {
     },
     {
       name: 'الحد الحرج',
-      selector: row => row.criticalValue,
+      selector: row => parseFloat(row?.criticalValue).toFixed(2),
       sortable: true
     },
-    { name: 'الوحدة', selector: row => row.unit, sortable: true },
+    { name: 'الوحدة', selector: row => row?.unit, sortable: true },
     {
       name: 'الصلاحية',
       cell: (row) => {

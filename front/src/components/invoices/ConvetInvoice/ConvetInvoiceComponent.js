@@ -73,7 +73,8 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     totalQuantity: 0,
                     originalQuantity: el?.totalQuantity,
                     unitPrice: parseFloat(el.unitPrice.toFixed(2)),
-                    expirationDatesArr: []
+                    expirationDatesArr: [],
+                    originalExpirationDatesArr:el?.expirationDatesArr
                 }
             })
             setCategoriesToConvert(categoriesForSelect);
@@ -399,6 +400,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                 showExpirationDatesModal && <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
+                                    type={'pill'}
                                 />
                             }
 
@@ -456,11 +458,11 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                             <tr>
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
-                                {
+                                {/* {
                                     type == null && <th className="text-center" scope="col" style={{
                                         whiteSpace: "nowrap"
                                     }}> تاريخ انتهاء الصلاحية </th>
-                                }
+                                } */}
 
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
@@ -504,7 +506,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                 )
                             }
 
-                            {
+                            {/* {
                                 showExpirationDatesModal && <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
@@ -512,7 +514,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                 // type={'payment'}
 
                                 />
-                            }
+                            } */}
 
                             {
                                 showAddQuantityModalAfter && <AddQuantityModal
