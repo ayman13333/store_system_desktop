@@ -457,6 +457,7 @@ ipcMain.handle('addCategory', async (event, data) => {
     }else{
       serialNumber = 1;
     }
+    
 
     const foundCode = await Category.findOne({ code });
     if (foundCode !== null) {
