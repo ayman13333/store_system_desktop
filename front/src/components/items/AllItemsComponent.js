@@ -79,8 +79,8 @@ export default function AllItemsComponent() {
       cell: row => {
         let codeStr;
 
-        if (row?.code?.length > 18) {
-          codeStr = row.code.substring(0, 18) + '...';
+        if (row?.code?.length > 10) {
+          codeStr = row.code.substring(0, 10) + '...';
         }
         else codeStr = row.code;
 
@@ -99,8 +99,8 @@ export default function AllItemsComponent() {
       cell: row => {
         let codeStr;
 
-        if (row?.name?.length > 18) {
-          codeStr = row?.name.substring(0, 18) + '...';
+        if (row?.name?.length > 10) {
+          codeStr = row?.name.substring(0, 10) + '...';
         }
         else codeStr = row?.name;
         return (
