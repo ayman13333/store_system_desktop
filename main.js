@@ -120,16 +120,22 @@ const setupCronJob = async() => {
        let newNotification=new NotificationModel();
     if (yellowCount == category?.expirationDatesArr?.length){
        newNotification.title=' الصنف '+`${category?.name} `+'منتهي الصلاحية';
+
+       newNotification.categoryID=category?._id;
        await newNotification.save();
     } 
     else if(yellowCount>0){
       newNotification.title=' الصنف'+`${category?.name} `+'به كميات منتهية الصلاحية';
+
+      newNotification.categoryID=category?._id;
       await newNotification.save();
     }
 
 
     if(category.criticalValue >= category.totalQuantity){
       newNotification.title=' كمية الصنف '+`${category?.name} `+'اقل من الحد الحرج';
+
+      newNotification.categoryID=category?._id;
       await newNotification.save();
     }
 
@@ -142,7 +148,7 @@ const setupCronJob = async() => {
 app.whenReady().then(async () => {
   await connectDB();
   createWindow();
- await setupCronJob();
+ 
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -1246,7 +1252,18 @@ ipcMain.handle('searchForInvoiceByCode', async (event, data) => {
 // get all notifications(today)
 ipcMain.handle('getNotifications',async(event, data)=>{
   try {
-    let notifications=await NotificationModel.find().lean();
+    let notifications=await NotificationModel.find().populate('categoryID').lean();
+
+    notifications=notifications?.map(el=>{
+      return{
+        ...el,
+        _id:el?._id?.toString(),
+        categoryID:{
+          ...el?.categoryID,
+          _id:el?.categoryID?._id?.toString()
+        }
+      }
+    })
 
     return{
       success:true,
@@ -1259,6 +1276,19 @@ ipcMain.handle('getNotifications',async(event, data)=>{
     }
   }
 });
+
+// post new notification
+ipcMain.handle('postNewNotifications',async(event, data)=>{
+  try {
+    await setupCronJob();
+
+    return{
+      success:true
+    }
+  } catch (error) {
+    
+  }
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

@@ -32,6 +32,10 @@ export default function NavBar() {
     // const location = useLocation();
     // console.log('location',location.pathname);
 
+    const handleClick=(notification)=>{
+      console.log('notification',notification);
+    }
+
   return (
     <div className='d-flex justify-content-end p-2' style={{backgroundColor: 'rgb(74 166 255)',color:'white',height:'70px'}}>
         {/* <Button  onClick={handleButtonClick}> */}
@@ -56,7 +60,7 @@ export default function NavBar() {
               {/* List of Notifications */}
               <ListGroup>
                 {notifications.map((notification, index) => (
-                  <ListGroup.Item className='notification' key={index} style={{fontWeight:'bold',cursor:'pointer'}}>
+                  <ListGroup.Item onClick={()=>handleClick(notification)} className='notification' key={index} style={{fontWeight:'bold',cursor:'pointer'}}>
                     {notification?.title}
                     </ListGroup.Item>
                 ))}

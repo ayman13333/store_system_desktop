@@ -24,6 +24,8 @@ contextBridge.exposeInMainWorld('electron', {
   deleteInvoice:(data)=>ipcRenderer.invoke('deleteInvoice',data),
   // الاشعارات   
   getNotifications:(data)=>ipcRenderer.invoke('getNotifications',data),
+  // postNewNotifications
+  postNewNotifications:(data)=>ipcRenderer.invoke('postNewNotifications',data),
 });
 
 
