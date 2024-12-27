@@ -1,11 +1,16 @@
 import { ligthBlue, orange, red, yellow } from "../../Constants"
 
 export default function AlarmComponent() {
+
+    const loggedUser=JSON.parse(localStorage.getItem('user'));
     let alarms=[
         {value:red,text:' صنف منتهي الصلاحية ' },
-        {value:yellow,text:'الكمية اقل من او تساوي الحد الحرج'},    
-        {value:ligthBlue,text:'صنف تم التعديل عليه'}
+        {value:yellow,text:'الكمية اقل من او تساوي الحد الحرج'} 
     ]
+
+    if(loggedUser?.type!='storekeeper') alarms.push({value:ligthBlue,text:'صنف تم التعديل عليه'});
+    
+
     return (
         <div className="d-flex gap-5 my-4">
             {
