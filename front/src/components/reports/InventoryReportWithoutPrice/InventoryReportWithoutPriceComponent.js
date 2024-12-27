@@ -58,7 +58,7 @@ export default function InventoryReportWithoutPriceComponent() {
       minwidth: "50px",
       cell: (row, index) => (
         <div style={{ textAlign: 'center', width: '100%' , maxWidth:"50px" }}>
-          {index + 1} {/* Display index starting from 1 */}
+          {row?.serialNumber} {/* Display index starting from 1 */}
         </div>
       ),
     },
@@ -270,7 +270,7 @@ export default function InventoryReportWithoutPriceComponent() {
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
           <td style="min-width: 50px;  padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all; background:#e9ecef;">
-          <div style=" display:flex; justify-content: center; align-items: center; ">${index+1}</div></td>
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.serialNumber}</div></td>
           <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${row.code}</div></td>
           <td style="min-width: 200px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
