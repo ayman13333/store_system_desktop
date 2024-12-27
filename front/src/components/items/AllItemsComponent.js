@@ -115,10 +115,10 @@ export default function AllItemsComponent() {
     },
     {
       name: 'الحد الحرج',
-      selector: row => row.criticalValue,
+      selector: row => parseFloat(row?.criticalValue).toFixed(2),
       sortable: true
     },
-    { name: 'الوحدة', selector: row => row.unit, sortable: true },
+    { name: 'الوحدة', selector: row => row?.unit, sortable: true },
     {
       name: 'الصلاحية',
       cell: (row) => {
