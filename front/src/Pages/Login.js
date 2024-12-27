@@ -25,12 +25,16 @@ export default function Login({setIsLogin}) {
             password : password.trim()
         }
         setIsLoading(true);
+        await window?.electron?.postNewNotifications();
+
         let result = await window?.electron?.login(data);
+
         setIsLoading(false);
 
         // localStorage.setItem('type','admin');
 
     //  return   navigate('/allitems');
+
 
         if(result?.success){
             localStorage.setItem('type',result?.user.type);
