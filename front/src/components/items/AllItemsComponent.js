@@ -72,6 +72,7 @@ export default function AllItemsComponent() {
   //  A0908B
 
   let columns = [
+    { name: 'م', selector: row => row?.serialNumber, sortable: true },
     {
       name: 'الكود',
       sortable: true,
