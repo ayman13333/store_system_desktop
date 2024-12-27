@@ -17,12 +17,22 @@ export default function SideBar() {
     { value: 'فاتورة صرف', to: '/paymentInvoice' },
     { value: 'فاتورة تحويل', to: '/convertInvoice' }
 
-  ];
+  ]; 
+
+  // const reportsOptions=[
+  //   { value: ' تقرير جرد ', to: '/InventoryReportWithoutPrice' },
+  //   { value: ' تقرير جرد مسعر', to: '/inventoryReport' },
+  //   { value: ' تقرير معاملات الجهة', to: '/EntityTransactionReport' },
+  //   { value: ' تقرير معاملات الصنف', to: '/ItemTransactionReport' },
+  //   { value: 'تقرير حصر الفواتير ', to: '/FinancialTransactionsReport' },
+  // ]; 
+
+
+
+  // const type = localStorage.getItem('type');
 
   const loggedUser = JSON.parse(localStorage.getItem('user'));
 
-  // worker
-  // storekeeper
   let reportsOptions = [
     { value: ' تقرير جرد ', to: '/InventoryReportWithoutPrice' },
   ];
@@ -38,14 +48,11 @@ export default function SideBar() {
     )
   }
 
-  // const type = localStorage.getItem('type');
-
-
 
   return (
-    <div style={{ width: '20%', backgroundColor: '#212529', color: 'white' }}>
+    <div style={{ width: '20%', backgroundColor: 'rgb(74 166 255)', color: 'white' }}>
       <div className='p-2 sidebar'>
-        <h4 className='my-3 text-center'> لوحة التحكم </h4>
+        <h4 className='my-3 text-center'> القائمة</h4>
 
         <p className='text-right my-3'>   <BsFillFilePersonFill />  {localStorage.getItem('email')} </p>
 
@@ -57,20 +64,16 @@ export default function SideBar() {
 
         {
           loggedUser?.type != "storekeeper" ? <>
-
-            {
-              loggedUser?.type == "admin" && <NavLink className='link my-3' to={'/users'}>
-                <span style={{ display: "flex", gap: "10px" }}>
-                  <div>
-                    <BsGlobeCentralSouthAsia />
-                  </div>
-                  <div>
-                    ادارة الموظفين
-                  </div>
-                </span>
-              </NavLink>
-            }
-
+            <NavLink className='link my-3' to={'/users'}>
+              <span style={{ display: "flex", gap: "10px" }}>
+                <div>
+                  <BsGlobeCentralSouthAsia />
+                </div>
+                <div>
+                  ادارة الموظفين
+                </div>
+              </span>
+            </NavLink>
 
             <NavLink className='link my-3' to={'/guests'}>
               <span style={{ display: "flex", gap: "10px" }}>
@@ -86,10 +89,10 @@ export default function SideBar() {
             <NavLink className='link my-3' to={'/print'}>
               <span style={{ display: "flex", gap: "10px" }}>
                 <div>
-                  <FaPrint />
+                <FaPrint />
                 </div>
                 <div>
-                  طباعة فاتورة
+                   طباعة فاتورة
                 </div>
               </span>
             </NavLink>
@@ -113,7 +116,7 @@ export default function SideBar() {
               />
             </Nav.Item>
 
-
+         
           </>
           :
           <>
