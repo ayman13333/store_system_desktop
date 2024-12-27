@@ -39,7 +39,7 @@
   font-size: medium;
   display: block;
   text-align: start;
-  transition: 0.1s ease-in-out;
+  transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out, border-radius 0.3s ease-in-out;
 }
 
 .dashboard{

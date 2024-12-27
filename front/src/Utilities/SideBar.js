@@ -43,9 +43,9 @@ export default function SideBar() {
 
 
   return (
-    <div style={{ width: '20%', backgroundColor: '#212529', color: 'white' }}>
-      <div className='p-2 sidebar'>
-        <h4 className='my-3 text-center'> لوحة التحكم </h4>
+    <div style={{ width: '20%', backgroundColor: 'rgb(74 166 255)', color: 'white' }}>
+    <div className='p-2 sidebar'>
+      <h4 className='my-3 text-center'> القائمة</h4>
 
         <p className='text-right my-3'>   <BsFillFilePersonFill />  {localStorage.getItem('email')} </p>
 
