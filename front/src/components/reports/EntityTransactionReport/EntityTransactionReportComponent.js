@@ -142,8 +142,9 @@ export default function EntityTransactionReportComponent() {
     {
       name: 'م', // Row index column
       minwidth: "30px",
+      width:"150px",
       cell: (row, index) => (
-        <div style={{ textAlign: 'center', width: '100%' }}>
+        <div style={{ textAlign: 'center', width: '100%'  }}>
           {index + 1} {/* Display index starting from 1 */}
         </div>
       ),
@@ -215,7 +216,7 @@ export default function EntityTransactionReportComponent() {
     {
       name: 'استعراض',
       width: "130px",
-      cell: row => <div style={{ cursor: "pointer" }}><FaEye size={24} onClick={() => {
+      cell: row => <div style={{ cursor: "pointer", color:"#ff0000" }}><FaEye size={24} onClick={() => {
         navigate('/print', { state: row })
       }} /></div>,
     },
@@ -234,7 +235,7 @@ export default function EntityTransactionReportComponent() {
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
         width: "100%",
-        backgroundColor:'#C4BFBE',
+        backgroundColor:'#e9ecef',
       },
     },
     cells: {
@@ -249,7 +250,7 @@ export default function EntityTransactionReportComponent() {
         textAlign: 'center',
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
-        borderBottom: '1px solid black',
+        borderBottom: '1px solid #c1c1c1',
         width: "100%",
       },
     },
@@ -313,12 +314,6 @@ export default function EntityTransactionReportComponent() {
           font-family: Arial, sans-serif; 
           font-size: 12px; 
           direction: rtl; 
-          margin: 0;
-          padding: 0;
-        }
-        @page { 
-          size: A4; /* Set page size to A4 */
-          margin: 20mm; /* Optional margin for A4 */
         }
         table { 
           width: 100%; 
@@ -330,43 +325,50 @@ export default function EntityTransactionReportComponent() {
           text-align: right; 
           border: 1px solid #ddd; 
         }
-        th {
-          font-weight: bold; /* Make the table header bold */
+        th { 
+          font-size: 18px; 
+          font-weight: bold; 
+          background-color: #f1f1f1; 
+          }
+          td { 
+            font-size: 16px; 
+            font-weight: 500; 
         }
-        td {
-          font-weight: normal;
-        }
-        table, th, td {
-          border: 5px solid black; /* Set the outer border to 5px */
-        }
-        @page {
-          direction: rtl;
+        @page { 
+          margin: 5mm; 
+          direction: rtl; 
+      size: A4 portrait ; 
+
         }
       }
     `);
 
+
     printWindow.document.write('</style></head><body>');
-    printWindow.document.write(`
-         <main style="margin: 10px; padding: 20px; border: 5px solid black; box-sizing: border-box; ">
-
-`);
 
 
-    printWindow.document.write(`
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-        <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
-        <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
-          <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
-          <div style=" font-weight: 900;">جاردينيا</div>
-        </div>
-      </div>
-    `);
+
+   
+             printWindow.document.write(`
+               <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+               ">
+               <div>دار ضباط الحرب الكيميائية</div>
+               <div>جاردينيا</div>
+               </div>
+               
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+                 ">
+                 <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+               </div>
+               </div>
+             `);
 
 
 
     // Print the table data with RTL column order
-    printWindow.document.write(`<div>
-        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800 direction: rtl;">
+    printWindow.document.write(`<div style="margin:0 0 30px 0">
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:18px; font-weight:800 direction: rtl;">
        <span>تقرير معامله جهة : </span>
        <span> ${report?.categoryObject[0]?.supplierID.fullName} </span>  </h2></div>`);
     printWindow.document.write('<div class="table-container">');
@@ -374,35 +376,46 @@ export default function EntityTransactionReportComponent() {
 
     // Define the column headers in RTL order (adjust the headers as per your table structure)
     printWindow.document.write(`
-      <thead style="border-bottom: 5px solid black;">
+      <thead style="border-bottom: 5px solid black; background:#e9ecef; ">
    <tr>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%; word-wrap: break-word;">م</th>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">كود الفاتوره</th>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">${numberColumnHeader}</th>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">نوع الفاتورة</th>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">تاريخ الفاتورة</th>
-  <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 18%; word-wrap: break-word;">تاريخ التسجيل</th>
+  <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 7%; word-wrap: break-word;">
+   <div style=" display:flex; justify-content: center; align-items: center; ">م</div></th>
+  <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 35%; word-wrap: break-word;">
+   <div style=" display:flex; justify-content: center; align-items: center; ">كود الفاتوره</div></th>
+  <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 35%; word-wrap: break-word;">
+   <div style=" display:flex; justify-content: center; align-items: center; ">${numberColumnHeader}</div></th>
+  <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 15%; word-wrap: break-word;">
+   <div style=" display:flex; justify-content: center; align-items: center; ">نوع الفاتورة</div></th>
+  <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 18%; word-wrap: break-word;">
+   <div style=" display:flex; justify-content: center; align-items: center; ">تاريخ الفاتورة</div></th>
+
 </tr>
 
-      </thead><tbody>`);
+      </thead>`);
 
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
     report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
+        <tbody style="border-bottom: 2px solid black;">
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index + 1}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.invoiceCode}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.serialNumber}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">
+          <td style="padding:3px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${index + 1}</div></td>
+          <td style="padding:3px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.invoiceCode}</div></td>
+          <td style="padding:3px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.serialNumber}</div></td>
+          <td style="padding:3px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">
             ${
               row?.type === "payment" ? "صرف" :
               row?.type === "supply" ? "توريد" :
               row?.type === "convert" ? "تحويل" :
               ""
             }
+            </div>
           </td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.supplyDate)}</td>
-          <td style="padding:3px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.registerDate)}</td>
+          <td style="padding:3px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${formatDate(row?.supplyDate)}</div></td>
         </tr>
       `);
     });
@@ -415,61 +428,72 @@ export default function EntityTransactionReportComponent() {
           border-top: 2px solid black;
           text-align: center;
         ">
-          <td colspan="7" style="
+          <td colspan="2" style="
             padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
+            font-size: 16px;
+            font-weight: 700;
             border-right: 5px solid black;
           ">
-            <span>المجموع الكلي : </span>
+          <div style=" display:flex; justify-content: center; align-items: center; ">
+            <span>المجموع الكلي</span>
+            </div>
+            </td>
+            <td colspan="3" style="
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            border-right: 5px solid black;
+          ">
+          <div style=" display:flex; justify-content: center; align-items: center; ">
             <span>${formattedTotalInvoicesPrice}</span>
-            <span> جنية </span>
-          </td>
+            <span style="margin:0 2px"> جنية </span>
+            </td>
+            </div>
         </tr>
       `);
     }
     
-    if (selectedValue == '3') {
-      printWindow.document.write(`
-        <tr style="
-          font-weight: bold;
-          padding: 5px;
-          border-top: 2px solid black;
-          text-align: center;
-        ">
-          <td colspan="7" style="
-            padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
-            border-right: 5px solid black;
-          ">
-            <span>اجمالي فواتير التحويل  ( التوريد ) :  </span>
-            <span>${totalInvoicesPriceForConvert2}</span>
-            <span> جنية </span>
-          </td>
-        </tr>
-      `);
-      printWindow.document.write(`
-        <tr style="
-          font-weight: bold;
-          padding: 5px;
-          border-top: 2px solid black;
-          text-align: center;
-        ">
-          <td colspan="7" style="
-            padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
-            border-right: 5px solid black;
-          ">
-            <span>اجمالي فواتير التحويل  ( الصرف ) :  </span>
-            <span>${totalInvoicesPriceForConvert1}</span>
-            <span> جنية </span>
-          </td>
-        </tr>
-      `);
-    }
-    printWindow.document.write('</main></tbody></table>');
+    // if (selectedValue == '3') {
+    //   printWindow.document.write(`
+    //     <tr style="
+    //       font-weight: bold;
+    //       padding: 5px;
+    //       border-top: 2px solid black;
+    //       text-align: center;
+    //     ">
+    //       <td colspan="7" style="
+    //         padding: 10px;
+    //         font-size: 28px;
+    //         font-weight: 900;
+    //         border-right: 5px solid black;
+    //       ">
+    //         <span>اجمالي فواتير التحويل  ( التوريد ) :  </span>
+    //         <span>${totalInvoicesPriceForConvert2}</span>
+    //         <span> جنية </span>
+    //       </td>
+    //     </tr>
+    //   `);
+    //   printWindow.document.write(`
+    //     <tr style="
+    //       font-weight: bold;
+    //       padding: 5px;
+    //       border-top: 2px solid black;
+    //       text-align: center;
+    //     ">
+    //       <td colspan="7" style="
+    //         padding: 10px;
+    //         font-size: 28px;
+    //         font-weight: 900;
+    //         border-right: 5px solid black;
+    //       ">
+    //         <span>اجمالي فواتير التحويل  ( الصرف ) :  </span>
+    //         <span>${totalInvoicesPriceForConvert1}</span>
+    //         <span> جنية </span>
+    //       </td>
+    //     </tr>
+    //   `);
+    // }
+    printWindow.document.write('</tbody></table>');
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
 
@@ -496,7 +520,7 @@ marginBottom:"20px"
 <div><h4>الوقت : {timePart}</h4></div>
       </div> */}
 
-      <h1 style={{color:'#106ebe'}}>تقرير معاملات الجهة</h1>
+      <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"365px" }}>تقرير معاملات الجهة</h1>
 
       <br />
       {/* Select Inputs */}
@@ -603,7 +627,7 @@ marginBottom:"20px"
   </div>
 </div>}
 
-  {selectedValue == '3' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
+  {/* {selectedValue == '3' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
   display: "flex",
   flexDirection:'row',
   justifyContent: "space-between",
@@ -652,7 +676,7 @@ marginBottom:"20px"
     <span>جنيه </span>
   </div>
   </div>
-</div>}
+</div>} */}
 
     </div>
   );

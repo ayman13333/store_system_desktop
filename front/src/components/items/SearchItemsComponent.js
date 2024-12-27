@@ -2,6 +2,7 @@ import { useState } from 'react';
 import FormatDate from '../../Utilities/FormatDate';
 import { BsBackspaceFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
+import { FiRefreshCcw } from "react-icons/fi";
 
 export default function SearchItemsComponent({setCategories,setIsLoading,originalCategories}) {
     const [searchType, setSearchType] = useState('');
@@ -78,7 +79,7 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
 
                 <button onClick={() => search()} className='btn btn-success'> بحث </button>
 
-                <button onClick={() => cancelFilter()} className='btn btn-danger customRed' > refresh  </button>
+                <button onClick={() => cancelFilter()} className='btn btn-danger' style={{width: '80px'}} > <FiRefreshCcw size={'24px'}/>   </button>
 
             </div>
 

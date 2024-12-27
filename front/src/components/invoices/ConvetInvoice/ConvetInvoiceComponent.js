@@ -219,7 +219,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
         <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
             // overflowX:'hidden'
         }}>
-           {type==null && <h1>  فاتورة التحويل   {isLoading && <Spinner />} </h1>}
+           {type==null && <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"265px" }}>  فاتورة التحويل   {isLoading && <Spinner />} </h1>}
 
             <div className="form-group">
                 <label className="my-2"> نوع الفاتورة </label>
@@ -396,10 +396,9 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                             }
 
                             {
-                                showExpirationDatesModal && showAddQuantityModalBefore && <ExpirationDatesModal
+                                showExpirationDatesModal && <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
-                                    type={'pill'}
                                 />
                             }
 

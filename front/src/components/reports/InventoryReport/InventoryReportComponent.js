@@ -145,7 +145,7 @@ export default function InventoryReportComponent() {
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
         width: "100%",
-        backgroundColor:'#C4BFBE',
+        backgroundColor:'#e9ecef',
       },
     },
     cells: {
@@ -191,12 +191,6 @@ export default function InventoryReportComponent() {
           font-family: Arial, sans-serif; 
           font-size: 12px; 
           direction: rtl; 
-          margin: 0;
-          padding: 0;
-        }
-        @page { 
-          size: A4; /* Set page size to A4 */
-          margin: 20mm; /* Optional margin for A4 */
         }
         table { 
           width: 100%; 
@@ -208,44 +202,64 @@ export default function InventoryReportComponent() {
           text-align: right; 
           border: 1px solid #ddd; 
         }
-        th {
-          font-weight: bold; /* Make the table header bold */
+        th { 
+          font-size: 18px; 
+          font-weight: bold; 
+          background-color: #f1f1f1; 
+          }
+          td { 
+            font-size: 16px; 
+            font-weight: 500; 
         }
-        td {
-          font-weight: normal;
-        }
-        table, th, td {
-          border: 5px solid black; /* Set the outer border to 5px */
-        }
-        @page {
-          direction: rtl;
+        @page { 
+          margin: 5mm; 
+          direction: rtl; 
+      size: A4 portrait ; 
+
         }
       }
     `);
+
   
     printWindow.document.write('</style></head><body>');
   
+    const today = new Date();
 
-          printWindow.document.write(`
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-              <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
-              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
-                <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
-                <div style=" font-weight: 900;">جاردينيا</div>
-              </div>
-            </div>
-          `);
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
   
-          printWindow.document.write(`
-            <main style="  margin: 10px; 
-            padding: 20px;
-            border: 5px solid black;
-            box-sizing: border-box; ">
-   `);
+      return `${day}/${month}/${year}`;
+    };
+    
+             printWindow.document.write(`
+               <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+               ">
+               <div>دار ضباط الحرب الكيميائية</div>
+               <div>جاردينيا</div>
+         <div  style="display: flex; justify-content:center; align-items: center;">
+         <div style="font-weight: 500; font-size: 14px;">  تاريخ الجرد </div> <span style="color:#fff">..</span> <div style:"font-weight: 300; font-size: 11px; ">${formatDate(today)}</div>
+         </div>
+        
+         
+               </div>
+               
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+                 ">
+                 <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+               </div>
+               </div>
+             `);
+         
+  
+
     // Title
     printWindow.document.write(`
-      <div>
-        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
+      <div style="margin:0 0 30px 0">
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:18px; font-weight:800">
             تقرير جرد مخزن الأغذية و المشروبات ( مسعر )
         </h2>
       </div>
@@ -255,15 +269,22 @@ export default function InventoryReportComponent() {
     printWindow.document.write(`
       <div class="table-container">
         <table border="5" style="width:100%;  table-layout: fixed; border-collapse: collapse; direction: rtl; text-align: center;">
-          <thead style="border-bottom: 5px solid black;">
+          <thead style="border-bottom: 5px solid black; background:#e9ecef;">
             <tr>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 5%; ">م</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكود</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 30%;">الصنف</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الوحدة</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 10%;">الكمية</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 15%;">سعر الوحدة</th>
-              <th style="padding: 5px; font-size: 24px; font-weight: 800; border-right: 5px solid black; width: 15%;">الاجمالي</th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 5%; ">
+              <div style=" display:flex; justify-content: center; align-items: center; ">م</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 10%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">الكود</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 30%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">الصنف</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 10%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">الوحدة</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 10%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">الكمية</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 15%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">سعر الوحدة</div></th>
+              <th style="padding: 5px; font-size: 16px; font-weight: 700; border-right: 5px solid black; width: 15%;">
+              <div style=" display:flex; justify-content: center; align-items: center; ">الاجمالي</div></th>
             </tr>
           </thead>
           <tbody>
@@ -278,30 +299,64 @@ export default function InventoryReportComponent() {
   
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
-          <td style="min-width: 40px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index+1}</td>
-          <td style="min-width: 60px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.code}</td>
-          <td style="min-width: 200px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.name}</td>
-          <td style="min-width: 70px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unit}</td>
-          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.totalQuantity}</td>
-          <td style="min-width: 80px;  padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row.unitPrice.toFixed(2)}</td>
-          <td style="min-width: 100px; padding: 5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${rowTotal.toFixed(2)}</td>
+          <td style="min-width: 40px;  padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${index+1}</div></td>
+          <td style="min-width: 60px;  padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row.code}</div></td>
+          <td style="min-width: 200px; padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row.name}</div></td>
+          <td style="min-width: 70px;  padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row.unit}</div></td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row.totalQuantity}
+          </div></td>
+          <td style="min-width: 80px;  padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row.unitPrice.toFixed(2)}</div></td>
+          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${rowTotal.toFixed(2)}</div></td>
         </tr>
       `);
     });
   
     // Close table body
     printWindow.document.write(`
-          </main>
+   
           </tbody>
         </table>
       </div>
     `);
   
     // Footer with total price
+
     printWindow.document.write(`
-      <div style="display: flex; justify-content: center; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; margin-top: 20px;">
-        <div><h2 style="margin: 0;">إجمالي سعر الأصناف بالمخزن : ${totalUnitPrice.toFixed(2)} جنيه</h2></div>
-      </div>
+      <tr style="
+        font-weight: bold;
+        padding: 5px;
+        border-top: 2px solid black;
+        text-align: center;
+      ">
+        <td colspan="2" style="
+          padding: 10px;
+          font-size: 16px;
+          font-weight: 700;
+          border-right: 5px solid black;
+        ">
+        <div style=" display:flex; justify-content: center; align-items: center; ">
+          <span> إجمالي سعر الأصناف بالمخزن</span>
+          </div>
+          </td>
+          <td colspan="5" style="
+          padding: 10px;
+          font-size: 14px;
+          font-weight: 500;
+          border-right: 5px solid black;
+        ">
+        <div style=" display:flex; justify-content: center; align-items: center; ">
+          <span>${totalUnitPrice.toFixed(2)}</span>
+          <span style="margin:0 4px;"> جنية </span>
+          </td>
+          </div>
+      </tr>
     `);
   
     // Close HTML
@@ -328,8 +383,15 @@ display: "flex",
 <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
 <div><h4>الوقت : {timePart}</h4></div>
       </div> */}
-        <h1>تقرير جرد مخزن الأغذية و المشروبات ( مسعر )</h1>
-  
+      <div style={{display:"flex", justifyContent:"space-between"}}>
+        <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"755px" }}>تقرير جرد مخزن الأغذية و المشروبات ( مسعر )</h1>
+        <img src={logo} alt="Logo" style={{ width: "130px", height: "90px" }} />
+      </div>
+
+
+
+
+
         <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>

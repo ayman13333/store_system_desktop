@@ -178,7 +178,7 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
             // overflowX:'hidden'
         }}>
             {
-                type == null && <h1>  فاتورة توريد   {isLoading && <Spinner />} </h1>
+                type == null && <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"222px"}} >  فاتورة توريد   {isLoading && <Spinner />} </h1>
             }
 
             <div className="form-group">

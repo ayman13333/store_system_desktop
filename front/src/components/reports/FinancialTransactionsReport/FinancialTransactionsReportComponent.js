@@ -5,6 +5,7 @@ import { FaEye } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import logo from '../InventoryReportWithoutPrice/logo.jpg'
+import { FiRefreshCcw } from "react-icons/fi";
 
 
 export default function FinancialTransactionsReportComponent() {
@@ -161,6 +162,7 @@ export default function FinancialTransactionsReportComponent() {
       {
         name: 'م', // Row index column
         minwidth: "30px",
+        width:"150px",
         cell: (row, index) => (
           <div style={{ textAlign: 'center', width: '100%' }}>
             {index + 1} {/* Display index starting from 1 */}
@@ -235,7 +237,7 @@ export default function FinancialTransactionsReportComponent() {
       {
         name: 'استعراض',
         width:"130px",
-        cell: row =>  <div style={{cursor:"pointer"}}><FaEye size={24} onClick={()=>{
+        cell: row =>  <div style={{cursor:"pointer" ,  color:"#ff0000"}}><FaEye size={24} onClick={()=>{
           navigate('/print',{state:row})
         }} /></div>,
       },
@@ -254,7 +256,7 @@ export default function FinancialTransactionsReportComponent() {
           borderRight: '2px solid black', // Border for table cells
           borderLeft: '2px solid black',  // Border for table cells
           width: "100%",
-          backgroundColor:'#C4BFBE',
+          backgroundColor:'#e9ecef',
         },
       },
       cells: {
@@ -269,7 +271,7 @@ export default function FinancialTransactionsReportComponent() {
           textAlign: 'center',
           borderRight: '2px solid black', // Border for table cells
           borderLeft: '2px solid black',  // Border for table cells
-          borderBottom: '1px solid black',
+          borderBottom: '1px solid #c1c1c1',
           width: "100%",
         },
       },
@@ -356,12 +358,6 @@ export default function FinancialTransactionsReportComponent() {
           font-family: Arial, sans-serif; 
           font-size: 12px; 
           direction: rtl; 
-          margin: 0;
-          padding: 0;
-        }
-        @page { 
-          size: A4; /* Set page size to A4 */
-          margin: 20mm; /* Optional margin for A4 */
         }
         table { 
           width: 100%; 
@@ -373,17 +369,20 @@ export default function FinancialTransactionsReportComponent() {
           text-align: right; 
           border: 1px solid #ddd; 
         }
-        th {
-          font-weight: bold; /* Make the table header bold */
+        th { 
+          font-size: 18px; 
+          font-weight: bold; 
+          background-color: #f1f1f1; 
+          }
+          td { 
+            font-size: 16px; 
+            font-weight: 500; 
         }
-        td {
-          font-weight: normal;
-        }
-        table, th, td {
-          border: 5px solid black; /* Set the outer border to 5px */
-        }
-        @page {
-          direction: rtl;
+        @page { 
+          margin: 5mm; 
+          direction: rtl; 
+      size: A4 portrait ; 
+
         }
       }
     `);
@@ -395,59 +394,74 @@ export default function FinancialTransactionsReportComponent() {
     // printWindow.document.write(`<div><h2 style="margin: 0;">التاريخ: ${datePart.year}-${datePart.month}-${datePart.day}</h2></div>`);
     // printWindow.document.write('</div>');
   
-    printWindow.document.write(`
-         <main style="margin: 10px; padding: 20px; border: 5px solid black; box-sizing: border-box; ">
 
-`);
 
-    printWindow.document.write(`
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-        <img src=${logo} alt="Logo" style="width: 130px; height: 90px;">
-        <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 28px; font-weight: 900; margin-left: 20px; text-decoration: underline;">
-          <div style=" font-weight: 900;">دار ضباط الحرب الكيميائية</div>
-          <div style=" font-weight: 900;">جاردينيا</div>
-        </div>
-      </div>
-    `);
+             printWindow.document.write(`
+               <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+               ">
+               <div>دار ضباط الحرب الكيميائية</div>
+               <div>جاردينيا</div>
+               </div>
+               
+               <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+                 ">
+                 <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+               </div>
+               </div>
+             `);
 
     // Print the table data with RTL column order
-    printWindow.document.write(`<div>
-        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:32px; font-weight:800">
+    printWindow.document.write(`<div style="margin:0 0 30px 0">
+        <h2 style="text-align: center; text-decoration: underline; text-underline-offset: 7px; font-size:20px; font-weight:800">
       تقرير حصر الفواتير   </h2></div>`);
     printWindow.document.write('<div class="table-container">');
-    printWindow.document.write('<table border="5" style="width:100%; table-layout: fixed; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
+    printWindow.document.write('<table border="5" style="width:100%;  table-layout: fixed; padding:20px; border-collapse: collapse; direction: rtl;  text-align: center;">');
   
     // Define the column headers in RTL order (adjust the headers as per your table structure)
     printWindow.document.write(`
-      <thead style="border-bottom: 5px solid black;">
+      <thead style="border-bottom: 5px solid black; background:#e9ecef; ">
       <tr>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:8%;" >م</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;" >كود الفاتوره</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">${numberColumnHeader}</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">نوع الفاتورة</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:17%;">${nameColumnHeader}</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">تاريخ الفاتورة</th>
-      <th style ="padding:8px; font-size:24px; font-weight:800;  border-right: 5px solid black; width:15%;">تاريخ التسجيل</th>
-      </tr></thead><tbody>`);
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:7%;" >
+      <div style=" display:flex; justify-content: center; align-items: center; ">م</div></th>
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:30%;" >
+      <div style=" display:flex; justify-content: center; align-items: center; ">كود الفاتوره</div></th>
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:30%;">
+      <div style=" display:flex; justify-content: center; align-items: center; ">${numberColumnHeader}</div></th>
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:15%;">
+      <div style=" display:flex; justify-content: center; align-items: center; ">نوع الفاتورة</div></th>
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:25%;">
+      <div style=" display:flex; justify-content: center; align-items: center; ">${nameColumnHeader}</div></th>
+      <th style ="padding:8px; font-size:16px; font-weight:700;  border-right: 5px solid black; width:18%;">
+      <div style=" display:flex; justify-content: center; align-items: center; ">تاريخ الفاتورة</div></th>
+      </tr></thead>`);
   
     // Populate the rows with the actual data from your state (or props, adjust as necessary)
     report?.categoryObject.forEach((row, index) => {
       printWindow.document.write(`
+         <tbody style="border-bottom: 2px solid black;">
         <tr style="padding:5px; border-right: 2px solid black;">
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${index+1}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.invoiceCode}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.serialNumber}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${index+1}</div></td>
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.invoiceCode}</div></td>
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.serialNumber}</div></td>
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">
           ${
             row?.type === "payment" ? "صرف" :
             row?.type === "supply" ? "توريد" :
             row?.type === "convert" ? "تحويل" :
             ""
           }
+          </div>
           </td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${row?.supplierID?.fullName}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.supplyDate)}</td>
-          <td style="padding:5px; font-size: 20px; font-weight: 600; border-right: 5px solid black; word-wrap: break-word;">${formatDate(row?.registerDate)}</td>
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${row?.supplierID?.fullName}
+          </div></td>
+          <td style="padding:5px; font-size: 14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+          <div style=" display:flex; justify-content: center; align-items: center; ">${formatDate(row?.supplyDate)}</div></td>
         </tr>
       `);
     });
@@ -459,64 +473,75 @@ export default function FinancialTransactionsReportComponent() {
           border-top: 2px solid black;
           text-align: center;
         ">
-          <td colspan="7" style="
+          <td colspan="2" style="
             padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
+            font-size: 16px;
+            font-weight: 700;
             border-right: 5px solid black;
           ">
-            <span>المجموع الكلي : </span>
+          <div style=" display:flex; justify-content: center; align-items: center; ">
+            <span>المجموع الكلي</span>
+            </div>
+            </td>
+            <td colspan="4" style="
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            border-right: 5px solid black;
+          ">
+          <div style=" display:flex; justify-content: center; align-items: center; ">
             <span>${formattedTotalInvoicesPrice}</span>
-            <span> جنية </span>
-          </td>
+            <span style="margin:0 4px;"> جنية </span>
+            </td>
+            </div>
         </tr>
       `);
     }
     
-    if (selectedValue == 'convert') {
-      printWindow.document.write(`
-        <tr style="
-          font-weight: bold;
-          padding: 5px;
-          border-top: 2px solid black;
-          text-align: center;
-        ">
-          <td colspan="7" style="
-            padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
-            border-right: 5px solid black;
-          ">
-            <span>اجمالي فواتير التحويل  ( التوريد ) :  </span>
-            <span>${totalInvoicesPriceForConvert2}</span>
-            <span> جنية </span>
-          </td>
-        </tr>
-      `);
-      printWindow.document.write(`
-        <tr style="
-          font-weight: bold;
-          padding: 5px;
-          border-top: 2px solid black;
-          text-align: center;
-        ">
-          <td colspan="7" style="
-            padding: 10px;
-            font-size: 28px;
-            font-weight: 900;
-            border-right: 5px solid black;
-          ">
-            <span>اجمالي فواتير التحويل  ( الصرف ) :  </span>
-            <span>${totalInvoicesPriceForConvert1}</span>
-            <span> جنية </span>
-          </td>
-        </tr>
-      `);
-    }
+    // if (selectedValue == 'convert') {
+    //   printWindow.document.write(`
+    //     <tr style="
+    //       font-weight: bold;
+    //       padding: 5px;
+    //       border-top: 2px solid black;
+    //       text-align: center;
+    //     ">
+    //       <td colspan="7" style="
+    //         padding: 10px;
+    //         font-size: 28px;
+    //         font-weight: 900;
+    //         border-right: 5px solid black;
+    //       ">
+    //         <span>اجمالي فواتير التحويل  ( التوريد ) :  </span>
+    //         <span>${totalInvoicesPriceForConvert2}</span>
+    //         <span> جنية </span>
+    //       </td>
+    //     </tr>
+    //   `);
+    //   printWindow.document.write(`
+    //     <tr style="
+    //       font-weight: bold;
+    //       padding: 5px;
+    //       border-top: 2px solid black;
+    //       text-align: center;
+    //     ">
+    //       <td colspan="7" style="
+    //         padding: 10px;
+    //         font-size: 28px;
+    //         font-weight: 900;
+    //         border-right: 5px solid black;
+    //       ">
+    //         <span>اجمالي فواتير التحويل  ( الصرف ) :  </span>
+    //         <span>${totalInvoicesPriceForConvert1}</span>
+    //         <span> جنية </span>
+    //       </td>
+    //     </tr>
+    //   `);
+    // }
     
 
   
-    printWindow.document.write('</main></tbody></table>');
+    printWindow.document.write('</tbody></table>');
     printWindow.document.write('</div>');
     printWindow.document.write('</body></html>');
   
@@ -529,13 +554,13 @@ export default function FinancialTransactionsReportComponent() {
   return (
     <div className="h-100">
 
-      <h1>تقرير حصر الفواتير </h1>
+      <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"310px" }}>تقرير حصر الفواتير </h1>
 
       <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
       <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
-      <label style={{margin:"0 3px"}}> اختر الجهة </label>
+      <label style={{margin:"0 3px" , fontWeight:"700"}}> اختر الجهة </label>
 
         <ReactSelect
           options={Staticoptions}
@@ -547,7 +572,7 @@ export default function FinancialTransactionsReportComponent() {
         />
 </div>
 <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
-        <label style={{margin:"0 3px"}}>تاريخ البدايه </label>
+        <label style={{margin:"0 3px", fontWeight:"700"}}>تاريخ البدايه </label>
         <input
           style={{ padding: "5px", border:"1px solid #c2c2c2" , borderRadius:"5px" }}
           type="date"
@@ -559,7 +584,7 @@ export default function FinancialTransactionsReportComponent() {
         />
         </div>
         <div style={{display:"flex", flexDirection:"column", gap:"8px"}}>
-        <label style={{margin:"0 3px"}}> تاريخ النهايه</label>
+        <label style={{margin:"0 3px", fontWeight:"700"}}> تاريخ النهايه</label>
 
         <input
           style={{ padding: "5px", border:"1px solid #c2c2c2" , borderRadius:"5px" }}
@@ -573,9 +598,9 @@ export default function FinancialTransactionsReportComponent() {
       </div>
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-        <button style={{ margin: "0 10px 0 0" }} onClick={getReport} className="btn btn-success">بحث</button>
-        <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">Refresh</button>
-        <button style={{ margin: "0 10px 0 0" }} onClick={printReport} className="btn btn-primary">طباعة</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={getReport} className="btn btn-success"> { "بحث"}</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={printReport} className="btn btn-primary">طباعة</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={cancelSearch} className="btn btn-danger"><FiRefreshCcw size={'24px'}/>        </button>
 
       </div>
 
@@ -624,7 +649,7 @@ export default function FinancialTransactionsReportComponent() {
   </div>
 </div>}
 
-  {selectedValue == 'convert' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
+  {/* {selectedValue == 'convert' &&  report?.categoryObject?.length !=0 && report.length !=0 &&     <div style={{
   display: "flex",
   flexDirection:'column',
   justifyContent: "flex-start",
@@ -673,7 +698,7 @@ export default function FinancialTransactionsReportComponent() {
     <span>جنيه </span>
   </div>
   </div>
-</div>}
+</div>} */}
 
 
     </div>

@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { BsBackspaceFill, BsPlus } from "react-icons/bs";
 import { CiEdit, CiLock, CiUnlock } from "react-icons/ci";
 import { toast } from "react-toastify";
+import { FiRefreshCcw } from "react-icons/fi";
 
 export default function AllGuestsComponent() {
   const [users, setUsers] = useState(null);
@@ -432,7 +433,7 @@ export default function AllGuestsComponent() {
       }
 
 
-      <h1> ادارة الجهات  {
+      <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"230px" }}> ادارة الجهات  {
         isLoading && <Spinner />
       } </h1>
 
@@ -454,7 +455,7 @@ export default function AllGuestsComponent() {
           <button onClick={() => search()} className='btn btn-success'> بحث </button>
         </div>
 
-        <button onClick={() => cancelFilter()} className='btn btn-danger' > refresh <BsBackspaceFill /> </button>
+        <button onClick={() => cancelFilter()}style={{width: '80px'}} className='btn btn-danger' > <FiRefreshCcw size={'24px'}/> </button>
       </div>
 
       {

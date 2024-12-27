@@ -2,9 +2,8 @@ import { Button, Modal } from "react-bootstrap";
 import FormatDate from "../../../Utilities/FormatDate";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
 
-export default function ExpirationDatesModal({ show, setShow , category , setCategory,type='' }) {
+export default function ExpirationDatesModal({ show, setShow , category , setCategory }) {
 
-    console.log('type',type);
     
     return (
         <Modal show={show} onHide={() =>{
@@ -25,7 +24,7 @@ export default function ExpirationDatesModal({ show, setShow , category , setCat
                     <table className="table mt-3">
                         <thead>
                             <tr>
-                               {type=='' && <th >تاريخ انتهاء الصلاحية</th>} 
+                                <th >تاريخ انتهاء الصلاحية</th>
                                 <th className="text-center" >الكمية</th>
                             </tr>
                         </thead>
@@ -36,7 +35,7 @@ export default function ExpirationDatesModal({ show, setShow , category , setCat
 
                                     return(
                                         <tr key={i}>
-                                      {type=='' && <td>{FormatDateForHTML(date)} </td>}  
+                                        <td>{FormatDateForHTML(date)} </td>
                                         <td className="text-center" >{el?.quantity}</td>
                                     </tr>
                                     )

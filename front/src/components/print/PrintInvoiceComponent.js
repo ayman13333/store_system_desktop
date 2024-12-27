@@ -113,19 +113,26 @@ export default function PrintInvoiceComponent() {
     //           box-sizing: border-box; ">
     //  `);
     printWindow.document.write(`
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
-              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
-              ">
-              <div>دار ضباط الحرب الكيميائية</div>
-              <div>جاردينيا</div>
-              </div>
-              
-              <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
-                ">
-                <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
-              </div>
-              </div>
-            `);
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;     direction: rtl;">
+      <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+      ">
+      <div>دار ضباط الحرب الكيميائية</div>
+      <div>جاردينيا</div>
+<div  style="display: flex; justify-content:center; align-items: center;">
+<div style="font-weight: 500; font-size: 14px;">  تاريخ التسجيل </div> <span style="color:#fff">..</span> <div style:"font-weight: 300; font-size: 11px; ">${formatDate(foundInvoice?.registerDate)}</div>
+</div>
+<div  style="display: flex; justify-content:center; align-items: center;">
+<div style="font-weight: 500; font-size: 14px;">  كود  </div> <span style="color:#fff">..</span> <div style:"font-weight: 300; font-size: 11px; "> ( ${foundInvoice?.invoiceCode} ) </div>
+</div>
+
+      </div>
+      
+      <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
+        ">
+        <img src=${logo} alt="Logo" style="width: 130px; height: 90px; ">
+      </div>
+      </div>
+    `);
 
     // Title
     if (foundInvoice?.type === "supply") {
@@ -133,21 +140,17 @@ export default function PrintInvoiceComponent() {
         <div style="text-underline-offset: 7px; margin:20px 0 0 0 ">
           <!-- First line: Invoice number and date -->
           <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; font-family: cairo;">
-            <span > فاتورة توريد رقم </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
+            <span >  مستند إضافة رقم </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
             <span > بتاريخ </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">${formatDate(foundInvoice?.supplyDate)}</span>
           </div>
           
           
           <!-- Second line: Supplier name -->
-          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; direction: rtl;  font-family: cairo;">
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; direction: rtl;  text-decoration: underline;  text-decoration-thickness: 2px; font-family: cairo;">
             <span>الاصناف الواردة بيد </span> <span style="color:#fff">..</span><span style="font-weight: 500;"> ( ${foundInvoice?.supplierID?.fullName} ) </span>
           </div>
 
-          <!-- thired line: Invoice code and Regstratiion date -->
-          <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px;font-family: cairo; margin:0 0 10px 0">
-            <span style="font-weight: 500;"> كود الفاتورة </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">( ${foundInvoice?.invoiceCode} )</span ><span style="color:#fff">..</span>
-            <span style="font-weight: 500;"> بتاريخ تسجيل </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">${formatDate(foundInvoice?.registerDate)}</span>
-          </div>
+          
         </div>
       `);
     }
@@ -156,19 +159,16 @@ export default function PrintInvoiceComponent() {
         <div style="text-underline-offset: 7px; margin:20px 0 0 0 ">
           <!-- First line: Invoice code and date -->
           <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; font-family: cairo;">
-            <span >فاتورة صرف اصناف من مخزن الأغذية و المشروبات رقم </span> <span style="font-weight: 500;"> ( ${foundInvoice?.serialNumber} )</span>
+            <span > طلب صرف اصناف من مخزن الأغذية و المشروبات رقم   </span> <span style="margin: 0 2px;"> </span><span style="font-weight: 500;"> ( ${foundInvoice?.serialNumber} )</span>
           </div>
-          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; direction: rtl;  font-family: cairo;">
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px; font-family: cairo;">
             <span > إلي قسم </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">( ${foundInvoice?.supplierID?.fullName} )</span ><span style="color:#fff">..</span>
             <span > بتاريخ </span> <span style="color:#fff">..</span> <span style="font-weight: 500;">${formatDate(foundInvoice?.supplyDate)}</span>
           </div>
           
           
           <!-- Second line: Supplier name -->
-          <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px;font-family: cairo; margin:0 0 10px 0">
-            <span style="font-weight: 500;"> كود الفاتورة  </span> <span style="color:#fff">..</span><span style="font-weight: 500;"> ( ${foundInvoice?.invoiceCode} ) </span> <span style="color:#fff">..</span>
-            <span style="font-weight: 500;"> تاريخ التسجيل</span> <span style="color:#fff">..</span><span style="font-weight: 500;"> ${formatDate(foundInvoice?.registerDate)} </span>
-          </div>
+
         </div>
       `);
     }
@@ -181,7 +181,7 @@ export default function PrintInvoiceComponent() {
                <div >
             </div>
   
-        <thead style="border-bottom: 5px solid black;">
+        <thead style="border-bottom: 5px solid black; background:#e9ecef;">
                   <tr>
       <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 3%;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">
@@ -228,7 +228,7 @@ export default function PrintInvoiceComponent() {
                    <div >
                 </div>
       
-            <thead style="border-bottom: 5px solid black;">
+            <thead style="border-bottom: 5px solid black; background:#e9ecef;">
                       <tr>
    <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 5%;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">
@@ -422,7 +422,7 @@ export default function PrintInvoiceComponent() {
     }
     if (foundInvoice?.type === "payment") {
       printWindow.document.write(`
-      <div style="font-size:18px; font-weight:700; direction: rtl; margin:0 10px 0 0;">           
+      <div style="font-size:18px; font-weight:700; direction: rtl; margin:50px 10px 0 0;">           
         <div style="display: flex; justify-content: space-between; margin-top: 10px;">
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
           <div  style="display: flex; justify-content:center; width:25%;">التوقيع </div>
@@ -432,7 +432,7 @@ export default function PrintInvoiceComponent() {
           <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size:16px;">
           <div  style="display: flex; justify-content:center; width:25%;" >أمين العهدة</div>
           <div  style="display: flex; justify-content:center; width:25%;" >المستلم</div>
-          <div  style="display: flex; justify-content:center; width:25%;">رئيس قسم المشتروات</div>
+          <div  style="display: flex; justify-content:center; width:25%;">رئيس قسم المشتريات</div>
           <div  style="display: flex; justify-content:center; width:25%;"> مدير الأغذية و المشروبات</div>
         </div>
               <div style="display: flex; justify-content: space-between; margin-top: 10px;">
@@ -531,6 +531,13 @@ export default function PrintInvoiceComponent() {
       ">
       <div>دار ضباط الحرب الكيميائية</div>
       <div>جاردينيا</div>
+<div  style="display: flex; justify-content:center; align-items: center;">
+<div style="font-weight: 500; font-size: 14px;">  تاريخ التسجيل </div> <span style="color:#fff">..</span> <div style:"font-weight: 300; font-size: 11px; ">${formatDate(foundInvoice?.registerDate)}</div>
+</div>
+<div  style="display: flex; justify-content:center; align-items: center;">
+<div style="font-weight: 500; font-size: 14px;">  كود  </div> <span style="color:#fff">..</span> <div style:"font-weight: 300; font-size: 11px; "> ( ${foundInvoice?.invoiceCode} ) </div>
+</div>
+
       </div>
       
       <div style="display: flex; justify-content:center; align-items: center; flex-direction: column; font-size: 14px; font-weight: 600; margin-left: 20px; text-underline-offset: 7px;
@@ -540,19 +547,19 @@ export default function PrintInvoiceComponent() {
       </div>
     `);
 
-
+    // <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; font-family: cairo; margin:0 0 10px 0">
+    //         <span style="font-weight: 500;"> كود فاتورة  </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.invoiceCode} )</span ><span style="color:#fff">..</span>
+    //         <span style="font-weight: 500;">  بتاريخ تسجيل </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">${formatDate(foundInvoice?.registerDate)}</span>
+    //       </div>
 
     if (foundInvoice?.type === "convert") {
       printWindow.document.write(`
-        <div style="text-underline-offset: 7px; margin:20px 0 0 0 ">
-          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; font-family: cairo;">
-            <span > فاتورة تحويل رقم </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
+        <div style="text-underline-offset: 7px; margin:20px 0 30px 0; ">
+          <div style="display: flex; margin-bottom:10px; justify-content: center; align-items: center; font-weight: 900; font-size: 20px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px; font-family: cairo;">
+            <span > أورنيك تحويل رقم </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.serialNumber} )</span ><span style="color:#fff">..</span>
             <span > بتاريخ </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">${formatDate(foundInvoice?.supplyDate)}</span>
           </div>
-          <div style="display: flex; justify-content: center;  margin-bottom:30px; align-items: center; font-weight: 500; font-weight: bold; font-size: 18px; direction: rtl; text-decoration: underline;  text-decoration-thickness: 2px;font-family: cairo; margin:0 0 10px 0">
-            <span style="font-weight: 500;"> كود فاتورة  </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">( ${foundInvoice?.invoiceCode} )</span ><span style="color:#fff">..</span>
-            <span style="font-weight: 500;">  بتاريخ تسجيل </span> <span style="color:#fff">..</span> <span style:"font-weight: 500;">${formatDate(foundInvoice?.registerDate)}</span>
-          </div>
+      
           
         </div>
       `);
@@ -573,18 +580,18 @@ export default function PrintInvoiceComponent() {
   
         <thead style="border-bottom: 5px solid black;">
                   <tr>
-   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%; background:#e9ecef;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">م </div></th>
-   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%;">
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%; background:#e9ecef;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">الصنف قبل التحويل</div></th>
-   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%; background:#e9ecef;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">الوحدة</div></th>
-   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
+   <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%; background:#e9ecef;">
                 <div style=" display:flex; justify-content: center; align-items: center;   ">الكمية</div></th>
    <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 20%;">
-                <div style=" display:flex; justify-content: center; align-items: center;   ">الصنف بعد التحويل</div></th>
+                <div style=" display:flex; justify-content: center; align-items: center; ">الصنف بعد التحويل</div></th>
    <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
-                <div style=" display:flex; justify-content: center; align-items: center;   "> الوحدة</div></th>
+                <div style=" display:flex; justify-content: center; align-items: center;    "> الوحدة</div></th>
    <th style="padding: 8px; font-size: 16px; font-weight: 800; border-right: 5px solid black; width: 10%;">
                 <div style=" display:flex; justify-content: center; align-items: center;   "> الكمية</div></th>
                   </tr>
@@ -607,20 +614,24 @@ export default function PrintInvoiceComponent() {
       printWindow.document.write(`
 <tbody style="border-bottom: 2px solid black;">
 <tr style="padding:5px; border-right: 2px solid black;">
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${index + 1}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.name ? row.name : ""}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.unit ? row.unit : ""}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
-                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.totalQuantity ? row.totalQuantity2 : ""}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
+                          <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.totalQuantity ? row.totalQuantity : ""}</div></td>
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word; ">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.name2 ? row.name2 : ""}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;  ">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.unit2 ? row.unit2 : ""}</div></td>
-           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;">
+           <td style="min-width: 80px; padding: 5px; font-size:14px; font-weight: 500; border-right: 5px solid black; word-wrap: break-word;  ">
                           <div style=" display:flex; justify-content: center; align-items: center;   "> ${row.totalQuantity2 ? row.totalQuantity2 : ""}</div></td>
+
+
+
+
 
                 </tr>
                 
@@ -671,7 +682,7 @@ export default function PrintInvoiceComponent() {
 
 
     printWindow.document.write(`
-          <div style="display: flex; justify-content: space-between; direction: rtl; margin:20px 0 0 0 ;">
+          <div style="display: flex; justify-content: space-between; direction: rtl; margin:50px 0 0 0 ;">
         
             <!-- First column: أمين العهدة -->
             <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; margin: 10px;">
@@ -692,14 +703,12 @@ export default function PrintInvoiceComponent() {
             </div>
         
             <!-- Fourth column: مديـر الــدار -->
-            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 28px; direction: rtl; margin: 10px;">
-             <div>
+            <div style="display: flex; flex-direction: column; justify-content: start; align-items: center; font-weight: bold; font-size: 18px; direction: rtl; margin: 10px;">
+             <div style="margin:0 0 0 40px">
              <span> يعتمد، </span>
-             <span style="color:#ffffff ">.............</span>
              </div>
-             <div>
+             <div style="margin:0 0 0 40px">
              <span>مديـر الــدار</span>
-             <span style="color:#ffffff">.............</span>
             </div>
             </div>
         
@@ -809,7 +818,7 @@ export default function PrintInvoiceComponent() {
   return (
     <div className='w-75 h-100'>
       <div className="d-flex justify-content-between">
-        <h1> طباعة فاتورة   {isLoading && <Spinner />}  </h1>
+        <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"242px" }}> طباعة فاتورة   {isLoading && <Spinner />}  </h1>
 
         <div>
 

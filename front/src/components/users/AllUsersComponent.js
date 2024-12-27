@@ -246,15 +246,17 @@ const onKeyEnter = (event)=>{
                     </Modal>
                 </>
             }
-            <h1> ادارة الموظفين   {isLoading&&<Spinner />} </h1>
+            <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"280px" }}> ادارة الموظفين   {isLoading&&<Spinner />} </h1>
 
            
+<div style={{display:"flex", justifyContent:"end"}}>
 
             <button className='btn btn-success my-2' onClick={() => {
                 setShowModal(true);
                 setIsEdit(false);
                 setUserID('');
             }} > اضافة <BsPlus /> </button>
+</div>
             {
                 users &&
                 <DataTable

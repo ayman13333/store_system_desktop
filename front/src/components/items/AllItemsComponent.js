@@ -10,6 +10,8 @@ import ExpirationDatesModal from "../invoices/supplyInvoice/ExpirationDatesModal
 import { ligthBlue, orange, red, yellow } from "../../Constants"
 import FormatDate from "../../Utilities/FormatDate";
 import { TbHandClick } from "react-icons/tb";
+import { FiRefreshCcw } from "react-icons/fi";
+
 
 export default function AllItemsComponent() {
 
@@ -70,7 +72,6 @@ export default function AllItemsComponent() {
   //  A0908B
 
   let columns = [
-    { name: 'م', selector: row => row?.serialNumber, sortable: true },
     {
       name: 'الكود',
       sortable: true,
@@ -93,12 +94,12 @@ export default function AllItemsComponent() {
       }
     },
     {
-      name: 'الصنف',
+      name: 'الاسم',
       cell: row => {
         let codeStr;
 
-        if (row?.name?.length > 15) {
-          codeStr = row?.name.substring(0, 15) + '...';
+        if (row?.name?.length > 18) {
+          codeStr = row?.name.substring(0, 18) + '...';
         }
         else codeStr = row?.name;
         return (
@@ -113,7 +114,7 @@ export default function AllItemsComponent() {
     },
     {
       name: 'الحد الحرج',
-      selector: row =>parseFloat(row.criticalValue).toFixed(2) ,
+      selector: row => row.criticalValue,
       sortable: true
     },
     { name: 'الوحدة', selector: row => row.unit, sortable: true },
@@ -147,7 +148,7 @@ export default function AllItemsComponent() {
                 setCategoryToShow(row);
                 setShowExpirationDatesModal(true);
               }}
-              className={`btn ${(isYellow == true && isRed == false) ? 'btn-danger customRed' : 'btn-secondary customBlack'} py-1`} style={{
+              className={`btn ${(isYellow == true && isRed == false) ? 'btn-danger' : 'btn-secondary customBlack'} py-1`} style={{
                 whiteSpace: 'nowrap',
                 width: '80%'
               }} > <TbHandClick height={'5px'} />  </button>
@@ -214,23 +215,21 @@ export default function AllItemsComponent() {
           }
         });
 
+        if (yellowCount == row?.expirationDatesArr?.length) {
+          return true;
+          //  isRed=true;
 
-        if ((row.criticalValue >= row.totalQuantity) || row?.expirationDatesArr?.length==0) {
-          return true
         }
-
-
-        // row.criticalValue === row.totalQuantity ?  true : false;
 
       },
       style: {
-        backgroundColor: yellow,
+        backgroundColor: red,
+        color:"#fff",
         fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
       }
     },
-
     {
       when: row => {
         const currentDate = new Date();
@@ -246,15 +245,17 @@ export default function AllItemsComponent() {
           }
         });
 
-        if (yellowCount == row?.expirationDatesArr?.length) {
-          return true;
-          //  isRed=true;
 
+        if ((row.criticalValue >= row.totalQuantity) || row?.expirationDatesArr?.length==0) {
+          return true
         }
+
+
+        // row.criticalValue === row.totalQuantity ?  true : false;
 
       },
       style: {
-        backgroundColor: red,
+        backgroundColor: yellow,
         fontWeight: 'bold',
         fontSize: 'large',
         textAlign: 'center',
@@ -293,7 +294,7 @@ export default function AllItemsComponent() {
         borderRight: '1px solid black', // Border for table cells
         borderLeft: '1px solid black',  // Border for table cells
         width: "100%",
-        backgroundColor:'#C4BFBE',
+        backgroundColor:'#e9ecef',
         // whiteSpace:'no-wrap'
       },
     },
@@ -351,12 +352,15 @@ export default function AllItemsComponent() {
         <div><h4>التاريخ : {datePart.year}-{datePart.month}-{datePart.day}</h4></div>
         <div><h4>الوقت : {timePart}</h4></div>
       </div>
-      <h1>  مخزن الاغذية والمشروبات   {isLoading && <Spinner />} </h1>
+      <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"445px" }}>  مخزن الاغذية والمشروبات   {isLoading && <Spinner />} </h1>
+      <div style={{display:"flex", justifyContent:"end",
+      }}>
       {
         loggedUser?.type != "storekeeper" && <button className='btn btn-success my-2' onClick={() => {
           navigate('/allitems/add');
         }} > اضافة <BsPlus /> </button>
       }
+      </div>
 
 
       <AlarmComponent />

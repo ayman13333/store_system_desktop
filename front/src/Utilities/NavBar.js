@@ -33,7 +33,7 @@ export default function NavBar() {
     // console.log('location',location.pathname);
 
   return (
-    <div className='d-flex justify-content-end p-2' style={{backgroundColor: '#212529',color:'white',height:'70px'}}>
+    <div className='d-flex justify-content-end p-2' style={{backgroundColor: 'rgb(74 166 255)',color:'white',height:'70px'}}>
         {/* <Button  onClick={handleButtonClick}> */}
         
       
