@@ -82,6 +82,7 @@ export default function ItemTransactionReportComponent() {
       {
         name: 'م', // Row index column
         minwidth: "30px",
+        maxwidth: "60px",
         cell: (row, index) => (
           <div style={{ textAlign: 'center', width: '100%' }}>
             {index + 1} {/* Display index starting from 1 */}
@@ -176,6 +177,7 @@ export default function ItemTransactionReportComponent() {
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
         width: "100%",
+        backgroundColor:'#C4BFBE',
       },
     },
     cells: {

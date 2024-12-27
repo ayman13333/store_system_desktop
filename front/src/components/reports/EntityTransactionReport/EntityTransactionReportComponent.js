@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import logo from '../InventoryReportWithoutPrice/logo.jpg'
+import { FiRefreshCcw } from "react-icons/fi";
 
 export default function EntityTransactionReportComponent() {
   const [selectedValue, setSelectedValue] = useState(null); // Track first select value
@@ -233,6 +234,7 @@ export default function EntityTransactionReportComponent() {
         borderRight: '2px solid black', // Border for table cells
         borderLeft: '2px solid black',  // Border for table cells
         width: "100%",
+        backgroundColor:'#C4BFBE',
       },
     },
     cells: {
@@ -494,13 +496,13 @@ marginBottom:"20px"
 <div><h4>الوقت : {timePart}</h4></div>
       </div> */}
 
-      <h1>تقرير معاملات الجهة</h1>
+      <h1 style={{color:'#106ebe'}}>تقرير معاملات الجهة</h1>
 
       <br />
       {/* Select Inputs */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <label style={{ margin: "0 3px" }}> اختر الجهة </label>
+          <label style={{ margin: "0 3px" , fontWeight:"700"}}> اختر الجهة </label>
           <ReactSelect
             options={Staticoptions}
             value={selectedValue}
@@ -511,7 +513,7 @@ marginBottom:"20px"
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <label style={{ margin: "0 3px" }}> اختر الاسم </label>
+          <label style={{ margin: "0 3px" ,fontWeight:"700" }}> اختر الاسم </label>
 
           <ReactSelect
             options={dynamicOptions}
@@ -523,7 +525,7 @@ marginBottom:"20px"
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <label style={{ margin: "0 3px" }}>تاريخ البدايه </label>
+          <label style={{ margin: "0 3px" ,fontWeight:"700" }}>تاريخ البدايه </label>
           <input
             style={{ padding: "5px", border: "1px solid #c2c2c2", borderRadius: "5px" }}
             type="date"
@@ -533,7 +535,7 @@ marginBottom:"20px"
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <label style={{ margin: "0 3px" }}> تاريخ النهايه</label>
+          <label style={{ margin: "0 3px",  fontWeight:"700" }}> تاريخ النهايه</label>
 
           <input
             style={{ padding: "5px", border: "1px solid #c2c2c2", borderRadius: "5px" }}
@@ -547,9 +549,9 @@ marginBottom:"20px"
       </div>
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-        <button style={{ margin: "0 10px 0 0" }} onClick={getReport} disabled={isLoading} className="btn btn-success"> {isLoading ? <Spinner /> : "بحث"}</button>
-        <button style={{ margin: "0 10px 0 0" }} onClick={cancelSearch} className="btn btn-danger">Refresh</button>
-        <button style={{ margin: "0 10px 0 0" }} onClick={printReport} className="btn btn-primary">طباعة</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={getReport} disabled={isLoading} className="btn btn-success"> {isLoading ? <Spinner /> : "بحث"}</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={printReport} className="btn btn-primary">طباعة</button>
+        <button style={{ margin: "0 10px 0 0" ,width: '80px'}} onClick={cancelSearch} className="btn btn-danger"><FiRefreshCcw size={'24px'}/>        </button>
 
       </div>
 

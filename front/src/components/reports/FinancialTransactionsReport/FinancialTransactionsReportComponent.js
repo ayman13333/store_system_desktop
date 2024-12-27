@@ -254,6 +254,7 @@ export default function FinancialTransactionsReportComponent() {
           borderRight: '2px solid black', // Border for table cells
           borderLeft: '2px solid black',  // Border for table cells
           width: "100%",
+          backgroundColor:'#C4BFBE',
         },
       },
       cells: {
