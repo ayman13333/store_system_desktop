@@ -25,7 +25,7 @@ export default function Login({setIsLogin}) {
             password : password.trim()
         }
         setIsLoading(true);
-        await window?.electron?.postNewNotifications();
+      //  await window?.electron?.postNewNotifications();
 
         let result = await window?.electron?.login(data);
 

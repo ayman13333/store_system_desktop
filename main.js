@@ -147,6 +147,8 @@ const setupCronJob = async() => {
 
 app.whenReady().then(async () => {
   await connectDB();
+  await setupCronJob();
+
   createWindow();
  
 
@@ -1280,7 +1282,7 @@ ipcMain.handle('getNotifications',async(event, data)=>{
 // post new notification
 ipcMain.handle('postNewNotifications',async(event, data)=>{
   try {
-    await setupCronJob();
+   // await setupCronJob();
 
     return{
       success:true
