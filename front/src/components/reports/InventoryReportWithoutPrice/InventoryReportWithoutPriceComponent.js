@@ -269,15 +269,15 @@ export default function InventoryReportWithoutPriceComponent() {
     tableData.forEach((row, index) => {
       printWindow.document.write(`
         <tr style="border-bottom: 2px solid black;">
-          <td style="min-width: 50px;  padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; background:#e9ecef;">
+          <td style="min-width: 50px;  padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all; background:#e9ecef;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${index+1}</div></td>
-          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word;">
+          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${row.code}</div></td>
-          <td style="min-width: 200px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word;">
+          <td style="min-width: 200px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${row.name}</div></td>
-          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word;">
+          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${row.unit}</div></td>
-          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word;">
+          <td style="min-width: 100px; padding: 5px; font-size: 14px; font-weight: 500;  border-right: 5px solid black; word-wrap: break-word; word-break: break-all;">
           <div style=" display:flex; justify-content: center; align-items: center; ">${row.totalQuantity}</div></td>
         </tr>
       `);
