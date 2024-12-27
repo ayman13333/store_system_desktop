@@ -2,7 +2,7 @@ import { Button, Modal } from "react-bootstrap";
 import FormatDate from "../../../Utilities/FormatDate";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
 
-export default function ExpirationDatesModal({ show, setShow , category , setCategory }) {
+export default function ExpirationDatesModal({ show, setShow , category , setCategory,type }) {
 
     
     return (
@@ -30,7 +30,21 @@ export default function ExpirationDatesModal({ show, setShow , category , setCat
                         </thead>
                         <tbody>
                             {
+                                type=='' ?
                                 category?.expirationDatesArr?.map((el, i) =>{
+                                    const date = new Date(el?.date);
+
+                                    return(
+                                        <tr key={i}>
+                                        <td>{FormatDateForHTML(date)} </td>
+                                        <td className="text-center" >{el?.quantity}</td>
+                                    </tr>
+                                    )
+                                }
+                                   
+                                )
+                                :
+                                category?.originalExpirationDatesArr?.map((el, i) =>{
                                     const date = new Date(el?.date);
 
                                     return(

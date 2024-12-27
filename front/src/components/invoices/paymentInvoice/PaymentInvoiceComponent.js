@@ -55,6 +55,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
 
             setSuppliers(activeAsuuplires);
 
+          //console.log('bbbbbbbbbbbb',categories);
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {
                     ...el,
@@ -62,7 +63,9 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                     value: el?._id,
                     totalQuantity: 0,
                     originalQuantity: el?.totalQuantity,
-                    expirationDatesArr: []
+                    originalExpirationDatesArr:el?.expirationDatesArr,
+                    expirationDatesArr: [],
+                    
                 }
             })
             setCategories(categoriesForSelect);
@@ -168,7 +171,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
             // overflowX:'hidden'
         }}>
             {
-                type == null && <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"225px" }}>  فاتورة صرف   {isLoading && <Spinner />} </h1>
+                type == null && <h1>  فاتورة صرف   {isLoading && <Spinner />} </h1>
 
             }
 
@@ -341,9 +344,11 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                             }
 
                             {
-                                showExpirationDatesModal && <ExpirationDatesModal
+                                showExpirationDatesModal && 
+                                <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}
+                                    type={'pill'}
                                 />
                             }
 
