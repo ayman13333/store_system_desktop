@@ -55,7 +55,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
 
             setSuppliers(activeAsuuplires);
 
-          //console.log('bbbbbbbbbbbb',categories);
+            //console.log('bbbbbbbbbbbb',categories);
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {
                     ...el,
@@ -63,9 +63,9 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                     value: el?._id,
                     totalQuantity: 0,
                     originalQuantity: el?.totalQuantity,
-                    originalExpirationDatesArr:el?.expirationDatesArr,
+                    originalExpirationDatesArr: el?.expirationDatesArr,
                     expirationDatesArr: [],
-                    
+
                 }
             })
             setCategories(categoriesForSelect);
@@ -183,17 +183,19 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                     type="text" className="form-control"
                 />
             </div>
+            {
+                type != null && <div className="form-group">
+                    <label className="my-2"> كود الفاتورة </label>
+                    <input
+                        value={invoiceCode}
+                        onChange={(e) => setInvoiceCode(e.target.value)}
+                        type="text" className="form-control"
+                        placeholder="كود الفاتورة"
+                        disabled={type ? true : false}
+                    />
+                </div>
+            }
 
-            <div className="form-group">
-                <label className="my-2"> كود الفاتورة </label>
-                <input
-                    value={invoiceCode}
-                    onChange={(e) => setInvoiceCode(e.target.value)}
-                    type="text" className="form-control"
-                    placeholder="كود الفاتورة"
-                    disabled={type ? true : false}
-                />
-            </div>
 
             <div className="form-group">
                 <label className="my-2"> رقم  الفاتورة </label>
@@ -344,7 +346,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                             }
 
                             {
-                                showExpirationDatesModal && 
+                                showExpirationDatesModal &&
                                 <ExpirationDatesModal
                                     show={showExpirationDatesModal} setShow={setShowExpirationDatesModal}
                                     category={categoryToShow} setCategory={setCategoryToShow}

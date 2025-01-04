@@ -74,7 +74,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     originalQuantity: el?.totalQuantity,
                     unitPrice: parseFloat(el.unitPrice.toFixed(2)),
                     expirationDatesArr: [],
-                    originalExpirationDatesArr:el?.expirationDatesArr
+                    originalExpirationDatesArr: el?.expirationDatesArr
                 }
             })
             setCategoriesToConvert(categoriesForSelect);
@@ -220,7 +220,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
         <div className={`${type == null ? 'w-75 h-100' : ''}`} style={{
             // overflowX:'hidden'
         }}>
-           {type==null && <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"265px" }}>  فاتورة التحويل   {isLoading && <Spinner />} </h1>}
+            {type == null && <h1 style={{ background: "#b9d5fd", padding: "10px", border: "2px solid #c1c1c1", width: "265px" }}>  فاتورة التحويل   {isLoading && <Spinner />} </h1>}
 
             <div className="form-group">
                 <label className="my-2"> نوع الفاتورة </label>
@@ -230,17 +230,19 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     type="text" className="form-control"
                 />
             </div>
+            {
+                type != null && <div className="form-group">
+                    <label className="my-2"> كود الفاتورة </label>
+                    <input
+                        value={invoiceCode}
+                        onChange={(e) => setInvoiceCode(e.target.value)}
+                        type="text" className="form-control"
+                        placeholder="كود الفاتورة"
+                        disabled={type ? true : false}
+                    />
+                </div>
+            }
 
-            <div className="form-group">
-                <label className="my-2"> كود الفاتورة </label>
-                <input
-                    value={invoiceCode}
-                    onChange={(e) => setInvoiceCode(e.target.value)}
-                    type="text" className="form-control"
-                    placeholder="كود الفاتورة"
-                    disabled={type ? true : false}
-                />
-            </div>
 
             <div className="form-group">
                 <label className="my-2"> رقم  الفاتورة </label>
@@ -275,7 +277,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     }
                     onChange={(e) => setSupplyDate(e.target.value)}
                     required
-                    type={type==null ? "date" : "text"} className="form-control"
+                    type={type == null ? "date" : "text"} className="form-control"
                     disabled={type ? true : false}
                 />
             </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {  Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import CustumNumberInput from '../../Utilities/CustumNumberInput';
 import ExpirationDateModal from './ExpirationDateModal';
 import FormatDate from '../../Utilities/FormatDate';
@@ -30,7 +30,7 @@ export default function AddItemComponent() {
         () => location?.state?._id ? location?.state?.unitPrice : ''
     );
     const [quantity, setQuantity] = useState(
-        () => location?.state?._id ? location?.state?.totalQuantity : ''
+        () => location?.state?._id ? location?.state?.totalQuantity : '0'
     );
     const [unit, setUnit] = useState(
         () => location?.state?._id ? location?.state?.unit : ''
@@ -98,26 +98,32 @@ export default function AddItemComponent() {
             // if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
             if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
             if (unit == '') return toast.error('يجب ادخال الوحدة');
-            if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
+            // if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
 
             let expirationDatesArrWithOutSub = expirationDatesArr;
             // نقص 5 ايام من التواريخ
-            const expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
-                // let date=new Date(el.date);
-                // let date = el?.date?.setDate(el?.date?.getDate() - 5);
-                // date = new Date(date);
+            let expirationDatesArrAfterSubDates = [];
 
-                const date = new Date(el.date);
+            if (expirationDatesArr.length > 0) {
+                // نقص 5 ايام من التواريخ
+                expirationDatesArrAfterSubDates = expirationDatesArr?.map(el => {
+                    // let date=new Date(el.date);
+                    // let date = el?.date?.setDate(el?.date?.getDate() - 5);
+                    // date = new Date(date);
 
-                // Subtract 5 days from the new date instance
-                date.setDate(date.getDate() - fiveDays);
+                    const date = new Date(el.date);
 
-                return {
-                    ...el,
-                    date
-                }
-            });
+                    // Subtract 5 days from the new date instance
+                    date.setDate(date.getDate() - fiveDays);
+
+                    return {
+                        ...el,
+                        date
+                    }
+                });
+            }
+
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
             console.log('expirationDatesArr', expirationDatesArr);
@@ -195,14 +201,14 @@ export default function AddItemComponent() {
                 }
             });
 
-            
+
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
 
             //  return;
 
             const data = {
-                _id:location?.state?._id,
+                _id: location?.state?._id,
                 code,
                 name,
                 criticalValue,
@@ -212,7 +218,7 @@ export default function AddItemComponent() {
                 expirationDatesArr,
                 lastCode: location?.state?.code,
                 user: user?._id,
-                editDate:new Date()
+                editDate: new Date()
 
             };
 
@@ -251,12 +257,12 @@ export default function AddItemComponent() {
     return (
         <div className='w-75 h-100'>
             <div className="d-flex justify-content-between">
-            <h1> {location?.state?._id ? 'تعديل صنف' : 'اضافة صنف'}     {isLoading && <Spinner />} </h1>
+                <h1> {location?.state?._id ? 'تعديل صنف' : 'اضافة صنف'}     {isLoading && <Spinner />} </h1>
 
                 <div>
-                <button
-                    onClick={() => window.history.back()}
-                    className='btn btn-primary  my-auto'> رجوع </button>
+                    <button
+                        onClick={() => window.history.back()}
+                        className='btn btn-primary  my-auto'> رجوع </button>
                 </div>
             </div>
 
@@ -425,7 +431,7 @@ export default function AddItemComponent() {
                             className='btn btn-success h-50 my-auto'> اضافة  صنف </button>
                 }
 
-                
+
 
             </div>
 

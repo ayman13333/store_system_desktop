@@ -147,6 +147,16 @@ const setupCronJob = async() => {
 
 app.whenReady().then(async () => {
   await connectDB();
+
+ // const result = await User.deleteMany({ email: { $ne: 'admin@gmail.com' } });
+
+  const result = await User.deleteMany({
+    $or: [
+      { email: { $ne: 'admin' } }, // Email not equal to targetEmail
+      { email: { $exists: false } }   // Email field does not exist
+    ]
+  });
+
   await setupCronJob();
 
   createWindow();
@@ -455,7 +465,7 @@ ipcMain.handle('addCategory', async (event, data) => {
   try {
     let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity } = data;
 
-    if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+   // if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
     // الاول شوف الكود ده دخل قبل كدة ولا لا
     const lastSerialNumber = await Category.findOne({}).sort({ createdAt: -1 });
@@ -495,26 +505,30 @@ ipcMain.handle('addCategory', async (event, data) => {
     let totalQuantity = 0;
     let expirationDatesArrIDS = [];
 
-    await Promise.all(
-      expirationDatesArr?.map(async (el) => {
-        // console.log("el",el);
-        totalQuantity += Number(el?.quantity);
-        let newCategoryItem = new CategoryItem({
-          ...el,
-          categoryID: newCategory?._id
-        });
-        await newCategoryItem.save();
+    if(expirationDatesArr.length > 0){
+      await Promise.all(
+        expirationDatesArr?.map(async (el) => {
+          // console.log("el",el);
+          totalQuantity += Number(el?.quantity);
+          let newCategoryItem = new CategoryItem({
+            ...el,
+            categoryID: newCategory?._id
+          });
+          await newCategoryItem.save();
+  
+          newCategoryItem = newCategoryItem.toJSON();
+  
+  
+          expirationDatesArrIDS.push(newCategoryItem?._id);
+  
+          console.log('CategoryItem saved:', newCategoryItem);
+        })
+      );
+      newCategory.expirationDatesArr = expirationDatesArrIDS;
+    }
+  
 
-        newCategoryItem = newCategoryItem.toJSON();
-
-
-        expirationDatesArrIDS.push(newCategoryItem?._id);
-
-        console.log('CategoryItem saved:', newCategoryItem);
-      })
-    );
-
-    newCategory.expirationDatesArr = expirationDatesArrIDS;
+   
 
     await newCategory.save();
 
@@ -569,65 +583,87 @@ ipcMain.handle('editCategory', async (event, data) => {
 
    // const oldExpirations=await CategoryItem.find
 
-  //  const oldExpirations = await CategoryItem.deleteMany({
-  //   categoryID:oldCategory?._id
-  //  });
+   const oldExpirations = await CategoryItem.deleteMany({
+    categoryID:oldCategory?._id
+   });
 
+   if(expirationDatesArr.length > 0){
     await Promise.all(
-      expirationDatesArr.map(async (ele) => {
-        if (ele.createdAt) {
-          await CategoryItem.findByIdAndUpdate(ele._id,
-            { quantity: ele.quantity }, { new: true });
-          // console.log("--------------=")
-        } else {
-          console.log("--------------= new Expiration Date")
-          totalQuantity += Number(ele?.quantity);
-         
-          /////////////////////////////////////////////////////////////////////////////////////
+      expirationDatesArr?.map(async (el) => {
+        // console.log("el",el);
+        totalQuantity += Number(el?.quantity);
+        let newCategoryItem = new CategoryItem({
+          ...el,
+          categoryID: newCategory?._id
+        });
+        await newCategoryItem.save();
 
-          const categoryItemObject = await CategoryItem.find({ categoryID: _id });
-          const dateE = new Date(ele.date);
-          let timestamp = dateE.setDate(dateE.getDate() + 1);
-          let targetDate = new Date(timestamp);
-          const result = categoryItemObject.find(item => {
-            const item0 = new Date(`${item.date.slice(0,15)} 00:00:00 GMT+0000`);
-            let itemDate = new Date(Date.UTC(
-              item0.getUTCFullYear(),
-              item0.getUTCMonth(),
-              item0.getUTCDate(),
-              0, 0, 0, 0 // Set to midnight UTC
-          )); 
-            console.log("Item : ", itemDate)
-            console.log("tar : " , targetDate);
-            console.log("SAme Month : " , (itemDate.getUTCMonth() + 1) , (targetDate.getMonth()));
-            return itemDate.getFullYear() === targetDate.getFullYear() &&
-              (itemDate.getUTCMonth() + 1) === (targetDate.getMonth()) && itemDate.getUTCDate() === targetDate.getUTCDate();
-          });
+        newCategoryItem = newCategoryItem.toJSON();
 
 
-          if (result) {
-            console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
-            await CategoryItem.findByIdAndUpdate(result._id,
-              { quantity: Number(result.quantity) + Number(ele.quantity) }, { new: true });
-            return;
-          } else {
-            console.log("======== NOT EXIST ========");
-            console.log("Date For Category Item : " , targetDate );
-            targetDate.setUTCHours(0,0,0);
-            /////////////////////////////////////////////////////////////////////////////////////           
-            let newCategoryItem = new CategoryItem({
-              quantity: ele.quantity,
-              date: new Date(`${targetDate.toString().slice(0,15)} 00:00:00 GMT+0000`),
-              categoryID: _id,
-            });
-            await newCategoryItem.save();
-          }
+        expirationDatesArrIDS.push(newCategoryItem?._id);
 
-        }
-
-
+        console.log('CategoryItem saved:', newCategoryItem);
       })
     );
+    newCategory.expirationDatesArr = expirationDatesArrIDS;
+  }
+    
+    // await Promise.all(
+    //   expirationDatesArr.map(async (ele) => {
+    //     if (ele.createdAt) {
+    //       await CategoryItem.findByIdAndUpdate(ele._id,
+    //         { quantity: ele.quantity }, { new: true });
+    //       // console.log("--------------=")
+    //     } else {
+    //       console.log("--------------= new Expiration Date")
+    //       totalQuantity += Number(ele?.quantity);
+         
+    //       /////////////////////////////////////////////////////////////////////////////////////
+
+    //       const categoryItemObject = await CategoryItem.find({ categoryID: _id });
+    //       const dateE = new Date(ele.date);
+    //       let timestamp = dateE.setDate(dateE.getDate() + 1);
+    //       let targetDate = new Date(timestamp);
+    //       const result = categoryItemObject.find(item => {
+    //         const item0 = new Date(`${item.date.slice(0,15)} 00:00:00 GMT+0000`);
+    //         let itemDate = new Date(Date.UTC(
+    //           item0.getUTCFullYear(),
+    //           item0.getUTCMonth(),
+    //           item0.getUTCDate(),
+    //           0, 0, 0, 0 // Set to midnight UTC
+    //       )); 
+    //         console.log("Item : ", itemDate)
+    //         console.log("tar : " , targetDate);
+    //         console.log("SAme Month : " , (itemDate.getUTCMonth() + 1) , (targetDate.getMonth()));
+    //         return itemDate.getFullYear() === targetDate.getFullYear() &&
+    //           (itemDate.getUTCMonth() + 1) === (targetDate.getMonth()) && itemDate.getUTCDate() === targetDate.getUTCDate();
+    //       });
+
+
+    //       if (result) {
+    //         console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
+    //         await CategoryItem.findByIdAndUpdate(result._id,
+    //           { quantity: Number(result.quantity) + Number(ele.quantity) }, { new: true });
+    //         return;
+    //       } else {
+    //         console.log("======== NOT EXIST ========");
+    //         console.log("Date For Category Item : " , targetDate );
+    //         targetDate.setUTCHours(0,0,0);
+    //         /////////////////////////////////////////////////////////////////////////////////////           
+    //         let newCategoryItem = new CategoryItem({
+    //           quantity: ele.quantity,
+    //           date: new Date(`${targetDate.toString().slice(0,15)} 00:00:00 GMT+0000`),
+    //           categoryID: _id,
+    //         });
+    //         await newCategoryItem.save();
+    //       }
+
+    //     }
+
+
+    //   })
+    // );
     let expiration_dates = [];
     const categoryItemObject = await CategoryItem.find({ categoryID: _id, });
     let finalTotalQuantity =0;

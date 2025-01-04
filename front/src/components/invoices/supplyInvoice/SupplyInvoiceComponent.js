@@ -178,7 +178,7 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
             // overflowX:'hidden'
         }}>
             {
-                type == null && <h1 style={{background:"#b9d5fd", padding:"10px", border:"2px solid #c1c1c1", width:"222px"}} >  فاتورة توريد   {isLoading && <Spinner />} </h1>
+                type == null && <h1 style={{ background: "#b9d5fd", padding: "10px", border: "2px solid #c1c1c1", width: "222px" }} >  فاتورة توريد   {isLoading && <Spinner />} </h1>
             }
 
             <div className="form-group">
@@ -189,17 +189,19 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
                     type="text" className="form-control"
                 />
             </div>
+            {
+                type != null && <div className="form-group">
+                    <label className="my-2"> كود الفاتورة </label>
+                    <input
+                        value={invoiceCode}
+                        onChange={(e) => setInvoiceCode(e.target.value)}
+                        type="text" className="form-control"
+                        placeholder="كود الفاتورة"
+                        disabled={type ? true : false}
+                    />
+                </div>
+            }
 
-            <div className="form-group">
-                <label className="my-2"> كود الفاتورة </label>
-                <input
-                    value={invoiceCode}
-                    onChange={(e) => setInvoiceCode(e.target.value)}
-                    type="text" className="form-control"
-                    placeholder="كود الفاتورة"
-                    disabled={type ? true : false}
-                />
-            </div>
 
             <div className="form-group">
                 <label className="my-2"> رقم  الفاتورة </label>
@@ -300,11 +302,11 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
                                 <th className="text-center" scope="col"> الاسم </th>
                                 <th className="text-center" scope="col">الكود  </th>
                                 {
-                                    type==null&&<th className="text-center" scope="col" style={{
+                                    type == null && <th className="text-center" scope="col" style={{
                                         whiteSpace: "nowrap"
                                     }}>تاريخ انتهاء الصلاحية</th>
                                 }
-                                
+
                                 <th className="text-center" scope="col"> سعر </th>
                                 <th className="text-center" scope="col"> كمية </th>
                                 <th className="text-center" scope="col"> وحدة </th>
