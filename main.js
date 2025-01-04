@@ -587,6 +587,9 @@ ipcMain.handle('editCategory', async (event, data) => {
     categoryID:oldCategory?._id
    });
 
+   let newCategoryObj ={};
+   let expirationDatesArrIDS=[];
+   
    if(expirationDatesArr.length > 0){
     await Promise.all(
       expirationDatesArr?.map(async (el) => {
@@ -594,7 +597,7 @@ ipcMain.handle('editCategory', async (event, data) => {
         totalQuantity += Number(el?.quantity);
         let newCategoryItem = new CategoryItem({
           ...el,
-          categoryID: newCategory?._id
+          categoryID: oldCategory?._id
         });
         await newCategoryItem.save();
 
@@ -606,7 +609,7 @@ ipcMain.handle('editCategory', async (event, data) => {
         console.log('CategoryItem saved:', newCategoryItem);
       })
     );
-    newCategory.expirationDatesArr = expirationDatesArrIDS;
+    newCategoryObj.expirationDatesArr = expirationDatesArrIDS;
   }
     
     // await Promise.all(
@@ -670,7 +673,7 @@ ipcMain.handle('editCategory', async (event, data) => {
     categoryItemObject.forEach((ele) => { finalTotalQuantity += ele.quantity;  expiration_dates.push(ele._id); });
 
     //2) ضيف الصنف
-    let newCategoryObj = {
+     newCategoryObj = {
       code,
       name,
       criticalValue,
