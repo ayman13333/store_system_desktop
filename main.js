@@ -612,61 +612,7 @@ ipcMain.handle('editCategory', async (event, data) => {
     newCategoryObj.expirationDatesArr = expirationDatesArrIDS;
   }
     
-    // await Promise.all(
-    //   expirationDatesArr.map(async (ele) => {
-    //     if (ele.createdAt) {
-    //       await CategoryItem.findByIdAndUpdate(ele._id,
-    //         { quantity: ele.quantity }, { new: true });
-    //       // console.log("--------------=")
-    //     } else {
-    //       console.log("--------------= new Expiration Date")
-    //       totalQuantity += Number(ele?.quantity);
-         
-    //       /////////////////////////////////////////////////////////////////////////////////////
-
-    //       const categoryItemObject = await CategoryItem.find({ categoryID: _id });
-    //       const dateE = new Date(ele.date);
-    //       let timestamp = dateE.setDate(dateE.getDate() + 1);
-    //       let targetDate = new Date(timestamp);
-    //       const result = categoryItemObject.find(item => {
-    //         const item0 = new Date(`${item.date.slice(0,15)} 00:00:00 GMT+0000`);
-    //         let itemDate = new Date(Date.UTC(
-    //           item0.getUTCFullYear(),
-    //           item0.getUTCMonth(),
-    //           item0.getUTCDate(),
-    //           0, 0, 0, 0 // Set to midnight UTC
-    //       )); 
-    //         console.log("Item : ", itemDate)
-    //         console.log("tar : " , targetDate);
-    //         console.log("SAme Month : " , (itemDate.getUTCMonth() + 1) , (targetDate.getMonth()));
-    //         return itemDate.getFullYear() === targetDate.getFullYear() &&
-    //           (itemDate.getUTCMonth() + 1) === (targetDate.getMonth()) && itemDate.getUTCDate() === targetDate.getUTCDate();
-    //       });
-
-
-    //       if (result) {
-    //         console.log("EXIST  : ", "OLD : ", result.quantity, "NEW : ", ele.quantity);
-    //         await CategoryItem.findByIdAndUpdate(result._id,
-    //           { quantity: Number(result.quantity) + Number(ele.quantity) }, { new: true });
-    //         return;
-    //       } else {
-    //         console.log("======== NOT EXIST ========");
-    //         console.log("Date For Category Item : " , targetDate );
-    //         targetDate.setUTCHours(0,0,0);
-    //         /////////////////////////////////////////////////////////////////////////////////////           
-    //         let newCategoryItem = new CategoryItem({
-    //           quantity: ele.quantity,
-    //           date: new Date(`${targetDate.toString().slice(0,15)} 00:00:00 GMT+0000`),
-    //           categoryID: _id,
-    //         });
-    //         await newCategoryItem.save();
-    //       }
-
-    //     }
-
-
-    //   })
-    // );
+   
     let expiration_dates = [];
     const categoryItemObject = await CategoryItem.find({ categoryID: _id, });
     let finalTotalQuantity =0;
@@ -674,18 +620,20 @@ ipcMain.handle('editCategory', async (event, data) => {
 
     //2) ضيف الصنف
      newCategoryObj = {
+      ...newCategoryObj,
       code,
       name,
       criticalValue,
       unitPrice,
       unit,
-      expirationDatesArr: expiration_dates,
+    //  expirationDatesArr: expiration_dates,
       totalQuantity: finalTotalQuantity,
       user,
       editDate
     }
 
-  
+      console.log('newCategoryObj',newCategoryObj);
+
     let newCategory = await Category.findByIdAndUpdate(
       oldCategory?._id,
       newCategoryObj,

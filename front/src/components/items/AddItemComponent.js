@@ -191,7 +191,7 @@ export default function AddItemComponent() {
                 // let date=new Date(el.date);
                 // صنف موجود قبل كدة مش هنقص منه تاني
                 if (el?._id) return el;
-                
+
                 const date = new Date(el.date);
 
                     // Subtract 5 days from the new date instance
@@ -215,7 +215,7 @@ export default function AddItemComponent() {
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
 
-            //  return;
+             // return;
 
             const data = {
                 _id: location?.state?._id,
@@ -225,7 +225,7 @@ export default function AddItemComponent() {
                 quantity,
                 unit,
                 unitPrice,
-                expirationDatesArr,
+                expirationDatesArr:expirationDatesArrAfterSubDates,
                 lastCode: location?.state?.code,
                 user: user?._id,
                 editDate: new Date()
