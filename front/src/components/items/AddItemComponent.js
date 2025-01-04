@@ -191,14 +191,24 @@ export default function AddItemComponent() {
                 // let date=new Date(el.date);
                 // صنف موجود قبل كدة مش هنقص منه تاني
                 if (el?._id) return el;
+                
+                const date = new Date(el.date);
 
-                let date = el?.date?.setDate(el?.date?.getDate() - fiveDays);
-                date = new Date(date);
+                    // Subtract 5 days from the new date instance
+                    date.setDate(date.getDate() - fiveDays);
 
-                return {
-                    ...el,
-                    date
-                }
+                    return {
+                        ...el,
+                        date
+                    }
+
+                // let date = el?.date?.setDate(el?.date?.getDate() - fiveDays);
+                // date = new Date(date);
+
+                // return {
+                //     ...el,
+                //     date
+                // }
             });
 
 
