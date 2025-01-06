@@ -95,7 +95,7 @@ export default function AllItemsComponent() {
       }
     },
     {
-      name: 'الاسم',
+      name: 'الاصناف',
       cell: row => {
         let codeStr;
 
