@@ -121,7 +121,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
 
     const addNewInvoice = async () => {
         try {
-            if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
+            // if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
             if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
             if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة الصرف');
             if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التحويل');
@@ -136,6 +136,9 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
             let totalQuantityBefore = 0;
             let totalQuantityAfter = 0;
 
+            let unitPriceBefore = 0;
+            let unitPriceAfter = 0;
+
             let hasError1 = false;
             selectedOptionArr?.map(el => {
                 if (el?.totalQuantity == '0') {
@@ -144,6 +147,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                 }
 
                 totalQuantityBefore += el?.totalQuantity;
+                unitPriceBefore += el?.unitPrice;
             });
 
             if (hasError1 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
@@ -156,6 +160,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                 }
 
                 totalQuantityAfter += el?.totalQuantity;
+                unitPriceAfter += el?.unitPrice;
             });
 
             if (hasError2 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
@@ -168,6 +173,13 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                 return toast.error('يجب ان تكون كمية الاصناف قبل وبعد التحويل متساوية');
 
             }
+
+            if (unitPriceAfter != unitPriceBefore) {
+                return toast.error('يجب ان يكون مجموع اسعار الاصناف قبل وبعد التحويل متساوية');
+            }
+
+            // console.log('done');
+            // return;
 
 
             const data = {
@@ -479,13 +491,13 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                                     <tr key={i}>
                                         <td className="text-center p-13">  {el?.name}   </td>
                                         <td className="text-center p-13" >{el?.code}</td>
-                                        {
+                                        {/* {
                                             type == null && <td className="text-center" >
                                                 <button onClick={() => showSelectedCategory(el)} className="btn btn-success small">
                                                     اضغط هنا
                                                 </button>
                                             </td>
-                                        }
+                                        } */}
 
                                         <td className="text-center p-13" >{el?.unitPrice}</td>
                                         <td className="text-center p-13" >{el?.totalQuantity}</td>

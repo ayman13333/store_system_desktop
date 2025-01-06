@@ -104,7 +104,7 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
     // console.log('supplyDate',new Date(supplyDate)?.toString());
     const addNewInvoice = async () => {
         try {
-            if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
+            // if (invoiceCode == '') return toast.error('من فضلك ادخل كود الفاتورة');
             if (invoiceNumber == '') return toast.error('من فضلك ادخل رقم الفاتورة');
             if (selectedSupplier == '0') return toast.error('من فضلك ادخل جهة التوريد');
             if (supplyDate == '') return toast.error('من فضلك ادخل تاريخ التوريد');
