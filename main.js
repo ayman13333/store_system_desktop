@@ -665,7 +665,6 @@ ipcMain.handle('editCategory', async (event, data) => {
 ipcMain.handle('addSupplyInvoice', async (event, data) => {
   try {
     const {
-      invoiceCode,
       selectedOptionArr,
       supplierID,
       employeeID,
@@ -678,14 +677,16 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     } = data;
 
     const forSearch = new Date(supplyDate);
-
-    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
-    if (invoiceCodeCheck) {
-
-      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-      return { success: false }
-      //  return res.send("Invoice Code Is Here")
+    let invoiceCode = 0;
+    let lastInvoice = await Invoice.findOne({ type: "supply" }).sort({ createdAt: -1 });
+    console.log("OPBJECT : " , data)
+    if(lastInvoice){
+      const number =  Number(lastInvoice.invoiceCode.split("A")[1]) +1;
+      invoiceCode = `A${number}`;
+    }else{
+      invoiceCode = `A1`;
     }
+
 
     console.log('bbbbbbbbbbbbbbbbb');
     let serial_nmber = invoiceNumber;
@@ -812,7 +813,6 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
 ipcMain.handle('addPaymentInvoice', async (event, data) => {
   try {
     const {
-      invoiceCode,
       selectedOptionArr,
       supplierID,
       employeeID,
@@ -824,10 +824,14 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
       invoiceNumber
     } = data;
 
-    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
-    if (invoiceCodeCheck) {
-      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-      return { success: false }
+    let invoiceCode = 0;
+    let lastInvoice = await Invoice.findOne({ type: "payment" }).sort({ createdAt: -1 });
+    console.log("OPBJECT : " , data)
+    if(lastInvoice){
+      const number =  Number(lastInvoice.invoiceCode.split("B")[1]) +1;
+      invoiceCode = `B${number}`;
+    }else{
+      invoiceCode = `B1`;
     }
 
 
@@ -914,7 +918,6 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
 ipcMain.handle('changeInvoice', async (event, data) => {
   try {
     const {
-      invoiceCode,
       selectedOptionArr,
       selectedOptionArr2,
       supplierID,
@@ -930,11 +933,19 @@ ipcMain.handle('changeInvoice', async (event, data) => {
 
     console.log("TYPE  : ", type)
 
-    const invoiceCodeCheck = await Invoice.findOne({ invoiceCode });
-    if (invoiceCodeCheck) {
-      new Notification({ title: 'هذا الكود مسجل من قبل' }).show();
-      return { success: false }
+    let invoiceCode = 0;
+    let lastInvoice = await Invoice.findOne({ type: "convert" }).sort({ createdAt: -1 });
+    console.log("OPBJECT : " , data)
+    if(lastInvoice){
+      const number =  Number(lastInvoice.invoiceCode.split("C")[1]) +1;
+      invoiceCode = `C${number}`;
+    }else{
+      invoiceCode = `C1`;
     }
+
+
+
+
     let serial_nmber = invoiceNumber;
 
 
