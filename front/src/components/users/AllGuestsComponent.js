@@ -34,6 +34,10 @@ export default function AllGuestsComponent() {
       setType(0);
       setMobile('');
       setAddress('');
+      setTaxNumber('');
+      setSerialNumber('');
+      setAdvantages('');
+      setDisAdvantages('');
     }
   }, [showEditModal])
 
