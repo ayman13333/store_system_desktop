@@ -150,12 +150,12 @@ app.whenReady().then(async () => {
 
  // const result = await User.deleteMany({ email: { $ne: 'admin@gmail.com' } });
 
-  const result = await User.deleteMany({
-    $or: [
-      { email: { $ne: 'admin' } }, // Email not equal to targetEmail
-      { email: { $exists: false } }   // Email field does not exist
-    ]
-  });
+  // const result = await User.deleteMany({
+  //   $or: [
+  //     { email: { $ne: 'admin' } }, // Email not equal to targetEmail
+  //     { email: { $exists: false } }   // Email field does not exist
+  //   ]
+  // });
 
   await setupCronJob();
 
@@ -1139,7 +1139,11 @@ ipcMain.handle('deleteInvoice', async (event, data) => {
 // تعديل الفاتورة
 ipcMain.handle('editInvoice',async(event,data)=>{
   try {
-    
+    let { invoiceCode,supplierID,supplyDate,invoiceNumber } = data;
+
+    return {
+      success: true
+    }
   } catch (error) {
     console.log('error', error.message);
     return {

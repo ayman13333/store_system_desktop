@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import { MyContext } from "../..";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import CustumNumberInput from "../../Utilities/CustumNumberInput";
 import FormatDateForHTML from "../../Utilities/FormatDateForHTML";
 import { toast } from "react-toastify";
 import ConfirmEditModal from "../items/ConfirmEditModal";
 
-function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
+function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
     const { entities, setEntities } = useContext(MyContext);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState(() => foundInvoice?.serialNumber);
@@ -28,13 +28,29 @@ function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
     const EditInvoiceFunc = async () => {
         try {
 
-            const data={
-                invoiceCode:foundInvoice?.invoiceCode
+            const data = {
+                invoiceCode: foundInvoice?.invoiceCode,
+                supplierID: selectedSupplier,
+                supplyDate: new Date(supplyDate)?.toString(),
+                invoiceNumber
             }
+
+            console.log('data',data);
+            return;
+            setIsLoading(true);
+            const result = await window?.electron?.editInvoice(data);
+            setIsLoading(false);
+
             // after logic
-            setShow(false);
-            setFoundInvoice(null);
-            toast.success('تم التعديل بنجاح');
+            if (result?.success == true) {
+                setShow(false);
+                setFoundInvoice(null);
+                toast.success('تم التعديل بنجاح');
+            }
+            else {
+                toast.error('فشل في عملية التعديل');
+            }
+
         } catch (error) {
             console.log('error', error?.message);
             setIsLoading(false);
@@ -48,7 +64,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
         }}>
             <Modal.Header >
                 <Modal.Title>
-                    تعديل
+                    <h1> تعديل الفاتورة {isLoading && <Spinner />} </h1>
 
                 </Modal.Title>
             </Modal.Header>
@@ -64,7 +80,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
                 </div>
 
                 <div className="form-group">
-                    <label className="my-2">  تاريخ التوريد </label>
+                    <label className="my-2">  تاريخ الفاتورة </label>
                     <input
                         value={FormatDateForHTML(supplyDate)}
                         onChange={(e) => setSupplyDate(e.target.value)}
@@ -75,7 +91,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
                 </div>
 
                 <div className="form-group">
-                    <label className="my-2"> اسم جهة التوريد </label>
+                    <label className="my-2"> اسم الجهة  </label>
 
                     <select
                         value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
