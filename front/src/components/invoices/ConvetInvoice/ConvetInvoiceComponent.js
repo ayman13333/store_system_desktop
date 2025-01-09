@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap';
 import ExpirationDatesModal from '../supplyInvoice/ExpirationDatesModal';
 import AddQuantityModal from '../supplyInvoice/AddQuantityModal';
@@ -9,9 +9,13 @@ import { toast } from 'react-toastify';
 import Select from 'react-select';
 import CalculateSum from '../../../Utilities/CalculateSum';
 import FormatDateForHTML from '../../../Utilities/FormatDateForHTML';
+import { MyContext } from '../../..';
 
 
 export default function ConvetInvoiceComponent({ type = null, invoice = null }) {
+
+      const { setEntities } = useContext(MyContext);
+    
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState(() => type == null ? '' : invoice?.serialNumber);
@@ -64,6 +68,9 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
             let activeAsuuplires = result?.users?.filter(el => el?.status == true);
 
             setSuppliers(activeAsuuplires);
+
+            if(type!=null) setEntities(activeAsuuplires);
+
 
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {

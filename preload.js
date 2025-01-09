@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('electron', {
   searchForInvoiceByCode:(data)=>ipcRenderer.invoke('searchForInvoiceByCode',data),
   // حذف فاتورة
   deleteInvoice:(data)=>ipcRenderer.invoke('deleteInvoice',data),
+  // تعديل الفاتورة
+  editInvoice:(data)=>ipcRenderer.invoke('editInvoice',data),
   // الاشعارات   
   getNotifications:(data)=>ipcRenderer.invoke('getNotifications',data),
   // postNewNotifications

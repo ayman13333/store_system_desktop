@@ -14,7 +14,7 @@ import { MyContext } from "../../..";
 
 export default function PaymentInvoiceComponent({ type = null, invoice = null }) {
 
-    const { entities,setEntities } = useContext(MyContext);
+    const { setEntities } = useContext(MyContext);
 
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة

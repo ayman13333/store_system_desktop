@@ -27,6 +27,10 @@ function EditInvoiceModal({ show, setShow, foundInvoice,setFoundInvoice }) {
 
     const EditInvoiceFunc = async () => {
         try {
+
+            const data={
+                invoiceCode:foundInvoice?.invoiceCode
+            }
             // after logic
             setShow(false);
             setFoundInvoice(null);

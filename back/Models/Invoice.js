@@ -9,6 +9,7 @@ const InvoiceSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    // كود الفاتورة
     invoiceCode:{
         type:String,
         required:true

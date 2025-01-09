@@ -1136,6 +1136,18 @@ ipcMain.handle('deleteInvoice', async (event, data) => {
   }
 });
 
+// تعديل الفاتورة
+ipcMain.handle('editInvoice',async(event,data)=>{
+  try {
+    
+  } catch (error) {
+    console.log('error', error.message);
+    return {
+      success: false
+    }
+  }
+})
+
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
