@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import { MyContext } from "../..";
 
 export default function SearchComponent({ setFoundInvoice, setIsLoading, isLoading }) {
+
+    const { setEntities } = useContext(MyContext);
     const [searchValue, setSearchValue] = useState('');
 
     const search = async () => {
@@ -21,10 +24,15 @@ export default function SearchComponent({ setFoundInvoice, setIsLoading, isLoadi
             else {
                 setFoundInvoice(null);
             }
+
+            setEntities(null);
         } catch (error) {
             console.log("error", error.message);
             toast.error(' حدث خطأ حاول مرة اخري');
+
+            setEntities(null);
         }
+       
 
     }
     return (

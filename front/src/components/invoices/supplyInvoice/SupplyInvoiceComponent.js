@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import CustumNumberInput from "../../../Utilities/CustumNumberInput";
 import FormatDate from "../../../Utilities/FormatDate";
@@ -10,8 +10,12 @@ import AddQuantityModal from "./AddQuantityModal";
 import { toast } from "react-toastify";
 import CalculateSum from "../../../Utilities/CalculateSum";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
+import { MyContext } from "../../..";
 
 export default function SupplyInvoiceComponent({ type = null, invoice = null }) {
+
+      const { setEntities } = useContext(MyContext);
+    
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState(() => type == null ? '' : invoice?.serialNumber);
@@ -57,6 +61,8 @@ export default function SupplyInvoiceComponent({ type = null, invoice = null }) 
             let activeSuppliers = result?.users?.filter(el => el?.status == true);
 
             setSuppliers(activeSuppliers);
+
+            if(type!=null) setEntities(activeSuppliers);
 
             let categoriesForSelect = categories?.categories?.map(el => {
                 return {

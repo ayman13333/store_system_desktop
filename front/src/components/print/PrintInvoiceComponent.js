@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import SearchComponent from "./SearchComponent";
 import SupplyInvoiceComponent from "../invoices/supplyInvoice/SupplyInvoiceComponent";
@@ -9,15 +9,25 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmEditModal from "../items/ConfirmEditModal";
 import { toast } from "react-toastify";
 import logo from '../reports/InventoryReportWithoutPrice/logo.jpg'
-
+import { MyContext } from "../..";
+import EditInvoiceModal from "./EditInvoiceModal";
 
 export default function PrintInvoiceComponent() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { setEntities } = useContext(MyContext);
+
+  // console.log('entities',entities);
+
+  useEffect(()=>{
+    return()=>setEntities(null);
+  },[]);
+
   const [isLoading, setIsLoading] = useState(() => false);
   const [foundInvoice, setFoundInvoice] = useState(() => location?.state ? location?.state : null);
   const [showDeleteModal, setShowDeleteModal] = useState(() => false);
+  const[showEditModal,setShowEditModal]=useState(false);
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -854,7 +864,10 @@ export default function PrintInvoiceComponent() {
             disabled={isLoading}
             className='btn btn-primary'> طباعة </button>
 
-            <button className="btn btn-warning"> 
+            <button 
+            className="btn btn-warning"
+            onClick={()=>setShowEditModal(true)}
+            > 
               تعديل
             </button>
           </div>
@@ -879,6 +892,15 @@ export default function PrintInvoiceComponent() {
           show={showDeleteModal}
           setShow={setShowDeleteModal}
           type={'delete'} />
+      }
+
+      {
+        showEditModal&&<EditInvoiceModal 
+        show={showEditModal}
+        setShow={setShowEditModal}
+        foundInvoice={foundInvoice}
+        setFoundInvoice={setFoundInvoice}
+         />
       }
     </div>
   )

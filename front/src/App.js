@@ -20,7 +20,9 @@ import ItemTransactionReportPage from './Pages/reports/ItemTransactionReportPage
 import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactionsReportPage';
 import PrintInvoicePage from './Pages/print/PrintInvoicePage';
 import NavBar from './Utilities/NavBar';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+
+import {MyContext} from "./index";
 
 // import PrintPayentandSupplyInvoice from './components/print/PrintPayentandSupplyInvoice';
 
@@ -29,11 +31,13 @@ import { useState } from 'react';
 
 function App() {
   // const location = useLocation();
-  const[isLogin,setIsLogin]=useState(false);
+  const { isLogin,setIsLogin } = useContext(MyContext);
+  // const[isLogin,setIsLogin]=useState(false);
 
    console.log('location',window.location.href);
     const loggedUser = JSON.parse(localStorage.getItem('user'));
 
+   
 
 
   return (

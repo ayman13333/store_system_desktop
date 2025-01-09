@@ -3,15 +3,19 @@ import ExpirationDatesModal from "../supplyInvoice/ExpirationDatesModal";
 import AddQuantityModal from "../supplyInvoice/AddQuantityModal";
 import CustumNumberInput from "../../../Utilities/CustumNumberInput";
 import { Spinner } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FormatDate from "../../../Utilities/FormatDate";
 import Select from 'react-select';
 import { toast } from "react-toastify";
 import CalculateSum from "../../../Utilities/CalculateSum";
 import FormatDateForHTML from "../../../Utilities/FormatDateForHTML";
+import { MyContext } from "../../..";
 
 
 export default function PaymentInvoiceComponent({ type = null, invoice = null }) {
+
+    const { entities,setEntities } = useContext(MyContext);
+
     const [isLoading, setIsLoading] = useState(false);
     // رقم  الفاتورة
     const [invoiceNumber, setInvoiceNumber] = useState(() => type == null ? '' : invoice?.serialNumber);
@@ -54,6 +58,9 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
             let activeAsuuplires = result?.users?.filter(el => el?.status == true);
 
             setSuppliers(activeAsuuplires);
+
+            if(type!=null) setEntities(activeAsuuplires);
+
 
             //console.log('bbbbbbbbbbbb',categories);
             let categoriesForSelect = categories?.categories?.map(el => {
