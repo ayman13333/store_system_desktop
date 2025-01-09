@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Spinner } from 'react-bootstrap';
 import CustumNumberInput from '../../Utilities/CustumNumberInput';
 import ExpirationDateModal from './ExpirationDateModal';
@@ -70,13 +70,17 @@ export default function AddItemComponent() {
     const [showConfirmEditModal, setShowConfirmEditModal] = useState(false);
 
     const[showConfirmDeleteModal,setShowConfirmDeleteModal]=useState(false);
-    const[selectedRow,setSelectedRow]=useState(null);
+    // const[selectedRow,setSelectedRow]=useState(null);
+    const selectedRow=useRef(null);
 
 
 
     const deleteRow = () => {
+
+        // console.log(selectedRow);
+        // return;
         let filter = expirationDatesArr.filter(el => {
-            if (el?.key != selectedRow?.key) return el;
+            if (el?.key != selectedRow.current?.key) return el;
             else {
                 setQuantity(prev => Number(Number(prev) - Number(el?.quantity)));
             }
@@ -85,7 +89,8 @@ export default function AddItemComponent() {
         // setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
         setExpirationDatesArr(filter);
         setRowToEdit(null);
-        setSelectedRow(null);
+        selectedRow.current=null;
+       // setSelectedRow(null);
     }
 
     const editRow = (row) => {
@@ -187,7 +192,7 @@ export default function AddItemComponent() {
             // if (quantity == '' || quantity == '0') return toast.error('يجب ادخال الكمية');
             if (unitPrice == '' || unitPrice == '0') return toast.error('يجب ادخال سعر الوحدة');
             if (unit == '') return toast.error('يجب ادخال الوحدة');
-            if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
+           // if (expirationDatesArr.length == 0) return toast.error('يجب ادخال تاريخ صلاحية للصنف علي الاقل');
 
 
             // نقص 5 ايام من التواريخ
@@ -265,7 +270,7 @@ export default function AddItemComponent() {
 
     // console.log('location.state', location.state);
 
-    console.log('selectedRow', selectedRow);
+    console.log('selectedRow', selectedRow.current);
 
 
     return (
@@ -403,7 +408,8 @@ export default function AddItemComponent() {
                                             <div className='d-flex h-25 gap-2'>
                                                 <button onClick={() =>{
                                                     setShowConfirmDeleteModal(true);
-                                                    setSelectedRow(el);
+                                                  //  setSelectedRow(el);
+                                                    selectedRow.current=el;
                                                    // deleteRow(el);
                                                 } } className='btn btn-danger h-25 my-auto small'> <FaTrashAlt height={'5px'} /> </button>
                                                 {/* <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button> */}

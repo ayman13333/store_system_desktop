@@ -564,7 +564,7 @@ ipcMain.handle('editCategory', async (event, data) => {
   try {
     let { expirationDatesArr, code, name, criticalValue, unitPrice, unit, quantity, lastCode, user, editDate, _id } = data;
 
-    if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
+   // if (expirationDatesArr.length == 0) return new Notification({ title: 'قم ب ادخال الاصناف' }).show();
 
     const oldCategory=await Category.findById(_id);
 

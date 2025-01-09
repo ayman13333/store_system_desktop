@@ -842,6 +842,7 @@ export default function PrintInvoiceComponent() {
 
       {
         foundInvoice && <div className="d-flex justify-content-between">
+          <div className="d-flex gap-5">
           <button
             onClick={() => {
               if (foundInvoice?.type == 'convert') {
@@ -852,7 +853,13 @@ export default function PrintInvoiceComponent() {
             }}
             disabled={isLoading}
             className='btn btn-primary'> طباعة </button>
-          {
+
+            <button className="btn btn-warning"> 
+              تعديل
+            </button>
+          </div>
+         <div>
+         {
             loggedUser?.type == "admin" &&
             <button
               onClick={() => setShowDeleteModal(true)}
@@ -860,6 +867,8 @@ export default function PrintInvoiceComponent() {
               حذف
             </button>
           }
+         </div>
+         
 
         </div>
       }
