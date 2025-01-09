@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ConfirmEditModal from './ConfirmEditModal';
 import { fiveDays } from '../../Constants';
+import { CiEdit } from 'react-icons/ci';
 
 
 
@@ -68,12 +69,14 @@ export default function AddItemComponent() {
 
     const [showConfirmEditModal, setShowConfirmEditModal] = useState(false);
 
+    const[showConfirmDeleteModal,setShowConfirmDeleteModal]=useState(false);
+    const[selectedRow,setSelectedRow]=useState(null);
 
 
 
-    const deleteRow = (row) => {
+    const deleteRow = () => {
         let filter = expirationDatesArr.filter(el => {
-            if (el?.key != row?.key) return el;
+            if (el?.key != selectedRow?.key) return el;
             else {
                 setQuantity(prev => Number(Number(prev) - Number(el?.quantity)));
             }
@@ -82,6 +85,7 @@ export default function AddItemComponent() {
         // setQuantity(prev=>Number(Number(prev)+Number(newQuantity)));
         setExpirationDatesArr(filter);
         setRowToEdit(null);
+        setSelectedRow(null);
     }
 
     const editRow = (row) => {
@@ -194,13 +198,13 @@ export default function AddItemComponent() {
 
                 const date = new Date(el.date);
 
-                    // Subtract 5 days from the new date instance
-                    date.setDate(date.getDate() - fiveDays);
+                // Subtract 5 days from the new date instance
+                date.setDate(date.getDate() - fiveDays);
 
-                    return {
-                        ...el,
-                        date
-                    }
+                return {
+                    ...el,
+                    date
+                }
 
                 // let date = el?.date?.setDate(el?.date?.getDate() - fiveDays);
                 // date = new Date(date);
@@ -215,7 +219,7 @@ export default function AddItemComponent() {
 
             console.log('expirationDatesArrAfterSubDates', expirationDatesArrAfterSubDates);
 
-             // return;
+            // return;
 
             const data = {
                 _id: location?.state?._id,
@@ -225,7 +229,7 @@ export default function AddItemComponent() {
                 quantity,
                 unit,
                 unitPrice,
-                expirationDatesArr:expirationDatesArrAfterSubDates,
+                expirationDatesArr: expirationDatesArrAfterSubDates,
                 lastCode: location?.state?.code,
                 user: user?._id,
                 editDate: new Date()
@@ -261,7 +265,7 @@ export default function AddItemComponent() {
 
     // console.log('location.state', location.state);
 
-    console.log('expirationDatesArr', expirationDatesArr);
+    console.log('selectedRow', selectedRow);
 
 
     return (
@@ -360,14 +364,22 @@ export default function AddItemComponent() {
             <div className="form-group my-3">
 
                 <div className='d-flex justify-content-between'>
-                    <h6 className="my-3">  تاريخ انتهاء الصلاحية </h6>
-                    <button
-                        onClick={() => {
-                            setRowToEdit(null);
-                            setShowExpirationDateModal(true);
+                    {
+                        location?.state == null && <>
+                            <h6 className="my-3">  تاريخ انتهاء الصلاحية </h6>
 
-                        }}
-                        className='btn btn-success h-50 my-auto'> اضافة تاريخ انتهاء الصلاحية </button>
+                            <button
+                                onClick={() => {
+                                    setRowToEdit(null);
+                                    setShowExpirationDateModal(true);
+
+                                }}
+                                className='btn btn-success h-50 my-auto'> اضافة تاريخ انتهاء الصلاحية </button>
+                        </>
+                    }
+
+
+
                 </div>
 
 
@@ -389,7 +401,11 @@ export default function AddItemComponent() {
                                         <td className="p-13" >{el?.quantity}</td>
                                         <td>
                                             <div className='d-flex h-25 gap-2'>
-                                                <button onClick={() => deleteRow(el)} className='btn btn-danger h-25 my-auto small'> <FaTrashAlt height={'5px'} /> </button>
+                                                <button onClick={() =>{
+                                                    setShowConfirmDeleteModal(true);
+                                                    setSelectedRow(el);
+                                                   // deleteRow(el);
+                                                } } className='btn btn-danger h-25 my-auto small'> <FaTrashAlt height={'5px'} /> </button>
                                                 {/* <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button> */}
                                             </div>
                                         </td>
@@ -422,7 +438,14 @@ export default function AddItemComponent() {
                     func={editCategory}
                 />
             }
-
+            
+            {
+                showConfirmDeleteModal&&<ConfirmEditModal
+                show={showConfirmDeleteModal} setShow={setShowConfirmDeleteModal}
+                type={'delete'}
+                func={deleteRow}
+            />
+            }
 
             <div className='d-flex justify-content-between'>
                 {

@@ -4,6 +4,7 @@ export default function ConfirmEditModal({ show, setShow, func , type }) {
 
     const confirm = async () => {
          await func();
+         setShow(false);
     }
     return (
         <Modal show={show} onHide={() => {
