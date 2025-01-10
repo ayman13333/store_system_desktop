@@ -35,8 +35,8 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
                 invoiceNumber
             }
 
-            console.log('data',data);
-          //  return;
+            console.log('data', data);
+            //  return;
             setIsLoading(true);
             const result = await window?.electron?.editInvoice(data);
             setIsLoading(false);
@@ -70,6 +70,20 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
             </Modal.Header>
 
             <Modal.Body>
+
+                <div className="form-group">
+                    <label className="my-2"> اسم الجهة  </label>
+
+                    <select
+                        value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
+                        className="form-control"
+                    >
+                        {
+                            entities?.length > 0 && entities?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
+                        }
+                    </select>
+                </div>
+
                 <div className="form-group">
                     <label className="my-2"> رقم  الفاتورة </label>
                     <CustumNumberInput
@@ -90,18 +104,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label className="my-2"> اسم الجهة  </label>
 
-                    <select
-                        value={selectedSupplier} onChange={(e) => setSelectedSupplier(e.target.value)}
-                        className="form-control"
-                    >
-                        {
-                            entities?.length > 0 && entities?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
-                        }
-                    </select>
-                </div>
 
                 {
                     showConfirmEditModal && <ConfirmEditModal
