@@ -412,7 +412,13 @@ export default function AddItemComponent() {
                                                     selectedRow.current=el;
                                                    // deleteRow(el);
                                                 } } className='btn btn-danger h-25 my-auto small'> <FaTrashAlt height={'5px'} /> </button>
-                                                {/* <button onClick={() => editRow(el)} className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button> */}
+                                                <button onClick={() =>{
+                                                   setRowToEdit(el);
+                                                  console.log('el',el);
+                                                    setShowExpirationDateModal(true);
+
+                                                   // editRow(el);
+                                                } } className='btn btn-warning h-25 my-auto'> <CiEdit height={'5px'} /> </button>
                                             </div>
                                         </td>
                                     </tr>
