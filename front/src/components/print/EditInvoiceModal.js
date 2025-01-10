@@ -36,7 +36,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
             }
 
             console.log('data',data);
-            return;
+          //  return;
             setIsLoading(true);
             const result = await window?.electron?.editInvoice(data);
             setIsLoading(false);
@@ -64,7 +64,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
         }}>
             <Modal.Header >
                 <Modal.Title>
-                    <h1> تعديل الفاتورة {isLoading && <Spinner />} </h1>
+                    <h1> تعديل الفاتورة  </h1>
 
                 </Modal.Title>
             </Modal.Header>
@@ -83,7 +83,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
                     <label className="my-2">  تاريخ الفاتورة </label>
                     <input
                         value={FormatDateForHTML(supplyDate)}
-                        onChange={(e) => setSupplyDate(e.target.value)}
+                        onChange={(e) => setSupplyDate(new Date(e.target.value))}
                         required
                         type={'date'}
                         className="form-control"
@@ -126,7 +126,7 @@ function EditInvoiceModal({ show, setShow, foundInvoice, setFoundInvoice }) {
                         }}
                         disabled={isLoading}
                     >
-                        موافق
+                        موافق {isLoading && <Spinner />}
                     </Button>
                 </div>
 

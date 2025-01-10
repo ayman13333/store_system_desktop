@@ -1141,6 +1141,18 @@ ipcMain.handle('editInvoice',async(event,data)=>{
   try {
     let { invoiceCode,supplierID,supplyDate,invoiceNumber } = data;
 
+    console.log('supplierID',supplierID?.toString());
+    await Invoice.findOneAndUpdate(
+      {invoiceCode},
+      { $set: { 
+        supplierID,
+        supplyDate,
+        serialNumber:invoiceNumber
+       } 
+      },
+      {new:true}
+    );
+
     return {
       success: true
     }

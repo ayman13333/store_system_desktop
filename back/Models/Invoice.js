@@ -5,6 +5,7 @@ const InvoiceSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    // رقم الفاتورة
     serialNumber:{
         type:String,
         required:true
