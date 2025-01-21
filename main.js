@@ -410,7 +410,12 @@ ipcMain.handle('editGuest', async (event, data) => {
 // الاصناف (categories)
 ipcMain.handle('getAllCategories', async (event, data) => {
   try {
-    let categories = await Category.find()
+    // const { date } = data;
+    let filter = {};
+    // if(date){
+      // filter.createdAt= {$lte : date};
+    // }
+    let categories = await Category.find(filter)
       .populate('expirationDatesArr user')
       // .sort({ createdAt: -1 })
       .lean();
@@ -443,7 +448,7 @@ ipcMain.handle('getAllCategories', async (event, data) => {
       return category;
     });
 
-    // console.log('categories',categories);
+    console.log('categories-                ------------');
 
     return {
       success: true,
@@ -1167,7 +1172,7 @@ ipcMain.handle('editInvoice',async(event,data)=>{
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {
   try {
-    const { invoiceCode, supplierID, startDate, endDate, itemCode, type } = data;
+    const { invoiceCode, supplierID, startDate, endDate, itemCode, type, isItem , isBeforeTransfare} = data;
     let categoryObject = [];
     let filter = {};
 
@@ -1221,11 +1226,74 @@ ipcMain.handle('searchForReport', async (event, data) => {
     }
 
      categoryObject = await Invoice.find(filter).populate('supplierID employeeID').lean();
+     
+     let handleList = [];
+     let handleList2 = [];
+     let finalList = [];
+     let finalList2 = [];
+     let finalPrice = [];
+     let finalPrice2 = [];
+     let sums = {};
+     let sums2 = {};
+     if(isItem==true){
+      await Promise.all(
+        categoryObject.map(async(ele)=>{
+          finalPrice.push(Number(ele.total_suplly_price));
+          finalPrice2.push(Number(ele.total_payment_price));
+          ele.invoicesData.map((ele2)=>{
+            handleList.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code  }); }),
+           ele.invoicesData2.map((ele2)=>{
+            handleList2.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code  }); })
+          }),
+        ),
 
-    return {
-      success: true,
-      categoryObject
-    }
+
+
+
+          // Loop through each item
+          handleList.forEach(item => {
+            const key = `${item.itemName}-${item.code}`; // Create a unique key for itemName and code
+            if (!sums[key]) {
+              sums[key] = { name: item.itemName, quantity: 0, code: item.code };
+            }
+            sums[key].quantity += item.quantity;
+          });
+          handleList2.forEach(item => {
+            const key = `${item.itemName}-${item.code}`; // Create a unique key for itemName and code
+            if (!sums2[key]) {
+              sums2[key] = { name: item.itemName, quantity: 0, code: item.code };
+            }
+            sums2[key].quantity += item.quantity;
+          });
+
+
+
+
+          finalList = Object.values(sums);
+          finalList.push({finalPrice:finalPrice.reduce((accumulator, currentValue) => accumulator + currentValue, 0)})
+
+          finalList2 = Object.values(sums2);
+          finalList2.push({finalPrice:finalPrice2.reduce((accumulator, currentValue) => accumulator + currentValue, 0)})
+          console.log("DATA : " , finalList)
+          console.log("DATA2 : " , finalList2)
+          if(isBeforeTransfare==true){
+            return {
+              success: true,
+              finalList2
+            }
+          }else{
+            return {
+              success: true,
+              finalList
+            }
+          }
+     
+    }else{
+      return {
+        success: true,
+        categoryObject
+      }
+     }
   } catch (error) {
     console.log('error', error);
     new Notification({ title: 'حدث خطأ حاول مرة اخري' }).show();
