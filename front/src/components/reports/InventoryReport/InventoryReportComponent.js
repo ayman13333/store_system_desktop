@@ -318,16 +318,6 @@ export default function InventoryReportComponent() {
       `);
     });
   
-    // Close table body
-    printWindow.document.write(`
-   
-          </tbody>
-        </table>
-      </div>
-    `);
-  
-    // Footer with total price
-
     printWindow.document.write(`
       <tr style="
         font-weight: bold;
@@ -358,6 +348,17 @@ export default function InventoryReportComponent() {
           </div>
       </tr>
     `);
+    // Close table body
+    printWindow.document.write(`
+   
+          </tbody>
+        </table>
+      </div>
+    `);
+  
+    // Footer with total price
+
+
   
     // Close HTML
     printWindow.document.write('</body></html>');

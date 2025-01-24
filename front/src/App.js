@@ -21,7 +21,7 @@ import FinancialTransactionsReportPage from './Pages/reports/FinancialTransactio
 import PrintInvoicePage from './Pages/print/PrintInvoicePage';
 import NavBar from './Utilities/NavBar';
 import { useContext, useState } from 'react';
-
+import EntityTransactionItemsReportPage from './Pages/reports/EntityTransactionItemsReportPage';
 import {MyContext} from "./index";
 
 // import PrintPayentandSupplyInvoice from './components/print/PrintPayentandSupplyInvoice';
@@ -79,6 +79,8 @@ function App() {
       {/* تقرير معاملات الجهة */}
 
       <Route path='/EntityTransactionReport' element={<EntityTransactionReportPage />} />
+      <Route path='/EntityTransactionItemsReport' element={<EntityTransactionItemsReportPage />} />
+
 
       {/*  تقرير معاملات الصنف */}
       <Route path='/ItemTransactionReport' element={<ItemTransactionReportPage />} />
