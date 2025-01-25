@@ -1241,9 +1241,9 @@ ipcMain.handle('searchForReport', async (event, data) => {
           finalPrice.push(Number(ele.total_suplly_price));
           finalPrice2.push(Number(ele.total_payment_price));
           ele.invoicesData.map((ele2)=>{
-            handleList.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code  }); }),
+            handleList.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code , unit : ele2.unit  }); }),
            ele.invoicesData2.map((ele2)=>{
-            handleList2.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code  }); })
+            handleList2.push({  itemName : ele2.name,  quantity : ele2.totalQuantity , code : ele2.code , unit : ele2.unit }); })
           }),
         ),
 
@@ -1252,16 +1252,18 @@ ipcMain.handle('searchForReport', async (event, data) => {
 
           // Loop through each item
           handleList.forEach(item => {
-            const key = `${item.itemName}-${item.code}`; // Create a unique key for itemName and code
+            const key = `${item.itemName}-${item.code}-${item.unit}`; // Create a unique key for itemName and code
             if (!sums[key]) {
-              sums[key] = { name: item.itemName, quantity: 0, code: item.code };
+              sums[key] = { name: item.itemName, quantity: 0, code: item.code , unit: item.unit };
             }
             sums[key].quantity += item.quantity;
           });
+
+
           handleList2.forEach(item => {
-            const key = `${item.itemName}-${item.code}`; // Create a unique key for itemName and code
+            const key = `${item.itemName}-${item.code}-${item.unit}`; // Create a unique key for itemName and code
             if (!sums2[key]) {
-              sums2[key] = { name: item.itemName, quantity: 0, code: item.code };
+              sums2[key] = { name: item.itemName, quantity: 0, code: item.code , unit: item.unit};
             }
             sums2[key].quantity += item.quantity;
           });
@@ -1279,7 +1281,7 @@ ipcMain.handle('searchForReport', async (event, data) => {
           if(isBeforeTransfare==true){
             return {
               success: true,
-              finalList2
+              finalList:finalList2
             }
           }else{
             return {
