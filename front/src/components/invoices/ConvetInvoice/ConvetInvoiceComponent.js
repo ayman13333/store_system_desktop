@@ -92,6 +92,25 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
         get();
     }, []);
 
+    useEffect(()=>{
+            if(type!=null){
+                setInvoiceNumber(() => type == null ? '' : invoice?.serialNumber);    
+                // اسم جهة الصرف
+                 setSelectedSupplier(() => type == null ? '0' : invoice?.supplierID?._id);
+                // تاريخ الصرف
+               setSupplyDate(() => type == null ? '' : new Date(invoice?.supplyDate));
+               
+                // كود الفاتورة
+                 setInvoiceCode(() => type == null ? '' : invoice?.invoiceCode);
+                // State to store the selected option
+                setSelectedOptionArr(() => type == null ? null : invoice?.invoicesData);
+                // تواريخ الصلاحية
+                 setNotes(() => type == null ? '' : invoice?.notes);
+                 
+                 setSelectedOptionArr2(() => type == null ? null : invoice?.invoicesData2);
+            }
+        },[invoice]);
+
     const toDayDate = FormatDate(new Date);
 
     // console.log('categoriesToConvert', categoriesToConvert);

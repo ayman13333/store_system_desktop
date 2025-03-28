@@ -18,7 +18,7 @@ export default function SearchComponent({ setFoundInvoice, setIsLoading, isLoadi
             setIsLoading(false);
 
             if (success == true) {
-                // console.log('invoice',foundInvoice);
+                 console.log('invoice',foundInvoice);
                 setFoundInvoice(foundInvoice);
             }
             else {

@@ -79,13 +79,32 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
         }
 
         get();
+        console.log('SupplyInvoiceComponent use Effect');
+
     }, []);
+
+    useEffect(()=>{
+        if(type!=null){
+             // رقم  الفاتورة
+     setInvoiceNumber(() => type == null ? '' : invoice?.serialNumber);    
+    // اسم جهة الصرف
+     setSelectedSupplier(() => type == null ? '0' : invoice?.supplierID?._id);
+    // تاريخ الصرف
+   setSupplyDate(() => type == null ? '' : new Date(invoice?.supplyDate));
+   
+    // كود الفاتورة
+     setInvoiceCode(() => type == null ? '' : invoice?.invoiceCode);
+    // State to store the selected option
+    setSelectedOptionArr(() => type == null ? null : invoice?.invoicesData);
+    // تواريخ الصلاحية
+     setShowExpirationDatesModal(false);
+     setNotes(() => type == null ? '' : invoice?.notes);
+        }
+    },[invoice]);
 
     const toDayDate = FormatDate(new Date);
 
-    console.log('categories', categories);
-    console.log('selectedOptionArr', selectedOptionArr);
-
+   
 
 
 

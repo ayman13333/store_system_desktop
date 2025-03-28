@@ -42,12 +42,12 @@ async function createWindow() {
 
 
   // test
-  mainWindow.webContents.openDevTools();
-  mainWindow.loadURL('http://localhost:3000');
+  // mainWindow.webContents.openDevTools();
+  // mainWindow.loadURL('http://localhost:3000');
 
   // production
-  // const startUrl = path.join(__dirname,'front','build','index.html');
-  //  mainWindow.loadFile(startUrl);
+  const startUrl = path.join(__dirname,'front','build','index.html');
+   mainWindow.loadFile(startUrl);
 }
 
 
@@ -684,12 +684,17 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     const forSearch = new Date(supplyDate);
     let invoiceCode = 0;
     let lastInvoice = await Invoice.findOne({ type: "supply" }).sort({ createdAt: -1 });
-    console.log("OPBJECT : " , data)
+
+    console.log("lastInvoice : " , lastInvoice);
+
     if(lastInvoice){
-      const number =  Number(lastInvoice.invoiceCode.split("A")[1]) +1;
-      invoiceCode = `A${number}`;
+      const number =  Number(lastInvoice.invoiceCode.split("أضافه (")[1].split(")")[0]) +1;
+      console.log('number',number);
+
+     // return;
+      invoiceCode = `أضافه (${number})`;
     }else{
-      invoiceCode = `A1`;
+      invoiceCode = `أضافه (1)`;
     }
 
 
@@ -831,12 +836,12 @@ ipcMain.handle('addPaymentInvoice', async (event, data) => {
 
     let invoiceCode = 0;
     let lastInvoice = await Invoice.findOne({ type: "payment" }).sort({ createdAt: -1 });
-    console.log("OPBJECT : " , data)
+   // console.log("OPBJECT : " , data)
     if(lastInvoice){
-      const number =  Number(lastInvoice.invoiceCode.split("B")[1]) +1;
-      invoiceCode = `B${number}`;
+      const number =  Number(lastInvoice.invoiceCode.split("صرف (")[1].split(")")[0]) +1;
+      invoiceCode = `صرف (${number})`;
     }else{
-      invoiceCode = `B1`;
+      invoiceCode = `صرف (1)`;
     }
 
 
@@ -940,12 +945,12 @@ ipcMain.handle('changeInvoice', async (event, data) => {
 
     let invoiceCode = 0;
     let lastInvoice = await Invoice.findOne({ type: "convert" }).sort({ createdAt: -1 });
-    console.log("OPBJECT : " , data)
+   // console.log("OPBJECT : " , data)
     if(lastInvoice){
-      const number =  Number(lastInvoice.invoiceCode.split("C")[1]) +1;
-      invoiceCode = `C${number}`;
+      const number =  Number(lastInvoice.invoiceCode.split("تحويل (")[1].split(")")[0]) +1;
+      invoiceCode = `تحويل (${number})`;
     }else{
-      invoiceCode = `C1`;
+      invoiceCode = `تحويل (1)`;
     }
 
 
