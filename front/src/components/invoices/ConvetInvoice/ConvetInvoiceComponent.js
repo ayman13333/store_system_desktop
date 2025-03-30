@@ -159,11 +159,11 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
             if (selectedOptionArr2 == null || selectedOptionArr2.length == 0) return toast.error(" من فضلك اختر قائمة الاصناف بعد تحويلها");
 
 
-            let totalQuantityBefore = 0;
-            let totalQuantityAfter = 0;
+            // let totalQuantityBefore = 0;
+            // let totalQuantityAfter = 0;
 
-            let unitPriceBefore = 0;
-            let unitPriceAfter = 0;
+          //  let unitPriceBefore = 0;
+          //  let unitPriceAfter = 0;
 
             let hasError1 = false;
             selectedOptionArr?.map(el => {
@@ -172,8 +172,8 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     // 
                 }
 
-                totalQuantityBefore += el?.totalQuantity;
-                unitPriceBefore += el?.unitPrice;
+              //  totalQuantityBefore += el?.totalQuantity;
+               // unitPriceBefore += el?.unitPrice;
             });
 
             if (hasError1 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
@@ -185,24 +185,24 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
                 }
 
-                totalQuantityAfter += el?.totalQuantity;
-                unitPriceAfter += el?.unitPrice;
+              //  totalQuantityAfter += el?.totalQuantity;
+               // unitPriceAfter += el?.unitPrice;
             });
 
             if (hasError2 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
 
-            console.log('totalQuantityBefore', totalQuantityBefore);
-            console.log('totalQuantityAfter', totalQuantityAfter);
+            // console.log('totalQuantityBefore', totalQuantityBefore);
+            // console.log('totalQuantityAfter', totalQuantityAfter);
 
-            if (totalQuantityBefore != totalQuantityAfter) {
-                return toast.error('يجب ان تكون كمية الاصناف قبل وبعد التحويل متساوية');
+            // if (totalQuantityBefore != totalQuantityAfter) {
+            //     return toast.error('يجب ان تكون كمية الاصناف قبل وبعد التحويل متساوية');
 
-            }
+            // }
 
-            if (unitPriceAfter != unitPriceBefore) {
-                return toast.error('يجب ان يكون مجموع اسعار الاصناف قبل وبعد التحويل متساوية');
-            }
+            // if (unitPriceAfter != unitPriceBefore) {
+            //     return toast.error('يجب ان يكون مجموع اسعار الاصناف قبل وبعد التحويل متساوية');
+            // }
 
             // console.log('done');
             // return;
