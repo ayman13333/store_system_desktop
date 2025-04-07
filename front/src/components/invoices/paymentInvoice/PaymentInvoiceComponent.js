@@ -240,6 +240,7 @@ export default function PaymentInvoiceComponent({ type = null, invoice = null })
                     disabled={type ? true : false}
                     className="form-control">
                     {type == null && <option value={'0'}> من فضلك اختر جهة الصرف </option>}
+                    {type != null && <option value={'0'}>{invoice?.supplierID?.fullName}</option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }

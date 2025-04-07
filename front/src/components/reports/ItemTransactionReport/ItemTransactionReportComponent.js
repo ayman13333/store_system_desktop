@@ -8,7 +8,7 @@ import { FiRefreshCcw } from "react-icons/fi";
 
 
 export default function ItemTransactionReportComponent() {
-  const [selectedValue, setSelectedValue] = useState(null); // Track first select value
+  const [selectedValue, setSelectedValue] = useState(); // Track first select value
   const [startDate, setStartDate] = useState(''); // Track start date
   const [endDate, setEndDate] = useState(''); // Track end date
   const [tableData, setTableData] = useState([]); // Data to be displayed in the table
@@ -18,6 +18,7 @@ export default function ItemTransactionReportComponent() {
 
   const navigate = useNavigate();
   console.log("tableData",tableData)
+  console.log("selectedValue",selectedValue)
 
   const getReport = async () => {
     try {
@@ -27,7 +28,7 @@ export default function ItemTransactionReportComponent() {
 
       const data = {
         // invoiceCode: selectedValue ,
-        itemCode: Number(selectedValue),
+        itemCode: selectedValue,
         startDate: startDate,
         endDate: endDate,
       };

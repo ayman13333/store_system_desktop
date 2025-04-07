@@ -14,6 +14,7 @@ import { MyContext } from '../../..';
 
 export default function ConvetInvoiceComponent({ type = null, invoice = null }) {
 
+    console.log("invoice",invoice);
       const { setEntities } = useContext(MyContext);
     
     const [isLoading, setIsLoading] = useState(false);
@@ -301,6 +302,7 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
                     disabled={type ? true : false}
                 >
                     {type == null && <option value={'0'}> من فضلك اختر جهة التحويل </option>}
+                    {type != null && <option value={'0'}>{invoice?.supplierID?.fullName}</option>}
                     {
                         suppliers?.length > 0 && suppliers?.map((el, i) => <option key={i} value={el?._id}>{el?.fullName}</option>)
                     }
