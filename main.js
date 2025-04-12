@@ -688,10 +688,12 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     console.log("lastInvoice : " , lastInvoice);
 
     if(lastInvoice){
-      const number =  Number(lastInvoice.invoiceCode.split("أضافه (")[1].split(")")[0]) +1;
+      // const number =  Number(lastInvoice.invoiceCode.split("أضافه (")[1].split(")")[0]) +1;
+
+      const number =  Number(lastInvoice.serialNumber.split("أضافه (")[1].split(")")[0]) +1;
       console.log('number',number);
 
-     // return;
+     // return serialNumber;
       invoiceCode = `أضافه (${number})`;
     }else{
       invoiceCode = `أضافه (1)`;
@@ -1172,7 +1174,53 @@ ipcMain.handle('editInvoice',async(event,data)=>{
       success: false
     }
   }
-})
+});
+
+// اعادة تهيئة كود الفاتورة
+ipcMain.handle('regenerateInvoiceCodes',async(event,data)=>{
+  try {
+      console.log("regenerateInvoiceCodes",data);
+      let invoiceType=data?.invoiceType;
+      let filter={ type: invoiceType };
+
+
+      let invoices=await Invoice.find(filter);
+      let invoiceCodeCount=1;
+
+     // let pattern=
+     // const number =  Number(lastInvoice.serialNumber.split("أضافه (")[1].split(")")[0]) +1;
+
+      for(let oneInvoice of invoices){
+        let invoiceCode;
+
+       // if(invoiceType=="supply") number =  Number(oneInvoice.serialNumber.split("أضافه (")[1].split(")")[0]) +1;
+
+      if(invoiceType=="supply") oneInvoice.invoiceCode = `أضافه (${invoiceCodeCount})`;
+      if(invoiceType=="payment") oneInvoice.invoiceCode = `صرف (${invoiceCodeCount})`;
+      if(invoiceType=="convert") oneInvoice.invoiceCode = `تحويل (${invoiceCodeCount})`;
+
+      
+     
+        await oneInvoice.save();
+      invoiceCodeCount++;
+
+      }
+
+      return {
+        success: true
+      }
+      // await Promise.all(
+      //   invoi
+      // );
+
+  } catch (error) {
+    console.log('error', error.message);
+
+    return {
+      success: false
+    }
+  }
+});
 
 // بحث التقارير
 ipcMain.handle('searchForReport', async (event, data) => {

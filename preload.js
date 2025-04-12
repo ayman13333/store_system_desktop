@@ -28,6 +28,8 @@ contextBridge.exposeInMainWorld('electron', {
   getNotifications:(data)=>ipcRenderer.invoke('getNotifications',data),
   // postNewNotifications
   postNewNotifications:(data)=>ipcRenderer.invoke('postNewNotifications',data),
+  // اعادة تهيئة كود الفاتورة
+  regenerateInvoiceCodes:(data)=>ipcRenderer.invoke('regenerateInvoiceCodes',data),
 });
 
 

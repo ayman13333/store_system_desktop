@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import FormatDate from '../../Utilities/FormatDate';
-import { BsBackspaceFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { FiRefreshCcw } from "react-icons/fi";
+import RegenerateInvoicesCodeModal from './RegenerateInvoicesCodeModal';
 
 export default function SearchItemsComponent({setCategories,setIsLoading,originalCategories}) {
     const [searchType, setSearchType] = useState('');
     const [searchValue, setSearchValue] = useState('');
+    const[showModal,setShowModal]=useState(false);
 
     const search=()=>{
         if(searchType=='') return toast.error(' من فضلك اختر نوع البحث');
@@ -44,6 +44,10 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
         setSearchValue('');
     }
 
+    // const regenerateInvoicesCodeFunc=async()=>{
+
+    // }
+
     return (
         <div className="d-flex justify-content-between my-4">
             {/* <div className="form-group d-flex gap-3">
@@ -78,13 +82,14 @@ export default function SearchItemsComponent({setCategories,setIsLoading,origina
                 </div>
 
                 <button onClick={() => search()} className='btn btn-success'> بحث </button>
-
                 <button onClick={() => cancelFilter()} className='btn btn-danger' style={{width: '80px'}} > <FiRefreshCcw size={'24px'}/>   </button>
-
+                <button onClick={() => setShowModal(true)} className='btn btn-success'> اعادة تهيئة كود الفاتورة </button>
             </div>
 
 
-
+                    {
+                        showModal&&<RegenerateInvoicesCodeModal show={showModal} setShow={setShowModal} />
+                    }
         </div>
     )
 }
