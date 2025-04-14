@@ -167,28 +167,28 @@ export default function ConvetInvoiceComponent({ type = null, invoice = null }) 
           //  let unitPriceAfter = 0;
 
             let hasError1 = false;
-            selectedOptionArr?.map(el => {
-                if (el?.totalQuantity == '0') {
-                    hasError1 = true;
-                    // 
-                }
+            // selectedOptionArr?.map(el => {
+            //     if (el?.totalQuantity == '0') {
+            //         hasError1 = true;
+            //         // 
+            //     }
 
-              //  totalQuantityBefore += el?.totalQuantity;
-               // unitPriceBefore += el?.unitPrice;
-            });
+            //   //  totalQuantityBefore += el?.totalQuantity;
+            //    // unitPriceBefore += el?.unitPrice;
+            // });
 
             if (hasError1 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
             let hasError2 = false;
-            selectedOptionArr2?.map(el => {
-                if (el?.totalQuantity == '0') {
-                    hasError2 = true;
-                    return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
-                }
+            // selectedOptionArr2?.map(el => {
+            //     if (el?.totalQuantity == '0') {
+            //         hasError2 = true;
+            //         return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف بعد تحويلها');
+            //     }
 
-              //  totalQuantityAfter += el?.totalQuantity;
-               // unitPriceAfter += el?.unitPrice;
-            });
+            //   //  totalQuantityAfter += el?.totalQuantity;
+            //    // unitPriceAfter += el?.unitPrice;
+            // });
 
             if (hasError2 == true) return toast.error('  من فضلك تاكد من  وجود كميه بكل صنف في الاصناف المراد تحويلها');
 
