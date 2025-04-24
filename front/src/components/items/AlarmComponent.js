@@ -1,11 +1,12 @@
-import { ligthBlue, orange, red, yellow } from "../../Constants"
+import { gray, ligthBlue, orange, red, yellow } from "../../Constants"
 
 export default function AlarmComponent() {
 
     const loggedUser=JSON.parse(localStorage.getItem('user'));
     let alarms=[
         {value:red,text:' صنف منتهي الصلاحية ' },
-        {value:yellow,text:'الكمية اقل من او تساوي الحد الحرج'} 
+        {value:yellow,text:'الكمية اقل من او تساوي الحد الحرج'},
+        {value:gray , text:'صنف الكمية تساوي صفر'}
     ]
 
     if(loggedUser?.type!='storekeeper') alarms.push({value:ligthBlue,text:'صنف تم التعديل عليه'});

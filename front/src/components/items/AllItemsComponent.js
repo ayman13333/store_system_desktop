@@ -7,7 +7,7 @@ import SearchItemsComponent from "./SearchItemsComponent";
 import DataTable from "react-data-table-component";
 import { CiEdit } from "react-icons/ci";
 import ExpirationDatesModal from "../invoices/supplyInvoice/ExpirationDatesModal";
-import { ligthBlue, orange, red, yellow } from "../../Constants"
+import { ligthBlue, orange, red, yellow,gray } from "../../Constants"
 import FormatDate from "../../Utilities/FormatDate";
 import { TbHandClick } from "react-icons/tb";
 import { FiRefreshCcw } from "react-icons/fi";
@@ -231,6 +231,7 @@ export default function AllItemsComponent() {
         textAlign: 'center',
       }
     },
+
    
     {
       when: row => {
@@ -256,6 +257,26 @@ export default function AllItemsComponent() {
       },
       style: {
         backgroundColor: red,
+        color:"#fff",
+        fontWeight: 'bold',
+        fontSize: 'large',
+        textAlign: 'center',
+      }
+    },
+
+    {
+      when: row => {
+       
+
+        if (row?.totalQuantity==0) {
+          return true;
+          //  isRed=true;
+
+        }
+
+      },
+      style: {
+        backgroundColor: gray,
         color:"#fff",
         fontWeight: 'bold',
         fontSize: 'large',
