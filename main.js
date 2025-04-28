@@ -690,7 +690,7 @@ ipcMain.handle('addSupplyInvoice', async (event, data) => {
     if(lastInvoice){
       // const number =  Number(lastInvoice.invoiceCode.split("أضافه (")[1].split(")")[0]) +1;
 
-      const number =  Number(lastInvoice.serialNumber.split("أضافه (")[1].split(")")[0]) +1;
+      const number =  Number(lastInvoice.invoiceCode.split("أضافه (")[1].split(")")[0]) +1;
       console.log('number',number);
 
      // return serialNumber;
