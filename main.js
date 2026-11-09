@@ -29,6 +29,7 @@ async function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, 'logo.ico'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
@@ -41,13 +42,15 @@ async function createWindow() {
 
 
 
-  // test
-  mainWindow.webContents.openDevTools();
-  mainWindow.loadURL('http://localhost:3000');
-
-  // production
-  // const startUrl = path.join(__dirname,'front','build','index.html');
-  //  mainWindow.loadFile(startUrl);
+  if (!app.isPackaged) {
+    // Development mode
+    mainWindow.webContents.openDevTools();
+    mainWindow.loadURL('http://localhost:3000');
+  } else {
+    // Production mode (Packaged for client)
+    const startUrl = path.join(__dirname, 'front', 'build', 'index.html');
+    mainWindow.loadFile(startUrl);
+  }
 }
 
 

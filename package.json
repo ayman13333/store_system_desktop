@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "build": "webpack --config webpack.renderer.config.js && webpack --config webpack.main.config.js",
-    "electron:build": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
+    "electron:build": "electron-packager . StoreSystem --overwrite --asar=true --platform=win32 --arch=x64 --icon=logo.ico --prune=true --out=release-builds --ignore=\"front/(src|public|node_modules)\"",
     "package-win": "electron-packager . my-electron-app --platform=win32 --arch=x64 --out=dist --overwrite",
     "start:watch": "npx electronmon --trace-warnings .",
     "dist": "electron-builder"

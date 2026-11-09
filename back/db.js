@@ -2,25 +2,12 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://gardeniag434:gardeniag434@cluster0.jjf40.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect('mongodb+srv://gardeniag434_db_user:mF1aCYLBkexUNbVy@cluster0.giktigh.mongodb.net/?retryWrites=true&w=majority');
     console.log('MongoDB connected...');
   } catch (err) {
-    console.error(err.message);
+    console.error('Database connection error:', err.message);
     process.exit(1);
   }
 };
 
-
-// mongoose.set('strictPopulate', false);
-
-// new 
-// mongodb+srv://gardeniag434:gardeniag434@cluster0.qh72r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
-// old
-// mongodb+srv://aymanmohamed15595:12345@cluster0.br2z0ag.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
-// mongodb+srv://gardeniag434:gardeniag434@cluster0.jjf40.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 module.exports = connectDB;
